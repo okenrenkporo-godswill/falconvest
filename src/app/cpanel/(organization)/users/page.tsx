@@ -11,7 +11,7 @@ export default async function UsersPage() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/admin/login");
+    redirect("/cpanel");
   }
 
   const { data: profile } = await supabase
@@ -47,16 +47,16 @@ export default async function UsersPage() {
           <TableColumn>Joined</TableColumn>
           <TableColumn>Actions</TableColumn>
         </TableHeader>
-        <TableBody>
-          {allUsers.map((user) => (
+        <TableBody emptyContent="No users found">
+          {(allUsers || []).map((user) => (
             <TableRow key={user.id}>
-              <TableCell>{user.full_name}</TableCell>
+              <TableCell>{user.first_name} {user.last_name}</TableCell>
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.username}</TableCell>
               <TableCell>{user.country}</TableCell>
               <TableCell>
-                <Chip color={statusColors[user.kyc_status]} variant="flat" size="sm">
-                  {user.kyc_status}
+                <Chip color={statusColors[user.kyc_status] || "default"} variant="flat" size="sm">
+                  {user.kyc_status || "N/A"}
                 </Chip>
               </TableCell>
               <TableCell>{new Date(user.created_at).toLocaleDateString()}</TableCell>

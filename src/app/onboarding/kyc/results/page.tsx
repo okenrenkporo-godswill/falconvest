@@ -8,7 +8,10 @@ import * as faceapi from "face-api.js";
 interface VerificationResult {
   faceMatch: { score: number; passed: boolean };
   liveness: { passed: boolean };
-  overall: { status: "passed" | "failed" | "manual_review"; confidence: number };
+  overall: {
+    status: "passed" | "failed" | "manual_review";
+    confidence: number;
+  };
 }
 
 export default function ResultsPage() {
@@ -22,18 +25,19 @@ export default function ResultsPage() {
 
   const performVerification = async () => {
     try {
-      await faceapi.nets.faceRecognitionNet.loadFromUri('/models');
-      await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
-      await faceapi.nets.faceLandmark68Net.loadFromUri('/models');
+      await faceapi.nets.faceRecognitionNet.loadFromUri("/models");
+      await faceapi.nets.tinyFaceDetector.loadFromUri("/models");
+      await faceapi.nets.faceLandmark68Net.loadFromUri("/models");
 
       const frontImage = sessionStorage.getItem("kyc_front_image");
       const backImage = sessionStorage.getItem("kyc_back_image");
       const selfieImage = sessionStorage.getItem("kyc_selfie_image");
       const extractedDataStr = sessionStorage.getItem("kyc_extracted_data");
-      const livenessPassed = sessionStorage.getItem("kyc_liveness_passed") === "true";
+      const livenessPassed =
+        sessionStorage.getItem("kyc_liveness_passed") === "true";
 
       if (!frontImage || !selfieImage || !extractedDataStr) {
-        router.push("/onboarding/kyc-advanced/capture");
+        router.push("/onboarding/kyc/capture");
         return;
       }
 
@@ -62,7 +66,10 @@ export default function ResultsPage() {
         return;
       }
 
-      const distance = faceapi.euclideanDistance(docDetection.descriptor, selfieDetection.descriptor);
+      const distance = faceapi.euclideanDistance(
+        docDetection.descriptor,
+        selfieDetection.descriptor,
+      );
       const similarity = Math.max(0, (1 - distance / 0.6) * 100);
       const faceMatchPassed = similarity >= 70;
 
@@ -73,7 +80,11 @@ export default function ResultsPage() {
         faceMatch: { score: similarity, passed: faceMatchPassed },
         liveness: { passed: livenessPassed },
         overall: {
-          status: (overallPassed ? "passed" : confidence > 50 ? "manual_review" : "failed") as "passed" | "failed" | "manual_review",
+          status: (overallPassed
+            ? "passed"
+            : confidence > 50
+              ? "manual_review"
+              : "failed") as "passed" | "failed" | "manual_review",
           confidence,
         },
       };
@@ -115,7 +126,7 @@ export default function ResultsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-full bg-background flex items-center justify-center">
         <div className="text-center">
           <Spinner size="lg" className="mb-4" />
           <p className="text-sm text-default-500">Verifying...</p>
@@ -124,15 +135,24 @@ export default function ResultsPage() {
     );
   }
 
-  const statusColor = result?.overall.status === "passed" ? "success" : result?.overall.status === "manual_review" ? "warning" : "danger";
+  const statusColor =
+    result?.overall.status === "passed"
+      ? "success"
+      : result?.overall.status === "manual_review"
+        ? "warning"
+        : "danger";
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-full bg-background p-6">
       <div className="max-w-2xl mx-auto">
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-bold mb-2">Verification Complete</h1>
           <Chip color={statusColor} size="lg">
-            {result?.overall.status === "passed" ? "✓ Verified" : result?.overall.status === "manual_review" ? "Under Review" : "Failed"}
+            {result?.overall.status === "passed"
+              ? "✓ Verified"
+              : result?.overall.status === "manual_review"
+                ? "Under Review"
+                : "Failed"}
           </Chip>
         </div>
 
@@ -142,21 +162,31 @@ export default function ResultsPage() {
               <div className="flex justify-between items-center">
                 <span className="text-sm">Face Match</span>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium">{Math.round(result?.faceMatch.score || 0)}%</span>
-                  <Chip color={result?.faceMatch.passed ? "success" : "danger"} size="sm">
+                  <span className="text-sm font-medium">
+                    {Math.round(result?.faceMatch.score || 0)}%
+                  </span>
+                  <Chip
+                    color={result?.faceMatch.passed ? "success" : "danger"}
+                    size="sm"
+                  >
                     {result?.faceMatch.passed ? "✓" : "✗"}
                   </Chip>
                 </div>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">Liveness</span>
-                <Chip color={result?.liveness.passed ? "success" : "danger"} size="sm">
+                <Chip
+                  color={result?.liveness.passed ? "success" : "danger"}
+                  size="sm"
+                >
                   {result?.liveness.passed ? "✓" : "✗"}
                 </Chip>
               </div>
               <div className="flex justify-between items-center pt-3 border-t">
                 <span className="text-sm font-medium">Overall</span>
-                <span className="text-sm font-medium">{Math.round(result?.overall.confidence || 0)}%</span>
+                <span className="text-sm font-medium">
+                  {Math.round(result?.overall.confidence || 0)}%
+                </span>
               </div>
             </div>
           </CardBody>
@@ -188,7 +218,11 @@ export default function ResultsPage() {
 
         <div className="flex gap-3">
           {result?.overall.status === "failed" && (
-            <Button color="primary" onPress={() => router.push("/onboarding/kyc-advanced/capture")} className="flex-1">
+            <Button
+              color="primary"
+              onPress={() => router.push("/onboarding/kyc/capture")}
+              className="flex-1"
+            >
               Try Again
             </Button>
           )}
@@ -198,7 +232,9 @@ export default function ResultsPage() {
             onPress={() => router.push("/dashboard")}
             className="flex-1"
           >
-            {result?.overall.status === "passed" ? "Continue" : "Go to Dashboard"}
+            {result?.overall.status === "passed"
+              ? "Continue"
+              : "Go to Dashboard"}
           </Button>
         </div>
       </div>

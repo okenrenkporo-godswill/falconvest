@@ -1,9 +1,4 @@
-import {
-  Heading,
-  Preview,
-  Section,
-  Text,
-} from "@react-email/components";
+import { Heading, Preview, Section, Text } from "@react-email/components";
 import { EmailTemplate } from "./email-template";
 
 interface OtpEmailProps {
@@ -14,37 +9,18 @@ export default function OtpEmail({ code }: OtpEmailProps) {
   return (
     <EmailTemplate preview={`Your MasterSync verification code: ${code}`}>
       <Preview>Your MasterSync verification code: {code}</Preview>
-      
-      <Heading style={h1}>MasterSync</Heading>
-          <Text style={text}>Your verification code is:</Text>
-          <Section style={codeContainer}>
-            <Text style={codeText}>{code}</Text>
-          </Section>
-          <Text style={text}>
-            This code will expire in 10 minutes. If you didn't request this code, please ignore this email.
-          </Text>
-          <Text style={footer}>
-            © 2026 MasterSync. All rights reserved.
-          </Text>
-        </Container>
-      </Body>
-    </Html>
+
+      <Text style={text}>Your verification code is:</Text>
+      <Section style={codeContainer}>
+        <Text style={codeText}>{code}</Text>
+      </Section>
+      <Text style={text}>
+        This code will expire in 10 minutes. If you didn't request this code,
+        please ignore this email.
+      </Text>
+    </EmailTemplate>
   );
 }
-
-const main = {
-  backgroundColor: "#f6f9fc",
-  fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
-};
-
-const container = {
-  backgroundColor: "#ffffff",
-  margin: "0 auto",
-  padding: "40px 20px",
-  marginBottom: "64px",
-  borderRadius: "8px",
-  maxWidth: "600px",
-};
 
 const h1 = {
   color: "#1a1a1a",
@@ -72,7 +48,7 @@ const codeContainer = {
 
 const codeText = {
   color: "#1a1a1a",
-  fontSize: "48px",
+  fontSize: "38px",
   fontWeight: "bold",
   letterSpacing: "8px",
   lineHeight: "1",
@@ -85,9 +61,4 @@ const footer = {
   lineHeight: "16px",
   marginTop: "32px",
   textAlign: "center" as const,
-};
-
-const logo = {
-  margin: "0 auto 24px",
-  display: "block",
 };

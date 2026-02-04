@@ -5,6 +5,7 @@ import WelcomeEmail from "@/emails/welcome-email";
 import KycSubmittedEmail from "@/emails/kyc-submitted-email";
 import KycApprovedEmail from "@/emails/kyc-approved-email";
 import KycRejectedEmail from "@/emails/kyc-rejected-email";
+import { AdminLoginEmail } from "@/emails/admin-login-email";
 
 const resend = new Resend(env.RESEND_API_KEY);
 
@@ -75,5 +76,29 @@ export async function sendKycRejectedEmail(email: string, name: string, reason?:
     to: email,
     subject: "Action Required: Identity Verification",
     react: KycRejectedEmail({ name, reason }),
+  });
+}
+
+export async function sendAdminLoginEmail(
+  email: string,
+  adminName: string,
+  ipAddress?: string,
+  userAgent?: string
+) {
+  if (!env.RESEND_API_KEY) {
+    console.warn("RESEND_API_KEY not configured, skipping email");
+    return;
+  }
+
+  const loginTime = new Date().toLocaleString("en-US", {
+    dateStyle: "full",
+    timeStyle: "long",
+  });
+
+  await resend.emails.send({
+    from: "MasterSync <security@mastersync.live>",
+    to: email,
+    subject: "🔐 Admin Login Alert - MasterSync",
+    react: AdminLoginEmail({ adminName, loginTime, ipAddress, userAgent }),
   });
 }

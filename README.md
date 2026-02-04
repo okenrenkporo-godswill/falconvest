@@ -1,295 +1,153 @@
 # MasterSync - Crypto Trading Platform
 
-A production-grade crypto broker/trading platform built with Next.js 15, TypeScript, Supabase, and modern fintech best practices.
+A production-grade cryptocurrency broker and trading platform built with Next.js 15, TypeScript, and Supabase.
 
-## Features
-
-- **Authentication**: Supabase Auth with email/password
-- **KYC Verification**: Document upload via Supabase Storage with admin review
-- **User Dashboard**: Portfolio overview, trading, holdings, staking, copy trading
-- **Admin Panel**: User management, KYC approval queue
-- **Theme Support**: Full light/dark mode with system preference detection
-- **Security**: Supabase Row Level Security (RLS), secure storage policies
-
-## Tech Stack
+## 🚀 Tech Stack
 
 - **Framework**: Next.js 15 (App Router)
 - **Language**: TypeScript (strict mode)
 - **Backend**: Supabase (Auth, Database, Storage)
-- **UI Library**: HeroUI (NextUI successor)
+- **UI Library**: HeroUI
 - **Styling**: Tailwind CSS v4
-- **Email**: Resend.com (optional - Supabase handles auth emails)
+- **Email**: Resend + React Email
+- **Security**: Cloudflare Turnstile CAPTCHA
 
-## Getting Started
+## ✨ Features
 
-### Prerequisites
+- Multi-step registration with OTP verification
+- Advanced KYC verification (document capture, OCR, face matching)
+- Admin control panel with KYC review
+- User dashboard with portfolio overview
+- Email notifications
+- Two-factor authentication
 
-- Node.js 18+
-- Supabase account and project
-- Resend API key (optional)
+## 🛠️ Local Development Setup
 
-### Installation
+### 1. Clone & Install
 
-1. **Clone and install**:
 ```bash
-git clone <repo-url>
+git clone <repository-url>
 cd mastersync
-npm install
+pnpm install
 ```
 
-2. **Set up Supabase**:
+### 2. Environment Variables
 
-Create a new Supabase project at https://supabase.com
+Create `.env.local` and ask team lead for credentials:
 
-3. **Run database migrations**:
+```env
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
 
-In your Supabase project dashboard, go to SQL Editor and run the migration file:
-```
-supabase/migrations/001_initial_schema.sql
-```
+# Resend
+RESEND_API_KEY=
 
-This creates:
-- `profiles` table (extends auth.users)
-- `kyc_submissions` table
-- `balances` table
-- `trades` table
-- Row Level Security policies
-- Trigger to auto-create profile on signup
+# Cloudflare Turnstile
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=
 
-4. **Create Storage bucket**:
-
-In Supabase Dashboard → Storage:
-- Create bucket: `kyc-documents`
-- Make it private
-- Add policy:
-```sql
--- Allow users to upload to their own folder
-CREATE POLICY "Users can upload own KYC docs"
-ON storage.objects FOR INSERT
-WITH CHECK (
-  bucket_id = 'kyc-documents' AND
-  (storage.foldername(name))[1] = auth.uid()::text
-);
-
--- Allow users to read own files
-CREATE POLICY "Users can read own KYC docs"
-ON storage.objects FOR SELECT
-USING (
-  bucket_id = 'kyc-documents' AND
-  (storage.foldername(name))[1] = auth.uid()::text
-);
-
--- Allow admins to read all
-CREATE POLICY "Admins can read all KYC docs"
-ON storage.objects FOR SELECT
-USING (
-  bucket_id = 'kyc-documents' AND
-  EXISTS (
-    SELECT 1 FROM public.profiles
-    WHERE id = auth.uid() AND role = 'admin'
-  )
-);
+# App URL
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
-5. **Set up environment variables**:
+### 3. Download Face Detection Models
+
 ```bash
-cp .env.example .env
+mkdir -p public/models && cd public/models
+curl -O https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights/tiny_face_detector_model-weights_manifest.json
+curl -O https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights/tiny_face_detector_model-shard1
+curl -O https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights/face_landmark_68_model-weights_manifest.json
+curl -O https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights/face_landmark_68_model-shard1
+curl -O https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights/face_recognition_model-weights_manifest.json
+curl -O https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights/face_recognition_model-shard1
+curl -O https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights/face_recognition_model-shard2
+cd ../..
 ```
 
-Edit `.env` with your Supabase credentials:
-- `NEXT_PUBLIC_SUPABASE_URL`: From Supabase project settings
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: From Supabase project settings → API
-- `SUPABASE_SERVICE_ROLE_KEY`: From Supabase project settings → API (keep secret!)
-- `RESEND_API_KEY`: Optional, for custom emails
+### 4. Start Development
 
-6. **Create admin user**:
-
-Sign up via the app at `/register` with email `admin@mastersync.com`, then run in Supabase SQL Editor:
-```sql
-UPDATE public.profiles 
-SET role = 'admin' 
-WHERE email = 'admin@mastersync.com';
-```
-
-7. **Start development server**:
 ```bash
-npm run dev
+pnpm dev
 ```
 
-Visit `http://localhost:3000`
+Visit [http://localhost:3000](http://localhost:3000)
 
-## Project Structure
+### 5. Test Accounts
+
+Ask team lead for:
+- **User account** - Test user flows
+- **Admin account** - Access `/cpanel`
+
+## 📁 Project Structure
 
 ```
 src/
-├── actions/
-│   ├── auth.ts               # Auth server actions
-│   ├── kyc.ts                # KYC server actions
-│   └── admin.ts              # Admin server actions
+├── actions/          # Server actions (auth, kyc, admin)
 ├── app/
-│   ├── admin/                # Admin panel routes
-│   ├── dashboard/            # User dashboard routes
-│   ├── login/                # Auth pages
-│   └── register/
-├── components/
-│   ├── dashboard/            # Dashboard components
-│   ├── admin/                # Admin components
-│   └── providers.tsx         # HeroUI + theme providers
-├── lib/
-│   └── supabase/
-│       ├── client.ts         # Browser client
-│       ├── server.ts         # Server client
-│       └── middleware.ts     # Auth middleware helper
-├── middleware.ts             # Route protection
-└── env.ts                    # Type-safe env vars
+│   ├── (auth)/      # Login, register
+│   ├── cpanel/      # Admin panel
+│   ├── dashboard/   # User dashboard
+│   └── onboarding/  # KYC flow
+├── components/      # Reusable components
+├── emails/          # Email templates
+└── lib/             # Utilities (supabase, ocr, email)
 ```
 
-## Key Flows
+## 🔑 Key Routes
 
-### User Registration
-1. Fill registration form → Supabase signUp
-2. Profile auto-created via database trigger
-3. Redirect to dashboard
-4. Upload KYC documents → pending review
+- `/register` - User registration
+- `/login` - User login
+- `/cpanel` - Admin login
+- `/cpanel/kyc-pending` - KYC review queue
+- `/dashboard` - User dashboard
+- `/onboarding/kyc-advanced` - KYC submission
 
-### Login Flow
-1. Enter email + password → Supabase signInWithPassword
-2. Session created → redirect to dashboard
+## 🧪 Testing Flows
 
-### KYC Verification
-1. User uploads government ID to Supabase Storage
-2. File path stored in `kyc_submissions` table
-3. Admin reviews in `/admin/kyc-pending`
-4. Admin approves/rejects with optional reason
-5. User sees status in account page
+### User Flow
+1. Register → Verify OTP → Complete profile
+2. Submit KYC (document + selfie)
+3. Check status at `/onboarding/kyc-advanced`
 
-## Admin Access
+### Admin Flow
+1. Login at `/cpanel`
+2. Review KYC at `/cpanel/kyc-pending`
+3. Approve/reject with notes
 
-- Login at `/admin/login` with admin account
-- Default: `admin@mastersync.com` (set role via SQL after signup)
+## 🤝 Contributing
 
-## Database Schema
+1. Create feature branch: `git checkout -b feature/name`
+2. Make changes
+3. Commit: `git commit -m 'Add feature'`
+4. Push: `git push origin feature/name`
+5. Open Pull Request
 
-### Tables
-- `profiles`: User profiles (extends auth.users)
-- `kyc_submissions`: KYC document uploads
-- `balances`: User crypto balances (mock)
-- `trades`: Trading history (mock)
+### Code Style
+- TypeScript strict mode
+- Use server actions for mutations
+- Add error handling
+- Follow existing patterns
 
-### Row Level Security (RLS)
-All tables have RLS enabled with policies:
-- Users can only read/write their own data
-- Admins can read/write all data
-- Enforced at database level (critical for security)
+## 🐛 Common Issues
 
-## Security Best Practices
-
-✅ **Implemented:**
-- Row Level Security on all tables
-- Supabase Auth session management
-- HTTP-only cookies via Supabase SSR
-- Server-side validation with Zod
-- Secure file uploads with user-scoped paths
-- Admin role checks at database level
-
-⚠️ **TODO:**
-- Rate limiting on auth endpoints (use Supabase Edge Functions)
-- 2FA/TOTP support
-- Password strength meter (zxcvbn)
-- Audit logs
-
-## Supabase Integration Details
-
-### Authentication
-- Uses `@supabase/ssr` for Next.js App Router
-- Server client: `createClient()` from `lib/supabase/server.ts`
-- Browser client: `createClient()` from `lib/supabase/client.ts`
-- Middleware: Automatic session refresh + route protection
-
-### Storage
-- Bucket: `kyc-documents` (private)
-- User uploads to: `{user_id}/{timestamp}-{filename}`
-- Signed URLs for admin review (1-hour expiry)
-
-### Realtime (Future)
-- Can subscribe to balance updates
-- Live notifications
-- Order book updates
-
-## Customization
-
-### Theme Colors
-Edit `tailwind.config.ts`:
-```ts
-heroui({
-  themes: {
-    light: { colors: { primary: "#your-color" } },
-    dark: { colors: { primary: "#your-color" } }
-  }
-})
-```
-
-### Add More Tables
-1. Create migration in Supabase SQL Editor
-2. Add RLS policies
-3. Create server actions in `src/actions/`
-4. Add UI components
-
-## Deployment
-
-### Vercel (Recommended)
-1. Push to GitHub
-2. Import to Vercel
-3. Add environment variables
-4. Deploy
-5. Update Supabase redirect URLs in project settings
-
-### Environment Variables for Production
-```
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-RESEND_API_KEY=re_...
-NEXT_PUBLIC_APP_URL=https://your-domain.com
-```
-
-## TODO / Roadmap
-
-- [ ] Implement actual trading engine integration
-- [ ] Add TradingView chart widget
-- [ ] Crypto deposit/withdrawal functionality
-- [ ] Staking pools implementation
-- [ ] Copy trading system
-- [ ] 2FA/TOTP support (Supabase supports this)
-- [ ] Rate limiting via Supabase Edge Functions
-- [ ] Password strength meter
-- [ ] Admin audit logs
-- [ ] Realtime balance updates
-- [ ] Push notifications
-
-## Troubleshooting
-
-### "Invalid JWT" errors
-- Check that `NEXT_PUBLIC_SUPABASE_ANON_KEY` is correct
-- Verify middleware is properly configured
+**"Invalid JWT" errors**
+- Check `.env.local` has correct Supabase keys
 - Clear cookies and re-login
 
-### Storage upload fails
-- Verify bucket exists and is named `kyc-documents`
-- Check RLS policies on `storage.objects`
-- Ensure user is authenticated
+**Models not loading**
+- Ensure models are in `public/models/`
+- Check browser console for 404 errors
 
-### Admin can't access admin panel
-- Verify role is set to 'admin' in profiles table
-- Check RLS policies allow admin access
-- Clear session and re-login
+**Admin can't access cPanel**
+- Ask team lead to set your role to 'admin' in database
 
-## Support
+## 📚 Resources
 
-For issues or questions:
-- Supabase docs: https://supabase.com/docs
-- GitHub issues: <your-repo>
+- [Next.js Docs](https://nextjs.org/docs)
+- [Supabase Docs](https://supabase.com/docs)
+- [HeroUI Docs](https://heroui.com)
 
-## License
+---
 
-MIT
+**Questions?** Ask in team chat or contact project lead.

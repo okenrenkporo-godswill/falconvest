@@ -11,7 +11,7 @@ export default async function KycPendingPage() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/admin/login");
+    redirect("/cpanel");
   }
 
   const { data: profile } = await supabase
@@ -29,6 +29,9 @@ export default async function KycPendingPage() {
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold">KYC Verification Queue</h1>
+      <p className="text-sm text-default-600">
+        Found {submissions?.length || 0} pending submissions
+      </p>
       <KycReviewTable submissions={submissions} />
     </div>
   );

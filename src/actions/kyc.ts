@@ -179,11 +179,13 @@ export async function submitAdvancedKycAction(data: {
     // Get user profile for email
     const { data: profile } = await supabase
       .from("profiles")
-      .select("full_name, email")
+      .select("first_name, last_name, email")
       .eq("id", user.id)
       .single();
 
-    const userName = profile?.full_name || profile?.email?.split("@")[0] || "User";
+    const userName = profile && profile.first_name && profile.last_name
+      ? `${profile.first_name} ${profile.last_name}`.trim() 
+      : (profile?.email || user.email || "User").split("@")[0];
 
     // Convert base64 to blob and upload
     const frontBlob = base64ToBlob(data.frontImage);
@@ -239,8 +241,10 @@ export async function submitAdvancedKycAction(data: {
 
     console.log("All files uploaded successfully");
 
+    // Create submission records using service role (already initialized above)
+
     // Create submission records
-    const { data: frontSubmission, error: frontSubError } = await supabase
+    const { data: frontSubmission, error: frontSubError } = await serviceSupabase
       .from("kyc_submissions")
       .insert({
         user_id: user.id,
@@ -251,10 +255,13 @@ export async function submitAdvancedKycAction(data: {
       .select()
       .single();
 
-    if (frontSubError) throw new Error("Failed to create front submission");
+    if (frontSubError) {
+      console.error("Front submission error:", frontSubError);
+      throw new Error(`Failed to create front submission: ${frontSubError.message}`);
+    }
 
     if (backPath) {
-      await supabase.from("kyc_submissions").insert({
+      await serviceSupabase.from("kyc_submissions").insert({
         user_id: user.id,
         document_type: "id_back",
         file_path: backPath,
@@ -262,7 +269,7 @@ export async function submitAdvancedKycAction(data: {
       });
     }
 
-    const { data: selfieSubmission } = await supabase
+    const { data: selfieSubmission } = await serviceSupabase
       .from("kyc_submissions")
       .insert({
         user_id: user.id,
@@ -273,8 +280,10 @@ export async function submitAdvancedKycAction(data: {
       .select()
       .single();
 
+    console.log("Saving extracted document data...");
+    console.log("Extracted data:", data.extractedData);
     // Save extracted document data
-    await supabase.from("kyc_document_data").insert({
+    const { data: insertedDoc, error: docDataError } = await serviceSupabase.from("kyc_document_data").insert({
       user_id: user.id,
       submission_id: frontSubmission.id,
       given_names: data.extractedData.givenNames,
@@ -289,29 +298,36 @@ export async function submitAdvancedKycAction(data: {
       mrz_valid: data.extractedData.mrzValid,
       ocr_confidence: data.extractedData.confidence,
       raw_ocr_text: data.extractedData.rawText,
-    });
+    }).select();
+    console.log("Inserted doc data:", insertedDoc);
+    if (docDataError) console.error("Document data error:", docDataError);
 
+    console.log("Saving liveness check...");
     // Save liveness check
-    await supabase.from("kyc_liveness_checks").insert({
+    const { error: livenessError } = await serviceSupabase.from("kyc_liveness_checks").insert({
       user_id: user.id,
-      challenges_given: ["blink", "smile"],
-      challenges_passed: data.verificationResult.liveness.passed ? ["blink", "smile"] : [],
-      blink_detected: data.verificationResult.liveness.passed,
-      smile_detected: data.verificationResult.liveness.passed,
+      challenges_given: ["face_detection"],
+      challenges_passed: data.verificationResult.liveness.passed ? ["face_detection"] : [],
+      blink_detected: false,
+      smile_detected: false,
       passed: data.verificationResult.liveness.passed,
       confidence_score: 100,
     });
+    if (livenessError) console.error("Liveness error:", livenessError);
 
+    console.log("Saving face match...");
     // Save face match
-    await supabase.from("kyc_face_matches").insert({
+    const { error: faceMatchError } = await serviceSupabase.from("kyc_face_matches").insert({
       user_id: user.id,
       similarity_score: data.verificationResult.faceMatch.score,
       euclidean_distance: (1 - data.verificationResult.faceMatch.score / 100) * 0.6,
       is_match: data.verificationResult.faceMatch.passed,
     });
+    if (faceMatchError) console.error("Face match error:", faceMatchError);
 
+    console.log("Saving verification result...");
     // Save overall verification result
-    await supabase.from("kyc_verification_results").insert({
+    const { error: verificationError } = await serviceSupabase.from("kyc_verification_results").insert({
       user_id: user.id,
       face_match_score: data.verificationResult.faceMatch.score,
       liveness_score: data.verificationResult.liveness.passed ? 100 : 0,
@@ -321,23 +337,28 @@ export async function submitAdvancedKycAction(data: {
       failure_reasons: data.verificationResult.overall.status === "failed" ? ["Low confidence"] : [],
       verified_at: data.verificationResult.overall.status === "passed" ? new Date().toISOString() : null,
     });
+    if (verificationError) console.error("Verification result error:", verificationError);
 
+    console.log("Updating profile KYC status...");
     // Update profile KYC status
-    const newStatus = data.verificationResult.overall.status === "passed" ? "approved" : "pending";
-    await supabase
+    const newStatus = data.verificationResult.overall.status === "passed" ? "auto_verified" : "pending";
+    const { error: profileError } = await serviceSupabase
       .from("profiles")
       .update({ kyc_status: newStatus })
       .eq("id", user.id);
+    if (profileError) console.error("Profile update error:", profileError);
 
+    console.log("Sending email notification...");
     // Send appropriate email
     const { sendKycSubmittedEmail, sendKycApprovedEmail } = await import("@/lib/email");
     
-    if (newStatus === "approved") {
+    if (newStatus === "auto_verified") {
       await sendKycApprovedEmail(user.email!, userName);
     } else {
       await sendKycSubmittedEmail(user.email!, userName);
     }
 
+    console.log("KYC submission completed successfully");
     revalidatePath("/dashboard");
     return { success: true, status: newStatus };
   } catch (error: any) {

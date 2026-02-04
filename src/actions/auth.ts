@@ -14,7 +14,7 @@ const loginSchema = z.object({
 
 export async function loginAction(formData: FormData) {
   console.log("=== LOGIN ACTION START ===");
-  
+
   const data = loginSchema.parse({
     email: formData.get("email"),
     password: formData.get("password"),
@@ -50,13 +50,14 @@ export async function loginAction(formData: FormData) {
   console.log("Deleting old OTP codes...");
   await adminClient.from("otp_codes").delete().eq("email", data.email);
 
-  // Insert new OTP
+  // Insert new OTP with password hash for later verification
   console.log("Inserting new OTP...");
   const { error: otpError } = await adminClient.from("otp_codes").insert({
     email: data.email,
     code,
     expires_at: expiresAt.toISOString(),
     verified: false,
+    metadata: { password: data.password }, // Store temporarily for OTP verification
   });
 
   if (otpError) {
@@ -84,7 +85,7 @@ const loginVerifyOtpSchema = z.object({
 
 export async function loginVerifyOtpAction(formData: FormData) {
   console.log("=== LOGIN VERIFY OTP START ===");
-  
+
   const data = loginVerifyOtpSchema.parse({
     email: formData.get("email"),
     code: formData.get("token"),
@@ -123,36 +124,56 @@ export async function loginVerifyOtpAction(formData: FormData) {
     .update({ verified: true })
     .eq("id", otpData.id);
 
-  // Get user
-  console.log("Finding user...");
-  const { data: userData } = await adminClient.auth.admin.listUsers();
-  const user = userData?.users.find((u) => u.email === data.email);
+  // Get password from metadata
+  const password = otpData.metadata?.password;
 
-  if (!user) {
-    console.error("User not found");
-    return { error: "User not found" };
+  if (!password) {
+    console.error("No password in OTP metadata");
+    return { error: "Session expired, please login again" };
   }
 
-  console.log("User found:", user.id);
+  // Sign in with password
+  console.log("Signing in with password...");
+  const supabase = await createClient();
 
-  // Sign in the user directly using admin
-  console.log("Signing in user...");
-  
-  // Generate a one-time sign-in link
-  const { data: linkData, error: linkError } = await adminClient.auth.admin.generateLink({
-    type: "magiclink",
+  const { error: signInError } = await supabase.auth.signInWithPassword({
     email: data.email,
+    password: password,
   });
 
-  if (linkError || !linkData) {
-    console.error("Link generation failed:", linkError);
+  if (signInError) {
+    console.error("Sign in failed:", signInError);
     return { error: "Failed to create session" };
   }
 
   console.log("=== LOGIN VERIFY OTP SUCCESS ===");
-  
-  // Redirect to the action link which will create the session
-  redirect(linkData.properties.action_link);
+
+  // Check if user is admin and send notification
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role, first_name, last_name, email")
+    .eq("email", data.email)
+    .single();
+
+  if (profile?.role === "admin") {
+    const adminName = profile.first_name && profile.last_name
+      ? `${profile.first_name} ${profile.last_name}`
+      : profile.email.split("@")[0];
+    
+    try {
+      const { sendAdminLoginEmail } = await import("@/lib/email");
+      await sendAdminLoginEmail(profile.email, adminName);
+      console.log("Admin login notification sent");
+    } catch (error) {
+      console.error("Failed to send admin login notification:", error);
+    }
+
+    revalidatePath("/", "layout");
+    redirect("/cpanel/admin");
+  }
+
+  revalidatePath("/", "layout");
+  redirect("/dashboard");
 }
 
 const sendOtpSchema = z.object({
@@ -347,11 +368,10 @@ export async function completeProfileAction(formData: FormData) {
 
     // Sign in the user with captcha token
     const supabase = await createClient();
-    const { error: signInError } =
-      await supabase.auth.signInWithPassword({
-        email: data.email,
-        password: data.password,
-      });
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: data.email,
+      password: data.password,
+    });
 
     if (signInError) {
       console.error("❌ [completeProfileAction] Sign in error:", signInError);
@@ -420,7 +440,7 @@ export async function completeProfileAction(formData: FormData) {
     // Don't fail the registration if email fails
   }
 
-  redirect("/onboarding/kyc-advanced");
+  redirect("/onboarding/kyc");
 }
 
 export async function logoutAction() {

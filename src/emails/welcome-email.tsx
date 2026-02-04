@@ -16,67 +16,61 @@ export default function WelcomeEmail({ name, email }: WelcomeEmailProps) {
   return (
     <EmailTemplate preview="Welcome to MasterSync - Complete Your KYC Verification">
       <Preview>Welcome to MasterSync - Complete Your KYC Verification</Preview>
-      
-      <Heading style={heading}>Welcome to MasterSync! 🎉</Heading>
-            
-            <Text style={paragraph}>
-              Hi {name},
-            </Text>
-            
-            <Text style={paragraph}>
-              Thank you for creating your MasterSync account. We're excited to have you join our crypto trading platform!
-            </Text>
-            
-            <Text style={paragraph}>
-              Your account has been successfully created with the email: <strong>{email}</strong>
-            </Text>
-            
-            <Section style={alertBox}>
-              <Text style={alertText}>
-                <strong>⚠️ Important: Complete Your KYC Verification</strong>
-              </Text>
-              <Text style={alertText}>
-                To start trading, you need to complete your KYC (Know Your Customer) verification by uploading a government-issued ID.
-              </Text>
-            </Section>
-            
-            <Text style={paragraph}>
-              <strong>What's next?</strong>
-            </Text>
-            
-            <Text style={listItem}>
-              1. Log in to your dashboard
-            </Text>
-            <Text style={listItem}>
-              2. Upload your government-issued ID (passport, driver's license, or national ID)
-            </Text>
-            <Text style={listItem}>
-              3. Wait for verification (usually within 24 hours)
-            </Text>
-            <Text style={listItem}>
-              4. Start trading!
-            </Text>
-            
-            <Text style={paragraph}>
-              If you have any questions or need assistance, please don't hesitate to contact our support team.
-            </Text>
-            
-            <Text style={paragraph}>
-              Best regards,
-              <br />
-              The MasterSync Team
-            </Text>
-            
-            <Text style={disclaimer}>
-              This email was sent to {email}. If you didn't create this account, please ignore this email.
-            </Text>
+
+      <Text style={paragraph}>Hi {name},</Text>
+
+      <Text style={paragraph}>
+        Thank you for creating your MasterSync account. We're excited to have
+        you join our crypto trading platform!
+      </Text>
+
+      <Text style={paragraph}>
+        Your account has been successfully created with the email:{" "}
+        <strong>{email}</strong>
+      </Text>
+
+      <Section style={alertBox}>
+        <Text style={alertText}>
+          <strong>⚠️ Important: Complete Your KYC Verification</strong>
+        </Text>
+        <Text style={alertText}>
+          To start trading, you need to complete your KYC (Know Your Customer)
+          verification by uploading a government-issued ID.
+        </Text>
+      </Section>
+
+      <Text style={paragraph}>
+        <strong>What's next?</strong>
+      </Text>
+
+      <Text style={listItem}>1. Log in to your dashboard</Text>
+      <Text style={listItem}>
+        2. Upload your government-issued ID (passport, driver's license, or
+        national ID)
+      </Text>
+      <Text style={listItem}>
+        3. Wait for verification (usually within 24 hours)
+      </Text>
+      <Text style={listItem}>4. Start trading!</Text>
+
+      <Text style={paragraph}>
+        If you have any questions or need assistance, please don't hesitate to
+        contact our support team.
+      </Text>
+
+      <Text style={paragraph}>
+        Best regards,
+        <br />
+        The MasterSync Team
+      </Text>
+
+      <Text style={disclaimer}>
+        This email was sent to {email}. If you didn't create this account,
+        please ignore this email.
+      </Text>
     </EmailTemplate>
   );
 }
-  backgroundColor: "#f6f9fc",
-  fontFamily:
-    '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
-};
 
 const heading = {
   fontSize: "32px",

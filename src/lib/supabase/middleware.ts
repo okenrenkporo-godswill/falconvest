@@ -15,19 +15,21 @@ export async function updateSession(request: NextRequest) {
         getAll() {
           return request.cookies.getAll();
         },
-        setAll(cookiesToSet: Array<{ name: string; value: string; options?: any }>) {
+        setAll(
+          cookiesToSet: Array<{ name: string; value: string; options?: any }>,
+        ) {
           cookiesToSet.forEach(({ name, value, options }) =>
-            request.cookies.set(name, value)
+            request.cookies.set(name, value),
           );
           supabaseResponse = NextResponse.next({
             request,
           });
           cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
+            supabaseResponse.cookies.set(name, value, options),
           );
         },
       },
-    }
+    },
   );
 
   const {
@@ -47,25 +49,36 @@ export async function updateSession(request: NextRequest) {
   ) {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("kyc_status")
+      .select("kyc_status, role")
       .eq("id", user.id)
       .single();
 
+    // Skip KYC check for admins
+    if (profile?.role === "admin") {
+      return supabaseResponse;
+    }
+
     if (profile?.kyc_status === "pending" || !profile?.kyc_status) {
-      return NextResponse.redirect(new URL("/onboarding/kyc-advanced", request.url));
+      return NextResponse.redirect(new URL("/onboarding/kyc", request.url));
     }
 
     if (profile?.kyc_status === "rejected") {
-      return NextResponse.redirect(new URL("/onboarding/kyc-advanced", request.url));
+      return NextResponse.redirect(new URL("/onboarding/kyc", request.url));
     }
   }
 
-  if (request.nextUrl.pathname.startsWith("/admin")) {
-    if (!user) {
-      return NextResponse.redirect(new URL("/admin/login", request.url));
+  // Admin/cPanel routes protection
+  if (request.nextUrl.pathname.startsWith("/cpanel")) {
+    // Allow access to cPanel login page
+    if (request.nextUrl.pathname === "/cpanel") {
+      return supabaseResponse;
     }
 
-    // Check admin role
+    if (!user) {
+      return NextResponse.redirect(new URL("/cpanel", request.url));
+    }
+
+    // Check admin role for organization routes
     const { data: profile } = await supabase
       .from("profiles")
       .select("role")

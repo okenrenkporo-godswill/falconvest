@@ -4,8 +4,10 @@ import {
   Html,
   Img,
   Link,
+  Section,
   Text,
 } from "@react-email/components";
+import { object } from "zod/v4";
 
 interface EmailTemplateProps {
   preview: string;
@@ -18,30 +20,33 @@ export function EmailTemplate({ preview, children }: EmailTemplateProps) {
       <Body style={main}>
         <Container style={container}>
           {/* Header */}
-          <Img
-            src="https://ik.imagekit.io/v5jcj7s4p/20260203_232251.png"
-            width="80"
-            height="80"
-            alt="MasterSync"
-            style={logo}
-          />
 
           {/* Content */}
           {children}
 
-          {/* Footer */}
-          <Text style={footer}>
-            <Link
-              href="https://mastersync.live"
-              target="_blank"
-              style={footerLink}
-            >
-              MasterSync
-            </Link>
-            , the all-in-one crypto trading platform
-            <br />
-            for spot, futures, staking, and copy trading.
-          </Text>
+          <Section>
+            <div className="w-[45px] h-[45px] flex justify-center items-center overflow-hidden relative">
+              <Img
+                src="https://ik.imagekit.io/v5jcj7s4p/20260203_232251.png"
+                alt="MasterSync"
+                style={logo}
+              />
+            </div>
+
+            {/* Footer */}
+            <Text style={footer}>
+              <Link
+                href="https://mastersync.live"
+                target="_blank"
+                style={footerLink}
+              >
+                MasterSync
+              </Link>
+              , the all-in-one crypto trading platform
+              <br />
+              for spot, futures, staking, and copy trading.
+            </Text>
+          </Section>
         </Container>
       </Body>
     </Html>
@@ -50,7 +55,8 @@ export function EmailTemplate({ preview, children }: EmailTemplateProps) {
 
 const main = {
   backgroundColor: "#ffffff",
-  fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
+  fontFamily:
+    '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
 };
 
 const container = {
@@ -61,8 +67,10 @@ const container = {
 };
 
 const logo = {
-  margin: "0 auto 32px",
   display: "block",
+  width: "45px",
+  height: "45px",
+  object: "contain",
 };
 
 const footer = {

@@ -5,9 +5,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const navItems = [
-  { href: "/admin", label: "Dashboard" },
-  { href: "/admin/users", label: "Users" },
-  { href: "/admin/kyc-pending", label: "KYC Queue" },
+  { href: "/cpanel/admin", label: "Dashboard" },
+  { href: "/cpanel/users", label: "Users" },
+  { href: "/cpanel/kyc-pending", label: "KYC Queue" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -16,7 +16,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="flex min-h-screen">
       <aside className="w-64 border-r p-4">
-        <h1 className="text-2xl font-bold mb-8">Admin Panel</h1>
+        <h1 className="text-2xl font-bold mb-8">Control Panel</h1>
         <nav className="space-y-2">
           {navItems.map((item) => (
             <Button
