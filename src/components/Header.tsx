@@ -75,19 +75,7 @@ export default function Header() {
                                         </Link>
                                     </div>
                                 </div>
-                                <div>
-                                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-900 dark:text-neutral-400 mb-6">Platforms</h3>
-                                    <div className="flex flex-col gap-4">
-                                        <Link href="/" className="group/link flex flex-col gap-1">
-                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">Web Trader</span>
-                                            <span className="text-[10px] text-neutral-500 font-medium">Professional browser-based execution</span>
-                                        </Link>
-                                        <Link href="/" className="group/link flex flex-col gap-1">
-                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">Mobile App</span>
-                                            <span className="text-[10px] text-neutral-500 font-medium">Trade anywhere with Vault security</span>
-                                        </Link>
-                                    </div>
-                                </div>
+                              
                             </div>
                         </div>
                     </div>
