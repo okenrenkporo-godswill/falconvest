@@ -7,6 +7,8 @@ import TradingPlans from "@/components/TradingPlans";
 import SecurityCard from "@/components/SecurityCard";
 import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
+import { Button } from "@heroui/react";
+import Link from "next/link";
 
 export default function HomePage() {
   return (
@@ -32,30 +34,35 @@ export default function HomePage() {
             </Button>
           </div>
 
-      {/* ACT 2: SOCIAL & TOOLS (THEME-RESPONSIVE LIGHTER) */}
-      <div className="bg-white dark:bg-neutral-950 transition-colors duration-500">
-        <section className="space-y-0">
-          <AutoCopyTrading />
-        </section>
-        <section className="relative z-10">
-          <TradingToolsSlider />
-        </section>
-      </div>
+          {/* ACT 2: SOCIAL & TOOLS (THEME-RESPONSIVE LIGHTER) */}
+          <div className="bg-white dark:bg-neutral-950 transition-colors duration-500">
+            <section className="space-y-0">
+              <AutoCopyTrading />
+            </section>
+            <section className="relative z-10">
+              <TradingToolsSlider />
+            </section>
+          </div>
 
-      {/* ACT 3: INSTITUTIONAL (THEME-RESPONSIVE DARK/LIGHT) */}
-      <div className="bg-neutral-50 dark:bg-black transition-colors duration-500">
-        <section className="relative z-10">
-          <TradingPlans />
-        </section>
-        <section className="relative z-10">
-          <SecurityCard />
-        </section>
-        <section className="relative z-10">
-          <FAQ />
-        </section>
-      </div>
+          {/* ACT 3: INSTITUTIONAL (THEME-RESPONSIVE DARK/LIGHT) */}
+          <div className="bg-neutral-50 dark:bg-black transition-colors duration-500">
+            <section className="relative z-10">
+              <TradingPlans />
+            </section>
+            <section className="relative z-10">
+              <SecurityCard />
+            </section>
+            <section className="relative z-10">
+              <FAQ />
+            </section>
+          </div>
 
-      <Footer />
+          <Footer />
+        </div>
+
+      </main>
     </div>
   );
 }
+
+
