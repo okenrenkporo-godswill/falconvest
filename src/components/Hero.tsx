@@ -149,7 +149,7 @@ export default function Hero() {
                </div>
                {/* Center text for placeholder */}
                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-neutral-700 font-bold text-lg tracking-widest uppercase">MasterSync Terminal</span>
+                  <span className="text-neutral-700 font-bold text-lg tracking-widest uppercase">MasterSync copy trading</span>
                </div>
            </div>
 
