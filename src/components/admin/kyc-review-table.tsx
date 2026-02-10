@@ -43,21 +43,21 @@ export function KycReviewTable({ submissions }: { submissions: KycSubmission[] }
     <>
       <Table aria-label="KYC submissions">
         <TableHeader>
-          <TableColumn>User</TableColumn>
-          <TableColumn>Email</TableColumn>
-          <TableColumn>Status</TableColumn>
-          <TableColumn>Face Match</TableColumn>
-          <TableColumn>Liveness</TableColumn>
-          <TableColumn>OCR</TableColumn>
-          <TableColumn>Overall</TableColumn>
-          <TableColumn>Submitted</TableColumn>
-          <TableColumn>Actions</TableColumn>
+          <TableColumn key="user">User</TableColumn>
+          <TableColumn key="email">Email</TableColumn>
+          <TableColumn key="status">Status</TableColumn>
+          <TableColumn key="face_match">Face Match</TableColumn>
+          <TableColumn key="liveness">Liveness</TableColumn>
+          <TableColumn key="ocr">OCR</TableColumn>
+          <TableColumn key="overall">Overall</TableColumn>
+          <TableColumn key="submitted">Submitted</TableColumn>
+          <TableColumn key="actions">Actions</TableColumn>
         </TableHeader>
-        <TableBody emptyContent="No pending KYC submissions">
-          {submissions.map((sub) => {
+        <TableBody items={submissions} emptyContent="No pending KYC submissions">
+          {(sub) => {
             const result = sub.kyc_verification_results?.[0];
             const name = `${sub.first_name || ""} ${sub.last_name || ""}`.trim() || sub.username;
-            
+
             return (
               <TableRow key={sub.id}>
                 <TableCell>{name}</TableCell>
@@ -102,7 +102,7 @@ export function KycReviewTable({ submissions }: { submissions: KycSubmission[] }
                 </TableCell>
               </TableRow>
             );
-          })}
+          }}
         </TableBody>
       </Table>
 

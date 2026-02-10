@@ -26,7 +26,7 @@ export default function HomePage() {
           <p className="text-xl text-default-600">
             Trade spot & futures, stake your assets, and copy top traders all in one secure platform
           </p>
-          
+
           <div className="flex gap-4 justify-center pt-8">
             <Button as={Link} href="/register" color="primary" size="lg">
               Get Started

@@ -1,18 +1,13 @@
-import { Card, CardBody, CardHeader } from "@heroui/react";
+import { WalletPage } from "@/components/dashboard/wallet-page";
 
 export default function HoldingsPage() {
+  // In a real app, fetch balance from Supabase here
   return (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Holdings</h1>
-
-      <Card>
-        <CardHeader>
-          <h3 className="font-semibold">Your Assets</h3>
-        </CardHeader>
-        <CardBody>
-          <p className="text-default-500">No assets yet</p>
-        </CardBody>
-      </Card>
-    </div>
+    <WalletPage
+      title="Holdings Wallet"
+      description="Manage your longterm crypto assets."
+      balance={0.00}
+      walletType="holdings"
+    />
   );
 }
