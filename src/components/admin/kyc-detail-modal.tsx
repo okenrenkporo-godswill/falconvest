@@ -125,10 +125,9 @@ export function KycDetailModal({
         <ModalContent>
           <ModalHeader>KYC Verification Review</ModalHeader>
           <ModalBody className="py-8">
-            <Alert color="warning">
-              No verification data found. The user may have submitted documents
-              but verification hasn't been processed yet.
-            </Alert>
+            <div className="p-4 rounded-lg bg-warning-50 border border-warning-200 text-warning-800">
+              <p className="text-sm font-medium">No verification data found. The user may have submitted documents but verification hasn't been processed yet.</p>
+            </div>
             {data?.documentUrls && (
               <div className="mt-4">
                 <p className="text-sm font-medium mb-3">Uploaded Documents</p>
