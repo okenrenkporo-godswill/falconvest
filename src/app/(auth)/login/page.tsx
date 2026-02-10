@@ -9,9 +9,8 @@ import {
   Form,
   Divider,
 } from "@heroui/react";
-import { Alert } from "@heroui/react";
-import { addToast } from "@heroui/react";
-import { InputOtp } from "@heroui/react";
+import { Alert, addToast, InputOtp } from "@heroui/react";
+
 import Link from "next/link";
 import { loginAction, loginVerifyOtpAction } from "@/actions/auth";
 import { useState } from "react";

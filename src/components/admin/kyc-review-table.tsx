@@ -1,6 +1,15 @@
 "use client";
 
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Chip } from "@heroui/react";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  Button,
+  Chip,
+} from "@heroui/react";
 import { useState } from "react";
 import { KycDetailModal } from "./kyc-detail-modal";
 
@@ -22,10 +31,12 @@ interface KycSubmission {
   }>;
 }
 
-export function KycReviewTable({ submissions }: { submissions: KycSubmission[] }) {
+export function KycReviewTable({
+  submissions,
+}: {
+  submissions: KycSubmission[];
+}) {
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-
-  console.log("KycReviewTable received submissions:", submissions);
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return "success";
@@ -43,21 +54,21 @@ export function KycReviewTable({ submissions }: { submissions: KycSubmission[] }
     <>
       <Table aria-label="KYC submissions">
         <TableHeader>
-          <TableColumn>User</TableColumn>
-          <TableColumn>Email</TableColumn>
-          <TableColumn>Status</TableColumn>
-          <TableColumn>Face Match</TableColumn>
-          <TableColumn>Liveness</TableColumn>
-          <TableColumn>OCR</TableColumn>
-          <TableColumn>Overall</TableColumn>
-          <TableColumn>Submitted</TableColumn>
-          <TableColumn>Actions</TableColumn>
+          <TableColumn key="user">User</TableColumn>
+          <TableColumn key="email">Email</TableColumn>
+          <TableColumn key="status">Status</TableColumn>
+          <TableColumn key="face_match">Face Match</TableColumn>
+          <TableColumn key="liveness">Liveness</TableColumn>
+          <TableColumn key="ocr">OCR</TableColumn>
+          <TableColumn key="overall">Overall</TableColumn>
+          <TableColumn key="submitted">Submitted</TableColumn>
+          <TableColumn key="actions">Actions</TableColumn>
         </TableHeader>
-        <TableBody emptyContent="No pending KYC submissions">
-          {submissions.map((sub) => {
+        <TableBody items={submissions} emptyContent="No pending KYC submissions">
+          {(sub) => {
             const result = sub.kyc_verification_results?.[0];
             const name = `${sub.first_name || ""} ${sub.last_name || ""}`.trim() || sub.username;
-            
+
             return (
               <TableRow key={sub.id}>
                 <TableCell>{name}</TableCell>
@@ -68,7 +79,10 @@ export function KycReviewTable({ submissions }: { submissions: KycSubmission[] }
                   </Chip>
                 </TableCell>
                 <TableCell>
-                  <Chip size="sm" color={getScoreColor(result?.face_match_score || 0)}>
+                  <Chip
+                    size="sm"
+                    color={getScoreColor(result?.face_match_score || 0)}
+                  >
                     {result?.face_match_score?.toFixed(0) || "N/A"}%
                   </Chip>
                 </TableCell>
@@ -83,12 +97,17 @@ export function KycReviewTable({ submissions }: { submissions: KycSubmission[] }
                   {result?.ocr_confidence_score?.toFixed(0) || "N/A"}%
                 </TableCell>
                 <TableCell>
-                  <Chip size="sm" color={getScoreColor(result?.overall_confidence || 0)}>
+                  <Chip
+                    size="sm"
+                    color={getScoreColor(result?.overall_confidence || 0)}
+                  >
                     {result?.overall_confidence?.toFixed(0) || "N/A"}%
                   </Chip>
                 </TableCell>
                 <TableCell>
-                  {result?.created_at ? new Date(result.created_at).toLocaleDateString() : "N/A"}
+                  {result?.created_at
+                    ? new Date(result.created_at).toLocaleDateString()
+                    : "N/A"}
                 </TableCell>
                 <TableCell>
                   <Button
@@ -102,7 +121,7 @@ export function KycReviewTable({ submissions }: { submissions: KycSubmission[] }
                 </TableCell>
               </TableRow>
             );
-          })}
+          }}
         </TableBody>
       </Table>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@heroui/react";
+import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
@@ -18,7 +19,7 @@ export function ThemeToggle() {
       variant="light"
       onPress={() => setTheme(theme === "dark" ? "light" : "dark")}
     >
-      {theme === "dark" ? "🌞" : "🌙"}
+      {theme === "dark" ? <SunIcon /> : <MoonIcon />}
     </Button>
   );
 }

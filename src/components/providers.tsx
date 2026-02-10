@@ -1,6 +1,6 @@
 "use client";
 
-import { HeroUIProvider,ToastProvider } from "@heroui/react";
+import { HeroUIProvider, ToastProvider } from "@heroui/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { useRouter } from "next/navigation";
 

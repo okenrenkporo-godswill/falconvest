@@ -1,8 +1,8 @@
 "use client";
 
 import { Button, Input, Card, CardBody, CardHeader, Form } from "@heroui/react";
-import { Alert } from "@heroui/alert";
-import { InputOtp } from "@heroui/input-otp";
+import { Alert,InputOtp } from "@heroui/react";
+
 import { loginAction, loginVerifyOtpAction } from "@/actions/auth";
 import { useState } from "react";
 
@@ -58,7 +58,6 @@ export default function CpanelLoginPage() {
 
     const formData = new FormData();
     formData.append("email", email);
-    formData.append("password", "temp"); // Will use stored password from first attempt
 
     const result = await loginAction(formData);
 
