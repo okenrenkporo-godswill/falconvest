@@ -10,8 +10,7 @@ import {
   DatePicker,
   Switch,
 } from "@heroui/react";
-import { Alert } from "@heroui/alert";
-import { addToast } from "@heroui/toast";
+import { Alert,addToast} from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { parseDate, type DateValue } from "@internationalized/date";
 import {
@@ -227,14 +226,14 @@ export default function ReviewDataPage() {
               <Button
                 color="primary"
                 onPress={handleContinue}
-                // className="flex-1"
+              // className="flex-1"
               >
                 Continue
               </Button>
               <Button
                 variant="flat"
                 onPress={() => router.back()}
-                // className="flex-1"
+              // className="flex-1"
               >
                 Back
               </Button>

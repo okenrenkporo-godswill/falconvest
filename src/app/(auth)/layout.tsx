@@ -5,8 +5,8 @@ import Link from "next/link";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { env } from "@/env";
 import { CaptchaProvider, useCaptcha } from "@/contexts/captcha-context";
-import { Divider } from "@heroui/react";
-import { Card, CardBody } from "@heroui/react";
+
+import { Card, CardBody,Divider} from "@heroui/react";
 
 function AuthLayoutContent({ children }: { children: React.ReactNode }) {
   const { captchaToken, setCaptchaToken, turnstileRef } = useCaptcha();

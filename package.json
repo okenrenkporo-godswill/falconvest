@@ -9,14 +9,17 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@heroui/react": "^2.6.10",
+    "@heroui/react": "^2.8.8",
     "@internationalized/date": "^3.11.0",
     "@marsidev/react-turnstile": "^1.4.1",
     "@react-email/components": "^1.0.6",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.45.7",
     "@t3-oss/env-nextjs": "^0.11.1",
+    "clsx": "^2.1.1",
     "country-state-city": "^3.2.1",
+    "embla-carousel-autoplay": "^8.6.0",
+    "embla-carousel-react": "^8.6.0",
     "face-api.js": "^0.22.2",
     "framer-motion": "^11.15.0",
     "lucide-react": "^0.563.0",
@@ -28,8 +31,10 @@
     "react-email": "^5.2.5",
     "react-webcam": "^7.2.0",
     "resend": "^4.0.1",
+    "tailwind-merge": "^3.4.0",
     "tesseract.js": "^7.0.0",
     "zod": "^3.24.1",
+    "zustand": "^5.0.11",
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {

@@ -14,12 +14,23 @@ export default function HomePage() {
       <Header />
       <Hero />
 
-      {/* ACT 1: THE CORE (THEME-RESPONSIVE DARK/LIGHT) */}
-      <div className="bg-neutral-50 dark:bg-black transition-colors duration-500">
-        <section className="relative z-20">
-          <AssetExplorer />
-        </section>
-      </div>
+      <main className="container mx-auto px-4 py-20">
+        <div className="max-w-4xl mx-auto text-center space-y-8">
+          <h2 className="text-5xl font-bold">
+            Professional Crypto Trading Platform
+          </h2>
+          <p className="text-xl text-default-600">
+            Trade spot & futures, stake your assets, and copy top traders all in one secure platform
+          </p>
+
+          <div className="flex gap-4 justify-center pt-8">
+            <Button as={Link} href="/register" color="primary" size="lg">
+              Get Started
+            </Button>
+            <Button as={Link} href="/login" variant="bordered" size="lg">
+              Sign In
+            </Button>
+          </div>
 
       {/* ACT 2: SOCIAL & TOOLS (THEME-RESPONSIVE LIGHTER) */}
       <div className="bg-white dark:bg-neutral-950 transition-colors duration-500">

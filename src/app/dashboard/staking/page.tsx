@@ -1,29 +1,13 @@
-import { Card, CardBody, CardHeader } from "@heroui/react";
+import { WalletPage } from "@/components/dashboard/wallet-page";
 
 export default function StakingPage() {
+  // In a real app, fetch balance from Supabase here
   return (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Staking</h1>
-
-      <div className="grid md:grid-cols-2 gap-4">
-        <Card>
-          <CardHeader>
-            <h3 className="font-semibold">Available Pools</h3>
-          </CardHeader>
-          <CardBody>
-            <p className="text-default-600">Staking pools coming soon</p>
-          </CardBody>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <h3 className="font-semibold">Your Stakes</h3>
-          </CardHeader>
-          <CardBody>
-            <p className="text-default-600">No active stakes</p>
-          </CardBody>
-        </Card>
-      </div>
-    </div>
+    <WalletPage
+      title="Staking Wallet"
+      description="Earn rewards on your staked assets."
+      balance={0.00}
+      walletType="staking"
+    />
   );
 }

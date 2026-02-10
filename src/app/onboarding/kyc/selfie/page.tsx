@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Card, Button, Chip, Spinner } from "@heroui/react";
-import { addToast } from "@heroui/toast";
+import { addToast } from "@heroui/react";
 import Webcam from "react-webcam";
 import { useRouter } from "next/navigation";
 import * as faceapi from "face-api.js";
@@ -229,11 +229,10 @@ export default function SelfiePage() {
                   {/* Circle border */}
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div
-                      className={`w-[280px] h-[280px] rounded-full border-4 transition-colors ${
-                        faceQuality.clear && faceQuality.centered
-                          ? "border-success"
-                          : "border-white"
-                      }`}
+                      className={`w-[280px] h-[280px] rounded-full border-4 transition-colors ${faceQuality.clear && faceQuality.centered
+                        ? "border-success"
+                        : "border-white"
+                        }`}
                     />
                   </div>
                 </div>

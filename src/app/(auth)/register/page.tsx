@@ -16,10 +16,9 @@ import {
   useDisclosure,
   Divider,
 } from "@heroui/react";
-import { Autocomplete, AutocompleteItem } from "@heroui/react";
-import { InputOtp } from "@heroui/react";
-import { Alert } from "@heroui/react";
-import { addToast } from "@heroui/react";
+import { Autocomplete, AutocompleteItem, InputOtp, Alert, addToast } from "@heroui/react";
+
+
 import {
   sendOtpAction,
   verifyOtpAction,
