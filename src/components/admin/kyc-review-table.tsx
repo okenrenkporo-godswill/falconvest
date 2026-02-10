@@ -1,6 +1,15 @@
 "use client";
 
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Chip } from "@heroui/react";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  Button,
+  Chip,
+} from "@heroui/react";
 import { useState } from "react";
 import { KycDetailModal } from "./kyc-detail-modal";
 
@@ -22,10 +31,12 @@ interface KycSubmission {
   }>;
 }
 
-export function KycReviewTable({ submissions }: { submissions: KycSubmission[] }) {
+export function KycReviewTable({
+  submissions,
+}: {
+  submissions: KycSubmission[];
+}) {
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-
-  console.log("KycReviewTable received submissions:", submissions);
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return "success";
@@ -56,8 +67,10 @@ export function KycReviewTable({ submissions }: { submissions: KycSubmission[] }
         <TableBody emptyContent="No pending KYC submissions">
           {submissions.map((sub) => {
             const result = sub.kyc_verification_results?.[0];
-            const name = `${sub.first_name || ""} ${sub.last_name || ""}`.trim() || sub.username;
-            
+            const name =
+              `${sub.first_name || ""} ${sub.last_name || ""}`.trim() ||
+              sub.username;
+
             return (
               <TableRow key={sub.id}>
                 <TableCell>{name}</TableCell>
@@ -68,7 +81,10 @@ export function KycReviewTable({ submissions }: { submissions: KycSubmission[] }
                   </Chip>
                 </TableCell>
                 <TableCell>
-                  <Chip size="sm" color={getScoreColor(result?.face_match_score || 0)}>
+                  <Chip
+                    size="sm"
+                    color={getScoreColor(result?.face_match_score || 0)}
+                  >
                     {result?.face_match_score?.toFixed(0) || "N/A"}%
                   </Chip>
                 </TableCell>
@@ -83,12 +99,17 @@ export function KycReviewTable({ submissions }: { submissions: KycSubmission[] }
                   {result?.ocr_confidence_score?.toFixed(0) || "N/A"}%
                 </TableCell>
                 <TableCell>
-                  <Chip size="sm" color={getScoreColor(result?.overall_confidence || 0)}>
+                  <Chip
+                    size="sm"
+                    color={getScoreColor(result?.overall_confidence || 0)}
+                  >
                     {result?.overall_confidence?.toFixed(0) || "N/A"}%
                   </Chip>
                 </TableCell>
                 <TableCell>
-                  {result?.created_at ? new Date(result.created_at).toLocaleDateString() : "N/A"}
+                  {result?.created_at
+                    ? new Date(result.created_at).toLocaleDateString()
+                    : "N/A"}
                 </TableCell>
                 <TableCell>
                   <Button
