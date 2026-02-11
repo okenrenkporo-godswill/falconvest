@@ -1,17 +1,7 @@
 "use client";
 
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  Chip,
-  Textarea,
-  Input,
-  Alert,
-} from "@heroui/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Chip, Textarea, Input } from "@heroui/react";
+import { Alert } from "@heroui/react";
 import { useState, useEffect } from "react";
 import {
   getKycVerificationDetails,

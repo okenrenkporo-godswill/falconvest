@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from "react";
 import { Card, Button, Chip } from "@heroui/react";
-import { addToast } from "@heroui/toast";
+import { addToast } from "@heroui/react";
 import Webcam from "react-webcam";
 import { useRouter } from "next/navigation";
 

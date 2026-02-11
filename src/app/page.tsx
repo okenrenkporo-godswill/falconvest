@@ -7,6 +7,8 @@ import TradingPlans from "@/components/TradingPlans";
 import SecurityCard from "@/components/SecurityCard";
 import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
+import { Button } from "@heroui/react";
+import Link from "next/link";
 
 export default function HomePage() {
   return (
@@ -14,37 +16,53 @@ export default function HomePage() {
       <Header />
       <Hero />
 
-      {/* ACT 1: THE CORE (THEME-RESPONSIVE DARK/LIGHT) */}
-      <div className="bg-neutral-50 dark:bg-black transition-colors duration-500">
-        <section className="relative z-20">
-          <AssetExplorer />
-        </section>
-      </div>
+      <main className="container mx-auto px-4 py-20">
+        <div className="max-w-4xl mx-auto text-center space-y-8">
+          <h2 className="text-5xl font-bold">
+            Professional Crypto Trading Platform
+          </h2>
+          <p className="text-xl text-default-600">
+            Trade spot & futures, stake your assets, and copy top traders all in one secure platform
+          </p>
 
-      {/* ACT 2: SOCIAL & TOOLS (THEME-RESPONSIVE LIGHTER) */}
-      <div className="bg-white dark:bg-neutral-950 transition-colors duration-500">
-        <section className="space-y-0">
-          <AutoCopyTrading />
-        </section>
-        <section className="relative z-10">
-          <TradingToolsSlider />
-        </section>
-      </div>
+          <div className="flex gap-4 justify-center pt-8">
+            <Button as={Link} href="/register" color="primary" size="lg">
+              Get Started
+            </Button>
+            <Button as={Link} href="/login" variant="bordered" size="lg">
+              Sign In
+            </Button>
+          </div>
 
-      {/* ACT 3: INSTITUTIONAL (THEME-RESPONSIVE DARK/LIGHT) */}
-      <div className="bg-neutral-50 dark:bg-black transition-colors duration-500">
-        <section className="relative z-10">
-          <TradingPlans />
-        </section>
-        <section className="relative z-10">
-          <SecurityCard />
-        </section>
-        <section className="relative z-10">
-          <FAQ />
-        </section>
-      </div>
+          {/* ACT 2: SOCIAL & TOOLS (THEME-RESPONSIVE LIGHTER) */}
+          <div className="bg-white dark:bg-neutral-950 transition-colors duration-500">
+            <section className="space-y-0">
+              <AutoCopyTrading />
+            </section>
+            <section className="relative z-10">
+              <TradingToolsSlider />
+            </section>
+          </div>
 
-      <Footer />
+          {/* ACT 3: INSTITUTIONAL (THEME-RESPONSIVE DARK/LIGHT) */}
+          <div className="bg-neutral-50 dark:bg-black transition-colors duration-500">
+            <section className="relative z-10">
+              <TradingPlans />
+            </section>
+            <section className="relative z-10">
+              <SecurityCard />
+            </section>
+            <section className="relative z-10">
+              <FAQ />
+            </section>
+          </div>
+
+          <Footer />
+        </div>
+
+      </main>
     </div>
   );
 }
+
+

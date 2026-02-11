@@ -50,16 +50,16 @@ export default async function UsersPage() {
 
       <Table aria-label="Users table">
         <TableHeader>
-          <TableColumn>Name</TableColumn>
-          <TableColumn>Email</TableColumn>
-          <TableColumn>Username</TableColumn>
-          <TableColumn>Country</TableColumn>
-          <TableColumn>KYC Status</TableColumn>
-          <TableColumn>Joined</TableColumn>
-          <TableColumn>Actions</TableColumn>
+          <TableColumn key="name">Name</TableColumn>
+          <TableColumn key="email">Email</TableColumn>
+          <TableColumn key="username">Username</TableColumn>
+          <TableColumn key="country">Country</TableColumn>
+          <TableColumn key="kyc_status">KYC Status</TableColumn>
+          <TableColumn key="joined">Joined</TableColumn>
+          <TableColumn key="actions">Actions</TableColumn>
         </TableHeader>
-        <TableBody emptyContent="No users found">
-          {(allUsers || []).map((user) => (
+        <TableBody items={allUsers || []} emptyContent="No users found">
+          {(user) => (
             <TableRow key={user.id}>
               <TableCell>
                 {user.first_name} {user.last_name}
@@ -97,7 +97,7 @@ export default async function UsersPage() {
                 </form>
               </TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
     </div>
