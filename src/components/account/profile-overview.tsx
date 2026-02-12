@@ -4,23 +4,87 @@ import { Card, CardBody, Avatar, Chip, Button, Divider, useDisclosure } from "@h
 import { ShieldCheck, ShieldAlert, Mail, Phone, Copy, Edit3, Globe } from "lucide-react";
 import { KycModal } from "./kyc-modal";
 import { EditProfileModal } from "./edit-profile-modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getKycStatus } from "@/actions/kyc";
+import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
-export function ProfileOverview() {
+interface ProfileOverviewProps {
+    openKycModal?: boolean;
+}
+
+export function ProfileOverview({ openKycModal }: ProfileOverviewProps) {
     const { isOpen: isKycOpen, onOpen: onKycOpen, onOpenChange: onKycChange } = useDisclosure();
     const { isOpen: isEditOpen, onOpen: onEditOpen, onOpenChange: onEditChange } = useDisclosure();
+    const router = useRouter();
 
-    const [isVerified, setIsVerified] = useState(false);
+    const [kycStatus, setKycStatus] = useState<string>("pending");
     const [userData, setUserData] = useState({
-        name: "Alex Morgan",
-        email: "alex.morgan@example.com",
-        phone: "+1 (555) ***-**88",
-        country: "United States"
+        name: "",
+        email: "",
+        phone: "",
+        country: ""
     });
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        loadUserData();
+    }, []);
+
+    useEffect(() => {
+        if (openKycModal && !isKycOpen) {
+            onKycOpen();
+            router.push("/dashboard/account");
+        }
+    }, [openKycModal]);
+
+    const handleKycClose = () => {
+        onKycChange();
+    };
+
+    const loadUserData = async () => {
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (user) {
+            const { data: profile } = await supabase
+                .from("profiles")
+                .select("full_name, phone, country, kyc_status")
+                .eq("id", user.id)
+                .single();
+
+            if (profile) {
+                setUserData({
+                    name: profile.full_name || "",
+                    email: user.email || "",
+                    phone: profile.phone || "",
+                    country: profile.country || ""
+                });
+                setKycStatus(profile.kyc_status || "pending");
+            }
+        }
+        setLoading(false);
+    };
 
     const handleSaveProfile = (newData: any) => {
         setUserData(newData);
     };
+
+    const isVerified = kycStatus === "auto_verified" || kycStatus === "manually_verified";
+    const isPending = kycStatus === "pending";
+
+    if (loading) {
+        return (
+            <Card className="border-none shadow-md dark:bg-zinc-900">
+                <CardBody className="p-6">
+                    <div className="animate-pulse space-y-4">
+                        <div className="h-20 w-20 bg-default-200 rounded-full" />
+                        <div className="h-4 bg-default-200 rounded w-1/2" />
+                    </div>
+                </CardBody>
+            </Card>
+        );
+    }
 
     return (
         <Card className="border-none shadow-md dark:bg-zinc-900 overflow-visible">
@@ -39,7 +103,7 @@ export function ProfileOverview() {
                             </Button>
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold">{userData.name}</h2>
+                            <h2 className="text-2xl font-bold">{userData.name || "User"}</h2>
                             <div className="flex items-center gap-2 text-default-500 text-sm mt-1">
                                 <span>UID: 8439201</span>
                                 <Copy size={12} className="cursor-pointer hover:text-primary" />
@@ -48,11 +112,11 @@ export function ProfileOverview() {
                                 <Chip
                                     startContent={isVerified ? <ShieldCheck size={14} /> : <ShieldAlert size={14} />}
                                     variant="flat"
-                                    color={isVerified ? "success" : "warning"}
+                                    color={isVerified ? "success" : isPending ? "warning" : "danger"}
                                     size="sm"
                                     className="pl-2"
                                 >
-                                    {isVerified ? "Verified User" : "Unverified"}
+                                    {isVerified ? "Verified User" : isPending ? "Pending Review" : "Unverified"}
                                 </Chip>
                                 {!isVerified && (
                                     <Button size="sm" variant="light" color="primary" className="h-6 text-xs px-2" onPress={onKycOpen}>
@@ -96,7 +160,7 @@ export function ProfileOverview() {
                             </div>
                             <div>
                                 <p className="text-xs text-default-400">Phone Number</p>
-                                <p className="text-sm font-medium">{userData.phone}</p>
+                                <p className="text-sm font-medium">{userData.phone || "Not set"}</p>
                             </div>
                         </div>
                         <Button size="sm" variant="light" onPress={onEditOpen}>Change</Button>
@@ -109,7 +173,7 @@ export function ProfileOverview() {
                             </div>
                             <div>
                                 <p className="text-xs text-default-400">Country / Region</p>
-                                <p className="text-sm font-medium">{userData.country}</p>
+                                <p className="text-sm font-medium">{userData.country || "Not set"}</p>
                             </div>
                         </div>
                         <Button size="sm" variant="light" onPress={onEditOpen}>Change</Button>
@@ -118,8 +182,8 @@ export function ProfileOverview() {
 
                 <KycModal
                     isOpen={isKycOpen}
-                    onOpenChange={onKycChange}
-                    onSubmitted={() => setIsVerified(true)}
+                    onOpenChange={handleKycClose}
+                    onSubmitted={loadUserData}
                 />
 
                 <EditProfileModal

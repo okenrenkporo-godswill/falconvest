@@ -13,45 +13,35 @@ const loginSchema = z.object({
 });
 
 export async function loginAction(formData: FormData) {
-  console.log("=== LOGIN ACTION START ===");
-
   const data = loginSchema.parse({
     email: formData.get("email"),
     password: formData.get("password"),
   });
 
-  console.log("Login attempt:", { email: data.email });
-
   const supabase = await createClient();
 
   // Verify password
-  console.log("Verifying password...");
   const { error: passwordError } = await supabase.auth.signInWithPassword({
     email: data.email,
     password: data.password,
   });
 
   if (passwordError) {
-    console.error("Password verification failed:", passwordError.message);
     return { error: passwordError.message };
   }
 
-  console.log("Password verified, signing out...");
   // Sign out immediately (we'll sign in again after OTP)
   await supabase.auth.signOut();
 
   // Generate and send OTP
-  console.log("Generating OTP...");
   const adminClient = createAdminClient();
   const code = Math.floor(100000 + Math.random() * 900000).toString();
   const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
   // Delete old OTP codes
-  console.log("Deleting old OTP codes...");
   await adminClient.from("otp_codes").delete().eq("email", data.email);
 
   // Insert new OTP with password hash for later verification
-  console.log("Inserting new OTP...");
   const { error: otpError } = await adminClient.from("otp_codes").insert({
     email: data.email,
     code,
@@ -61,20 +51,16 @@ export async function loginAction(formData: FormData) {
   });
 
   if (otpError) {
-    console.error("OTP insert failed:", otpError);
     return { error: "Failed to send OTP" };
   }
 
   // Send OTP email
-  console.log("Sending OTP email...");
   try {
     await sendOtpEmail(data.email, code);
-    console.log("OTP email sent successfully");
   } catch (emailError) {
     console.error("Email send failed:", emailError);
   }
 
-  console.log("=== LOGIN ACTION SUCCESS ===");
   return { success: true };
 }
 
@@ -84,19 +70,14 @@ const loginVerifyOtpSchema = z.object({
 });
 
 export async function loginVerifyOtpAction(formData: FormData) {
-  console.log("=== LOGIN VERIFY OTP START ===");
-
   const data = loginVerifyOtpSchema.parse({
     email: formData.get("email"),
     code: formData.get("token"),
   });
 
-  console.log("OTP verification:", { email: data.email, code: data.code });
-
   const adminClient = createAdminClient();
 
   // Verify OTP
-  console.log("Checking OTP in database...");
   const { data: otpData, error: otpError } = await adminClient
     .from("otp_codes")
     .select("*")
@@ -111,14 +92,12 @@ export async function loginVerifyOtpAction(formData: FormData) {
   }
 
   // Check expiry
-  console.log("Checking expiry:", otpData.expires_at);
   if (new Date(otpData.expires_at) < new Date()) {
     console.error("OTP expired");
     return { error: "OTP code has expired" };
   }
 
   // Mark as verified
-  console.log("Marking OTP as verified...");
   await adminClient
     .from("otp_codes")
     .update({ verified: true })
@@ -133,7 +112,6 @@ export async function loginVerifyOtpAction(formData: FormData) {
   }
 
   // Sign in with password
-  console.log("Signing in with password...");
   const supabase = await createClient();
 
   const { error: signInError } = await supabase.auth.signInWithPassword({
@@ -146,8 +124,6 @@ export async function loginVerifyOtpAction(formData: FormData) {
     return { error: "Failed to create session" };
   }
 
-  console.log("=== LOGIN VERIFY OTP SUCCESS ===");
-
   // Check if user is admin and send notification
   const { data: profile } = await supabase
     .from("profiles")
@@ -156,20 +132,35 @@ export async function loginVerifyOtpAction(formData: FormData) {
     .single();
 
   if (profile?.role === "admin") {
-    const adminName = profile.first_name && profile.last_name
-      ? `${profile.first_name} ${profile.last_name}`
-      : profile.email.split("@")[0];
-    
+    const adminName =
+      profile.first_name && profile.last_name
+        ? `${profile.first_name} ${profile.last_name}`
+        : profile.email.split("@")[0];
+
     try {
       const { sendAdminLoginEmail } = await import("@/lib/email");
       await sendAdminLoginEmail(profile.email, adminName);
-      console.log("Admin login notification sent");
     } catch (error) {
       console.error("Failed to send admin login notification:", error);
     }
 
     revalidatePath("/", "layout");
     redirect("/cpanel/admin");
+  }
+
+  // Notify admin of user login
+  if (profile && profile.role !== "admin") {
+    const userName =
+      profile.first_name && profile.last_name
+        ? `${profile.first_name} ${profile.last_name}`
+        : profile.email.split("@")[0];
+
+    try {
+      const { notifyAdminUserLogin } = await import("@/lib/email");
+      await notifyAdminUserLogin(profile.email, userName);
+    } catch (error) {
+      console.error("Failed to notify admin of user login:", error);
+    }
   }
 
   revalidatePath("/", "layout");
@@ -181,13 +172,9 @@ const sendOtpSchema = z.object({
 });
 
 export async function sendOtpAction(formData: FormData) {
-  console.log("📧 [sendOtpAction] Starting OTP send process");
-
   const data = sendOtpSchema.parse({
     email: formData.get("email"),
   });
-
-  console.log("📧 [sendOtpAction] Email:", data.email);
 
   const supabase = await createClient();
   const adminClient = createAdminClient();
@@ -196,12 +183,8 @@ export async function sendOtpAction(formData: FormData) {
   const code = Math.floor(100000 + Math.random() * 900000).toString();
   const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
-  console.log("📧 [sendOtpAction] Generated OTP code:", code);
-
   // Delete old OTP codes for this email
   await adminClient.from("otp_codes").delete().eq("email", data.email);
-
-  console.log("🗑️ [sendOtpAction] Deleted old OTP codes");
 
   // Insert new OTP
   const { error: otpError } = await adminClient.from("otp_codes").insert({
@@ -216,12 +199,9 @@ export async function sendOtpAction(formData: FormData) {
     return { error: otpError.message };
   }
 
-  console.log("✅ [sendOtpAction] OTP saved to database");
-
   // Send OTP email
   try {
     await sendOtpEmail(data.email, code);
-    console.log("✅ [sendOtpAction] Email sent successfully");
   } catch (emailError) {
     console.error("❌ [sendOtpAction] Email error:", emailError);
     return { error: "Failed to send verification email" };
@@ -236,14 +216,10 @@ const verifyOtpSchema = z.object({
 });
 
 export async function verifyOtpAction(formData: FormData) {
-  console.log("🔐 [verifyOtpAction] Starting OTP verification");
-
   const data = verifyOtpSchema.parse({
     email: formData.get("email"),
     token: formData.get("token"),
   });
-
-  console.log("🔐 [verifyOtpAction] Email:", data.email, "Token:", data.token);
 
   const adminClient = createAdminClient();
 
@@ -264,15 +240,11 @@ export async function verifyOtpAction(formData: FormData) {
     return { error: "Invalid or expired code" };
   }
 
-  console.log("✅ [verifyOtpAction] OTP verified, marking as used");
-
   // Mark OTP as verified
   await adminClient
     .from("otp_codes")
     .update({ verified: true })
     .eq("id", otpData.id);
-
-  console.log("✅ [verifyOtpAction] Verification complete");
 
   return { success: true, email: data.email };
 }
@@ -291,8 +263,6 @@ const completeProfileSchema = z.object({
 });
 
 export async function completeProfileAction(formData: FormData) {
-  console.log("👤 [completeProfileAction] Starting profile completion");
-
   const data = completeProfileSchema.parse({
     email: formData.get("email"),
     firstName: formData.get("firstName"),
@@ -364,8 +334,6 @@ export async function completeProfileAction(formData: FormData) {
       return { error: profileError.message };
     }
 
-    console.log("✅ [completeProfileAction] User updated, signing in");
-
     // Sign in the user with captcha token
     const supabase = await createClient();
     const { error: signInError } = await supabase.auth.signInWithPassword({
@@ -378,7 +346,6 @@ export async function completeProfileAction(formData: FormData) {
       return { error: signInError.message };
     }
 
-    console.log("✅ [completeProfileAction] Sign in successful, redirecting");
     redirect("/dashboard");
     return { success: true };
   }
@@ -406,8 +373,6 @@ export async function completeProfileAction(formData: FormData) {
     return { error: authError.message };
   }
 
-  console.log("✅ [completeProfileAction] User created, signing in");
-
   // Sign in the newly created user with captcha token
   const supabase = await createClient();
   const signInOptions: any = {
@@ -429,18 +394,18 @@ export async function completeProfileAction(formData: FormData) {
 
   // Send welcome email
   try {
-    const { sendWelcomeEmail } = await import("@/lib/email");
+    const { sendWelcomeEmail, notifyAdminNewAccount } =
+      await import("@/lib/email");
     await sendWelcomeEmail(data.email, data.firstName);
-    console.log("✅ [completeProfileAction] Welcome email sent");
-  } catch (emailError) {
-    console.error(
-      "⚠️ [completeProfileAction] Failed to send welcome email:",
-      emailError,
+    await notifyAdminNewAccount(
+      data.email,
+      `${data.firstName} ${data.lastName}`,
     );
-    // Don't fail the registration if email fails
+  } catch (emailError) {
+    console.error("Failed to send emails:", emailError);
   }
 
-  redirect("/onboarding/kyc");
+  redirect("/dashboard");
 }
 
 export async function logoutAction() {

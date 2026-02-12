@@ -95,14 +95,14 @@ export async function updateKycStatusAction(
   return { success: true };
 }
 
-export async function getPendingKycSubmissions() {
+export async function getPendingKycSubmissions(page: number = 1, limit: number = 15) {
   const supabase = await createClient();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) return [];
+  if (!user) return { data: [], totalPages: 0 };
 
   // Check admin role
   const { data: profile } = await supabase
@@ -111,34 +111,27 @@ export async function getPendingKycSubmissions() {
     .eq("id", user.id)
     .single();
 
-  if (profile?.role !== "admin") return [];
+  if (profile?.role !== "admin") return { data: [], totalPages: 0 };
 
-  // Use admin client to fetch all KYC submissions with verification results
+  // Use admin client to fetch all KYC submissions
   const adminClient = createAdminClient();
 
-  const { data, error } = await adminClient
-    .from("profiles")
-    .select(
-      `
-      id,
-      email,
-      first_name,
-      last_name,
-      username,
-      kyc_status,
-      created_at,
-      kyc_verification_results (
-        status,
-        face_match_score,
-        liveness_score,
-        ocr_confidence_score,
-        overall_confidence,
-        created_at
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  const { data, count, error } = await adminClient
+    .from("kyc_submissions")
+    .select(`
+      *,
+      profiles!inner (
+        email,
+        first_name,
+        last_name,
+        full_name
       )
-    `,
-    )
-    .not("kyc_status", "is", null)
-    .order("created_at", { ascending: false });
+    `, { count: "exact" })
+    .order("created_at", { ascending: false })
+    .range(from, to);
 
   console.log("getPendingKycSubmissions query result:", {
     data,
@@ -146,17 +139,17 @@ export async function getPendingKycSubmissions() {
     count: data?.length,
   });
 
-  return data || [];
+  return {
+    data: data || [],
+    totalPages: Math.ceil((count || 0) / limit),
+  };
 }
 
-export async function getAllUsers() {
+export async function approveKycAction(submissionId: string) {
   const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) return [];
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (!user) return { error: "Not authenticated" };
 
   // Check admin role
   const { data: profile } = await supabase
@@ -165,18 +158,114 @@ export async function getAllUsers() {
     .eq("id", user.id)
     .single();
 
-  if (profile?.role !== "admin") return [];
+  if (profile?.role !== "admin") return { error: "Unauthorized" };
 
-  // Use admin client to fetch all users
   const adminClient = createAdminClient();
 
-  const { data } = await adminClient
-    .from("profiles")
-    .select("*")
-    .eq("role", "user")
-    .order("created_at", { ascending: false });
+  // Get submission
+  const { data: submission } = await adminClient
+    .from("kyc_submissions")
+    .select("user_id")
+    .eq("id", submissionId)
+    .single();
 
-  return data || [];
+  if (!submission) return { error: "Submission not found" };
+
+  // Update submission status
+  await adminClient
+    .from("kyc_submissions")
+    .update({ status: "manually_verified" })
+    .eq("id", submissionId);
+
+  // Update profile KYC status
+  await adminClient
+    .from("profiles")
+    .update({ kyc_status: "manually_verified" })
+    .eq("id", submission.user_id);
+
+  revalidatePath("/cpanel/kyc-pending");
+  return { success: true };
+}
+
+export async function rejectKycAction(submissionId: string, reason: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (!user) return { error: "Not authenticated" };
+
+  // Check admin role
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (profile?.role !== "admin") return { error: "Unauthorized" };
+
+  const adminClient = createAdminClient();
+
+  // Get submission
+  const { data: submission } = await adminClient
+    .from("kyc_submissions")
+    .select("user_id")
+    .eq("id", submissionId)
+    .single();
+
+  if (!submission) return { error: "Submission not found" };
+
+  // Update submission status
+  await adminClient
+    .from("kyc_submissions")
+    .update({ 
+      status: "rejected",
+      admin_notes: reason 
+    })
+    .eq("id", submissionId);
+
+  // Update profile KYC status
+  await adminClient
+    .from("profiles")
+    .update({ kyc_status: "rejected" })
+    .eq("id", submission.user_id);
+
+  revalidatePath("/cpanel/kyc-pending");
+  return { success: true };
+}
+
+export async function getAllUsers(page: number = 1, limit: number = 20) {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { data: [], totalPages: 0 };
+
+  // Check admin role
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (profile?.role !== "admin") return { data: [], totalPages: 0 };
+
+  // Use admin client to fetch all users (including admins)
+  const adminClient = createAdminClient();
+
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  const { data, count } = await adminClient
+    .from("profiles")
+    .select("*", { count: "exact" })
+    .order("created_at", { ascending: false })
+    .range(from, to);
+
+  return {
+    data: data || [],
+    totalPages: Math.ceil((count || 0) / limit),
+  };
 }
 
 export async function deleteUserAction(userId: string) {

@@ -212,7 +212,13 @@ export default function TraderProfilePage({ params }: { params: Promise<{ id: st
             <CopySettingsModal
                 isOpen={isModalOpen}
                 onOpenChange={() => setIsModalOpen(false)}
-                trader={trader}
+                trader={trader ? {
+                    id: trader.id,
+                    display_name: trader.name,
+                    min_copy_amount: 100,
+                    total_profit: trader.pnl,
+                    win_rate: trader.winRate
+                } : null}
             />
         </div>
     );

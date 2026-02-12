@@ -1,15 +1,19 @@
 "use client";
 
 import { useTradingStore } from "@/lib/store/trading-store";
-import { Button, Card, CardBody } from "@heroui/react";
+import { Button, Card, CardBody, useDisclosure } from "@heroui/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { ArrowRightLeft } from "lucide-react";
+import { TransferModal } from "@/components/account/transfer-modal";
 // ... existing imports
 
 interface Balance {
     id: string;
-    currency: string;
+    asset: string;
     amount: number;
+    account_type: string;
+    logo_url?: string;
 }
 
 interface AccountTabsProps {
@@ -19,6 +23,7 @@ interface AccountTabsProps {
 
 export function AccountTabs({ totalBalance, balances }: AccountTabsProps) {
     const [activeTab, setActiveTab] = useState<'account' | 'asset'>('asset');
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     // Zustand hydration safe handling
     const positions = useTradingStore((state) => state.positions);
@@ -31,6 +36,7 @@ export function AccountTabs({ totalBalance, balances }: AccountTabsProps) {
     const hasAssets = (balances && balances.length > 0) || (isMounted && positions.length > 0);
 
     return (
+        <>
         <Card className="bg-transparent shadow-none border-none" shadow="none">
             <CardBody className="p-0">
                 {/* Custom Tab Buttons */}
@@ -65,6 +71,19 @@ export function AccountTabs({ totalBalance, balances }: AccountTabsProps) {
                 {/* Tab Content */}
                 {activeTab === 'asset' && (
                     <div className="p-4 sm:p-6 space-y-6">
+                        {hasAssets && balances && balances.length > 1 && (
+                            <Button
+                                size="sm"
+                                variant="flat"
+                                color="primary"
+                                startContent={<ArrowRightLeft size={16} />}
+                                onPress={onOpen}
+                                className="w-full sm:w-auto"
+                            >
+                                Transfer Between Accounts
+                            </Button>
+                        )}
+                        
                         {hasAssets ? (
                             <>
                                 {/* Open Trades Section */}
@@ -76,18 +95,18 @@ export function AccountTabs({ totalBalance, balances }: AccountTabsProps) {
                                                 <div key={pos.id} className="flex items-center justify-between p-3 rounded-lg bg-default-50 dark:bg-default-50/5 border border-default-100 dark:border-default-50/10">
                                                     <div className="flex flex-col">
                                                         <div className="flex items-center gap-2">
-                                                            <span className="font-bold text-sm">{pos.symbol}</span>
-                                                            <span className={`text-xs font-medium px-1.5 py-0.5 rounded ${pos.side === 'buy' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'}`}>
+                                                            <span className="font-bold text-sm">{pos.pair}</span>
+                                                            <span className={`text-xs font-medium px-1.5 py-0.5 rounded ${pos.side === 'long' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'}`}>
                                                                 {pos.side.toUpperCase()}
                                                             </span>
                                                         </div>
-                                                        <span className="text-xs text-default-400">{pos.time}</span>
+                                                        <span className="text-xs text-default-400">{new Date(pos.opened_at).toLocaleString()}</span>
                                                     </div>
                                                     <div className="text-right">
-                                                        <p className={`text-sm font-semibold ${pos.pnl && pos.pnl >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                                                            {pos.pnl ? (pos.pnl > 0 ? '+' : '') + pos.pnl.toFixed(2) : '0.00'} USDT
+                                                        <p className={`text-sm font-semibold ${pos.unrealized_pnl && pos.unrealized_pnl >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                                            {pos.unrealized_pnl ? (pos.unrealized_pnl > 0 ? '+' : '') + pos.unrealized_pnl.toFixed(2) : '0.00'} USDT
                                                         </p>
-                                                        <p className="text-xs text-default-500">{pos.amount} {pos.symbol.split('/')[0]}</p>
+                                                        <p className="text-xs text-default-500">{pos.amount} {pos.pair.split('/')[0]}</p>
                                                     </div>
                                                 </div>
                                             ))}
@@ -103,17 +122,27 @@ export function AccountTabs({ totalBalance, balances }: AccountTabsProps) {
                                             {balances.map((balance) => (
                                                 <div key={balance.id} className="flex items-center justify-between p-2 sm:p-3 rounded-lg hover:bg-default-50 transition-colors">
                                                     <div className="flex items-center gap-2 sm:gap-3">
-                                                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center text-white text-xs font-bold">
-                                                            {balance.currency?.substring(0, 2).toUpperCase()}
+                                                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-default-100 dark:bg-zinc-800 flex items-center justify-center overflow-hidden">
+                                                            {balance.logo_url ? (
+                                                                <img 
+                                                                    src={balance.logo_url} 
+                                                                    alt={balance.asset} 
+                                                                    className="w-full h-full object-cover"
+                                                                />
+                                                            ) : (
+                                                                <span className="text-xs font-bold text-default-600">
+                                                                    {balance.asset?.substring(0, 2).toUpperCase()}
+                                                                </span>
+                                                            )}
                                                         </div>
                                                         <div>
-                                                            <p className="text-sm sm:text-base font-medium">{balance.currency}</p>
-                                                            <p className="text-xs text-default-500">{balance.currency} Balance</p>
+                                                            <p className="text-sm sm:text-base font-medium">{balance.asset}</p>
+                                                            <p className="text-xs text-default-500 capitalize">{balance.account_type} Account</p>
                                                         </div>
                                                     </div>
                                                     <div className="text-right">
                                                         <p className="text-sm sm:text-base font-semibold">${Number(balance.amount).toFixed(2)}</p>
-                                                        <p className="text-xs text-default-500">{Number(balance.amount).toFixed(8)} {balance.currency}</p>
+                                                        <p className="text-xs text-default-500">{Number(balance.amount).toFixed(8)} {balance.asset}</p>
                                                     </div>
                                                 </div>
                                             ))}
@@ -151,5 +180,8 @@ export function AccountTabs({ totalBalance, balances }: AccountTabsProps) {
 
             </CardBody>
         </Card>
+
+        {balances && <TransferModal isOpen={isOpen} onOpenChange={onOpenChange} balances={balances} />}
+        </>
     );
 }

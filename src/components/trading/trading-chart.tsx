@@ -15,7 +15,8 @@ function TradingChartComponent({ symbol = "BTCUSDT" }: TradingChartProps) {
     const tvSymbol = `BINANCE:${symbol}`;
 
     const script = document.createElement("script");
-    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+    script.src =
+      "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
     script.type = "text/javascript";
     script.async = true;
     script.innerHTML = `
@@ -44,7 +45,7 @@ function TradingChartComponent({ symbol = "BTCUSDT" }: TradingChartProps) {
 
   return (
     <div className="tradingview-widget-container h-full w-full" ref={container}>
-      <div className="tradingview-widget-container__widget h-[calc(100%-32px)] w-full"></div>
+      <div className="tradingview-widget-container__widget rounded-lg h-[calc(100%-32px)] w-full"></div>
     </div>
   );
 }
