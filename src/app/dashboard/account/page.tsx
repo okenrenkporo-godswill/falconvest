@@ -2,23 +2,30 @@
 
 import { useState } from "react";
 import { Card, CardBody, Button } from "@heroui/react";
-import { User, Shield, ArrowRightLeft, Users, Settings, ChevronRight, ArrowLeft } from "lucide-react";
+import { User, Shield, ArrowRightLeft, Users, Settings, ChevronRight, ArrowLeft, Wallet } from "lucide-react";
 import { ProfileOverview } from "@/components/account/profile-overview";
 import { SecuritySettings } from "@/components/account/security-settings";
-import { AssetTransfer } from "@/components/account/asset-transfer";
+import { MyAssets } from "@/components/account/my-assets";
 import { ReferralDashboard } from "@/components/account/referral-dashboard";
 import { cn } from "@/lib/utils";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 const SECTIONS = [
     { id: "overview", label: "Overview", icon: User, component: ProfileOverview },
     { id: "security", label: "Security", icon: Shield, component: SecuritySettings },
-    { id: "transfer", label: "My Assets", icon: ArrowRightLeft, component: AssetTransfer },
+    { id: "transfer", label: "My Assets", icon: ArrowRightLeft, component: MyAssets },
+    { id: "wallets", label: "Withdrawal Wallets", icon: Wallet, isLink: true, href: "/dashboard/account/wallets" },
     { id: "referrals", label: "Referrals", icon: Users, component: ReferralDashboard },
 ];
 
 export default function AccountPage() {
     const [activeSection, setActiveSection] = useState("overview");
     const [isMobileDetailOpen, setIsMobileDetailOpen] = useState(false);
+    const searchParams = useSearchParams();
+
+    // Watch for openKyc param changes
+    const shouldOpenKyc = searchParams.get("openKyc") === "true";
 
     const ActiveComponent = SECTIONS.find(s => s.id === activeSection)?.component;
 
@@ -45,6 +52,24 @@ export default function AccountPage() {
                 {SECTIONS.map((section) => {
                     const Icon = section.icon;
                     const isActive = activeSection === section.id;
+                    
+                    if (section.isLink) {
+                        return (
+                            <a
+                                key={section.id}
+                                href={section.href}
+                                className={cn(
+                                    "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-left",
+                                    "text-sm font-medium",
+                                    "text-default-500 hover:bg-default-100 dark:hover:bg-default-50/10 hover:text-default-900"
+                                )}
+                            >
+                                <Icon size={18} />
+                                <span>{section.label}</span>
+                            </a>
+                        );
+                    }
+                    
                     return (
                         <button
                             key={section.id}
@@ -69,7 +94,7 @@ export default function AccountPage() {
                 <h1 className="text-2xl font-bold mb-2">Account</h1>
 
                 {/* Profile Card Summary */}
-                <ProfileOverview />
+                <ProfileOverview openKycModal={shouldOpenKyc} />
 
                 <div className="grid gap-3 mt-2">
                     {SECTIONS.filter(s => s.id !== "overview").map((section) => {
@@ -117,7 +142,7 @@ export default function AccountPage() {
                     </div>
 
                     {ActiveComponent ? (
-                        <ActiveComponent />
+                        <ActiveComponent openKycModal={shouldOpenKyc} />
                     ) : (
                         <Card className="border-none shadow-md dark:bg-zinc-900">
                             <CardBody className="p-12 text-center text-default-500">

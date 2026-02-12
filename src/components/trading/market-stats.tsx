@@ -19,21 +19,21 @@ export function MarketStats() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchTicker = async () => {
-            try {
-                const response = await fetch("https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT");
-                const data = await response.json();
-                setTicker(data);
-                setLoading(false);
-            } catch (error) {
-                console.error("Failed to fetch ticker:", error);
-            }
+        if (typeof window === 'undefined') return;
+        
+        // Mock Bitcoin data
+        const mockData = {
+            symbol: "BTCUSDT",
+            lastPrice: "45000.00",
+            priceChange: "1125.50",
+            priceChangePercent: "2.5",
+            highPrice: "46000.00",
+            lowPrice: "44000.00",
+            volume: "1000000",
         };
-
-        fetchTicker();
-        // Poll every 5 seconds
-        const interval = setInterval(fetchTicker, 5000);
-        return () => clearInterval(interval);
+        
+        setTicker(mockData);
+        setLoading(false);
     }, []);
 
     if (loading) {

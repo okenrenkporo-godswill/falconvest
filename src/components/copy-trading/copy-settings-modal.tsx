@@ -1,10 +1,21 @@
 "use client";
 
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input, Slider } from "@heroui/react";
-import { Trader } from "@/data/mock-traders";
-import { useState } from "react";
-import { Wallet, ShieldAlert, TrendingUp } from "lucide-react";
-import { useTradingStore } from "@/lib/store/trading-store";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input, addToast } from "@heroui/react";
+import { useState, useEffect } from "react";
+import { Plus } from "lucide-react";
+import { startCopyTrading } from "@/actions/copy-trading";
+import { createClient } from "@/lib/supabase/client";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { AssetConverter } from "@/components/shared/asset-converter";
+
+type Trader = {
+  id: string;
+  display_name: string;
+  min_copy_amount: number;
+  total_profit: number;
+  win_rate: number;
+};
 
 interface CopySettingsModalProps {
     isOpen: boolean;
@@ -12,32 +23,101 @@ interface CopySettingsModalProps {
     trader: Trader | null;
 }
 
+type Balance = {
+    asset: string;
+    amount: number;
+};
+
 export function CopySettingsModal({ isOpen, onOpenChange, trader }: CopySettingsModalProps) {
-    const addPosition = useTradingStore((state) => state.addPosition);
+    const router = useRouter();
     const [amount, setAmount] = useState("");
-    const [stopLoss, setStopLoss] = useState(10); // Percentage
-    const [takeProfit, setTakeProfit] = useState(20); // Percentage
-    const [leverage, setLeverage] = useState(1);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [balance, setBalance] = useState(0);
+    const [loading, setLoading] = useState(true);
+    const [otherBalances, setOtherBalances] = useState<Balance[]>([]);
+
+    useEffect(() => {
+        if (isOpen) {
+            fetchBalance();
+        }
+    }, [isOpen]);
+
+    const fetchBalance = async () => {
+        setLoading(true);
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (!user) {
+            setLoading(false);
+            return;
+        }
+
+        const { data: usdtData } = await supabase
+            .from("balances")
+            .select("amount")
+            .eq("user_id", user.id)
+            .eq("asset", "USDT")
+            .eq("account_type", "trading")
+            .maybeSingle();
+
+        setBalance(usdtData?.amount || 0);
+
+        const { data: allBalances } = await supabase
+            .from("balances")
+            .select("asset, amount")
+            .eq("user_id", user.id)
+            .eq("account_type", "trading")
+            .neq("asset", "USDT")
+            .gt("amount", 0);
+
+        setOtherBalances(allBalances || []);
+        setLoading(false);
+    };
 
     if (!trader) return null;
 
-    const handleCopy = () => {
-        if (!trader || !amount) return;
+    const handleCopy = async () => {
+        if (!amount || parseFloat(amount) < trader.min_copy_amount) {
+            addToast({
+                title: "Error",
+                description: `Minimum copy amount is $${trader.min_copy_amount}`,
+                color: "danger",
+            });
+            return;
+        }
 
-        // Create a new position representing the copied trade
-        addPosition({
-            id: Math.random().toString(36).substr(2, 9),
-            symbol: `COPY: ${trader.name}`,
-            side: "buy", // standardized as a 'long' investment in the trader
-            type: "market",
-            price: "ENTRY",
-            amount: amount,
-            total: amount,
-            time: new Date().toLocaleTimeString(),
-            pnl: 0
+        if (parseFloat(amount) > balance) {
+            addToast({
+                title: "Error",
+                description: "Insufficient balance",
+                color: "danger",
+            });
+            return;
+        }
+
+        setIsSubmitting(true);
+        const result = await startCopyTrading({
+            traderId: trader.id,
+            copyAmount: parseFloat(amount),
         });
+        setIsSubmitting(false);
 
-        onOpenChange();
+        if (result.error) {
+            addToast({
+                title: "Error",
+                description: result.error,
+                color: "danger",
+            });
+        } else {
+            addToast({
+                title: "Success",
+                description: `Started copying ${trader.display_name}`,
+                color: "success",
+            });
+            onOpenChange();
+            setAmount("");
+            router.push("/dashboard/my-copy-trades");
+        }
     };
 
     return (
@@ -46,90 +126,79 @@ export function CopySettingsModal({ isOpen, onOpenChange, trader }: CopySettings
                 {(onClose) => (
                     <>
                         <ModalHeader className="flex flex-col gap-1">
-                            <h2 className="text-xl font-bold">Copy Trade {trader.name}</h2>
+                            <h2 className="text-xl font-bold">Copy {trader.display_name}</h2>
                             <div className="flex gap-4 text-sm text-default-500">
-                                <span className="flex items-center gap-1"><TrendingUp size={14} className="text-green-500" /> ROI: {trader.roi}%</span>
-                                <span className="flex items-center gap-1"><ShieldAlert size={14} className="text-orange-500" /> Risk: {trader.riskScore}/10</span>
+                                <span>Profit: ${trader.total_profit.toLocaleString()}</span>
+                                <span>Win Rate: {trader.win_rate}%</span>
                             </div>
                         </ModalHeader>
-                        <ModalBody className="gap-6">
+                        <ModalBody>
+                            <div className="space-y-4">
+                                <div className="flex items-center justify-between p-3 bg-default-100 dark:bg-default-50/10 rounded-lg">
+                                    <span className="text-sm text-default-500">USDT Balance (Trading)</span>
+                                    <div className="flex items-center gap-2">
+                                        <span className="font-bold">
+                                            {loading ? "..." : `$${balance.toLocaleString()}`}
+                                        </span>
+                                        <Link href="/dashboard/deposit?account=trading">
+                                            <Button
+                                                size="sm"
+                                                color="primary"
+                                                variant="flat"
+                                                startContent={<Plus size={14} />}
+                                            >
+                                                Add USDT
+                                            </Button>
+                                        </Link>
+                                    </div>
+                                </div>
 
-                            {/* Investment Amount */}
-                            <div>
+                                <AssetConverter
+                                    targetAsset="USDT"
+                                    accountType="trading"
+                                    otherBalances={otherBalances}
+                                    onConversionComplete={fetchBalance}
+                                />
+
                                 <Input
-                                    label="Investment Amount (USDT)"
-                                    placeholder="Min 50 USDT"
+                                    label="Copy Amount (USDT)"
+                                    type="number"
                                     value={amount}
                                     onValueChange={setAmount}
-                                    startContent={<Wallet size={18} className="text-default-400" />}
-                                    type="number"
-                                    description="Available Balance: $12,500.50"
+                                    placeholder={`Min: $${trader.min_copy_amount}`}
+                                    description={`Minimum: $${trader.min_copy_amount}`}
+                                    startContent={<span className="text-default-400">$</span>}
+                                    endContent={
+                                        <Button
+                                            size="sm"
+                                            variant="flat"
+                                            className="min-w-12"
+                                            onPress={() => setAmount(balance.toString())}
+                                        >
+                                            Max
+                                        </Button>
+                                    }
+                                    isInvalid={amount ? parseFloat(amount) > balance || parseFloat(amount) < trader.min_copy_amount : false}
+                                    errorMessage={
+                                        amount && parseFloat(amount) > balance
+                                            ? "Insufficient balance"
+                                            : amount && parseFloat(amount) < trader.min_copy_amount
+                                            ? `Minimum is $${trader.min_copy_amount}`
+                                            : ""
+                                    }
                                 />
                             </div>
-
-                            {/* Leverage Slider */}
-                            <div>
-                                <label className="text-sm font-medium mb-2 block">Leverage (Optional)</label>
-                                <Slider
-                                    aria-label="Leverage"
-                                    step={1}
-                                    maxValue={10}
-                                    minValue={1}
-                                    defaultValue={1}
-                                    value={leverage}
-                                    onChange={(value) => setLeverage(value as number)}
-                                    showSteps={true}
-
-                                    className="max-w-md"
-                                // renderValue={({children, ...props}) => (
-                                //     <output {...props}>
-                                //         {leverage}x
-                                //     </output>
-                                // )}
-                                />
-                                <div className="flex justify-between text-xs text-default-400 mt-1">
-                                    <span>1x (Safe)</span>
-                                    <span className="font-bold text-primary">{leverage}x</span>
-                                    <span>10x (High Risk)</span>
-                                </div>
-                            </div>
-
-                            {/* Risk Management */}
-                            <div className="grid grid-cols-2 gap-4">
-                                <Input
-                                    label="Stop Loss (%)"
-                                    placeholder="e.g. 10"
-                                    value={stopLoss.toString()}
-                                    onValueChange={(v) => setStopLoss(Number(v))}
-                                    endContent={<span className="text-default-400">%</span>}
-                                    type="number"
-                                />
-                                <Input
-                                    label="Take Profit (%)"
-                                    placeholder="e.g. 20"
-                                    value={takeProfit.toString()}
-                                    onValueChange={(v) => setTakeProfit(Number(v))}
-                                    endContent={<span className="text-default-400">%</span>}
-                                    type="number"
-                                />
-                            </div>
-
-                            <div className="bg-default-100 dark:bg-default-50/50 p-3 rounded-lg text-xs text-default-500">
-                                Warning: Copy trading involves risk. Past performance is not indicative of future results.
-                                Ensure you understand the risks before proceeding with high leverage.
-                            </div>
-
                         </ModalBody>
                         <ModalFooter>
                             <Button variant="light" onPress={onClose}>
                                 Cancel
                             </Button>
                             <Button
-                                className="bg-zinc-900 text-white dark:bg-zinc-100 dark:text-black font-semibold"
+                                color="primary"
                                 onPress={handleCopy}
-                                isDisabled={!amount || Number(amount) < 10}
+                                isLoading={isSubmitting}
                             >
-                                Confirm Copy
+                                Start Copying
                             </Button>
                         </ModalFooter>
                     </>

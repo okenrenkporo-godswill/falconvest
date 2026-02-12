@@ -9,14 +9,33 @@ interface WalletPageProps {
     title: string;
     description: string;
     balance: number;
-    walletType: "holdings" | "staking";
+    walletType: "holdings" | "staking" | "trading";
+    isLoading?: boolean;
 }
 
-export function WalletPage({ title, description, balance, walletType }: WalletPageProps) {
+export function WalletPage({ title, description, balance, walletType, isLoading = false }: WalletPageProps) {
     // Format balance
     const formattedBalance = useMemo(() => {
         return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(balance);
     }, [balance]);
+
+    if (isLoading) {
+        return (
+            <div className="max-w-7xl mx-auto space-y-6 pt-4">
+                <div className="flex flex-col gap-2">
+                    <h1 className="text-2xl font-bold">{title}</h1>
+                    <p className="text-default-500">{description}</p>
+                </div>
+                <Card className="border-none shadow-md bg-gradient-to-br from-zinc-900 to-zinc-800 text-white dark:from-zinc-800 dark:to-zinc-900">
+                    <CardBody className="p-8">
+                        <p className="text-zinc-400 font-medium mb-1">Total Balance</p>
+                        <div className="h-10 w-32 bg-zinc-700 animate-pulse rounded mb-6" />
+                        <div className="h-10 w-28 bg-zinc-700 animate-pulse rounded" />
+                    </CardBody>
+                </Card>
+            </div>
+        );
+    }
 
     return (
         <div className="max-w-7xl mx-auto space-y-6 pt-4">
