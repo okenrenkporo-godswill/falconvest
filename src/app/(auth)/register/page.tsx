@@ -157,6 +157,60 @@ export default function RegisterPage() {
     // Validation
     const newErrors: Record<string, string> = {};
 
+    // First Name validation (2-50 characters, letters only)
+    const firstName = (data.firstName as string).trim();
+    if (!firstName) {
+      newErrors.firstName = "First name is required";
+    } else if (firstName.length < 2) {
+      newErrors.firstName = "First name must be at least 2 characters";
+    } else if (firstName.length > 50) {
+      newErrors.firstName = "First name must not exceed 50 characters";
+    } else if (!/^[a-zA-Z\s'-]+$/.test(firstName)) {
+      newErrors.firstName = "First name can only contain letters, spaces, hyphens, and apostrophes";
+    }
+
+    // Last Name validation (2-50 characters, letters only)
+    const lastName = (data.lastName as string).trim();
+    if (!lastName) {
+      newErrors.lastName = "Last name is required";
+    } else if (lastName.length < 2) {
+      newErrors.lastName = "Last name must be at least 2 characters";
+    } else if (lastName.length > 50) {
+      newErrors.lastName = "Last name must not exceed 50 characters";
+    } else if (!/^[a-zA-Z\s'-]+$/.test(lastName)) {
+      newErrors.lastName = "Last name can only contain letters, spaces, hyphens, and apostrophes";
+    }
+
+    // Username validation (3-30 characters, alphanumeric and underscore)
+    const username = (data.username as string).trim();
+    if (!username) {
+      newErrors.username = "Username is required";
+    } else if (username.length < 3) {
+      newErrors.username = "Username must be at least 3 characters";
+    } else if (username.length > 30) {
+      newErrors.username = "Username must not exceed 30 characters";
+    } else if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+      newErrors.username = "Username can only contain letters, numbers, and underscores";
+    }
+
+    // Phone validation (optional, 10-15 digits)
+    const phone = (data.phone as string).trim();
+    if (phone && !/^\+?[0-9]{10,15}$/.test(phone.replace(/[\s()-]/g, ''))) {
+      newErrors.phone = "Please enter a valid phone number (10-15 digits)";
+    }
+
+    // Country validation
+    if (!selectedCountry) {
+      newErrors.country = "Please select a country";
+    }
+
+    // Address validation (optional, max 200 characters)
+    const address = (data.address as string)?.trim() || '';
+    if (address && address.length > 200) {
+      newErrors.address = "Address must not exceed 200 characters";
+    }
+
+    // Password validation
     const passwordError = getPasswordError(data.password as string);
     if (passwordError) {
       newErrors.password = passwordError;
@@ -508,9 +562,13 @@ export default function RegisterPage() {
                 name="firstName"
                 label="First Name"
                 isRequired
-                errorMessage={({ validationDetails }) => {
-                  if (validationDetails.valueMissing) {
-                    return "Please enter your first name";
+                maxLength={50}
+                errorMessage={errors.firstName}
+                isInvalid={!!errors.firstName}
+                onValueChange={() => {
+                  if (errors.firstName) {
+                    const { firstName, ...rest } = errors;
+                    setErrors(rest);
                   }
                 }}
               />
@@ -518,9 +576,13 @@ export default function RegisterPage() {
                 name="lastName"
                 label="Last Name"
                 isRequired
-                errorMessage={({ validationDetails }) => {
-                  if (validationDetails.valueMissing) {
-                    return "Please enter your last name";
+                maxLength={50}
+                errorMessage={errors.lastName}
+                isInvalid={!!errors.lastName}
+                onValueChange={() => {
+                  if (errors.lastName) {
+                    const { lastName, ...rest } = errors;
+                    setErrors(rest);
                   }
                 }}
               />
@@ -530,21 +592,46 @@ export default function RegisterPage() {
               name="username"
               label="Username"
               isRequired
-              errorMessage={({ validationDetails }) => {
-                if (validationDetails.valueMissing) {
-                  return "Please enter a username";
+              maxLength={30}
+              description="3-30 characters, letters, numbers, and underscores only"
+              errorMessage={errors.username}
+              isInvalid={!!errors.username}
+              onValueChange={() => {
+                if (errors.username) {
+                  const { username, ...rest } = errors;
+                  setErrors(rest);
                 }
               }}
             />
-            <Input name="phone" type="tel" label="Phone Number" />
+            <Input 
+              name="phone" 
+              type="tel" 
+              label="Phone Number"
+              maxLength={20}
+              description="Optional: Include country code (e.g., +1234567890)"
+              errorMessage={errors.phone}
+              isInvalid={!!errors.phone}
+              onValueChange={() => {
+                if (errors.phone) {
+                  const { phone, ...rest } = errors;
+                  setErrors(rest);
+                }
+              }}
+            />
 
             <Autocomplete
               label="Country"
               placeholder="Search country"
               isRequired
+              errorMessage={errors.country}
+              isInvalid={!!errors.country}
               onSelectionChange={(key) => {
                 setSelectedCountry(key as string);
                 setSelectedState("");
+                if (errors.country) {
+                  const { country, ...rest } = errors;
+                  setErrors(rest);
+                }
               }}
               startContent={
                 selectedCountry && (
@@ -600,7 +687,20 @@ export default function RegisterPage() {
               </Autocomplete>
             )}
 
-            <Input name="address" label="Address" />
+            <Input 
+              name="address" 
+              label="Address"
+              maxLength={200}
+              description="Optional: Street address"
+              errorMessage={errors.address}
+              isInvalid={!!errors.address}
+              onValueChange={() => {
+                if (errors.address) {
+                  const { address, ...rest } = errors;
+                  setErrors(rest);
+                }
+              }}
+            />
 
             <Input
               name="password"
