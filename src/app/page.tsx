@@ -16,13 +16,14 @@ export default function HomePage() {
       <Header />
       <Hero />
 
-      <main className="container mx-auto px-4 py-20">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
+      <main className="mx-auto px-4">
+        <div className=" mx-auto text-center space-y-8">
           <h2 className="text-5xl font-bold">
             Professional Crypto Trading Platform
           </h2>
           <p className="text-xl text-default-600">
-            Trade spot & futures, stake your assets, and copy top traders all in one secure platform
+            Trade spot & futures, stake your assets, and copy top traders all in
+            one secure platform
           </p>
 
           <div className="flex gap-4 justify-center pt-8">
@@ -59,10 +60,7 @@ export default function HomePage() {
 
           <Footer />
         </div>
-
       </main>
     </div>
   );
 }
-
-
