@@ -28,7 +28,6 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import { Country, State, City } from "country-state-city";
 import { EyeFilledIcon, EyeSlashFilledIcon } from "@heroui/shared-icons";
-import { useCaptcha } from "@/contexts/captcha-context";
 
 export default function RegisterPage() {
   const [step, setStep] = useState(1);
@@ -43,7 +42,6 @@ export default function RegisterPage() {
   const [scrollBehavior] = useState("inside");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [pendingEmail, setPendingEmail] = useState("");
-  const { captchaToken } = useCaptcha();
 
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedState, setSelectedState] = useState("");
@@ -226,13 +224,6 @@ export default function RegisterPage() {
       return;
     }
 
-    // Check CAPTCHA
-    if (!captchaToken) {
-      setError("Please complete the CAPTCHA verification");
-      setLoading(false);
-      return;
-    }
-
     // Add email to form data
     formData.append("email", email);
 
@@ -293,7 +284,6 @@ export default function RegisterPage() {
                   color="primary"
                   className="w-full"
                   isLoading={loading}
-                  isDisabled={!captchaToken}
                 >
                   Continue
                 </Button>
@@ -762,7 +752,6 @@ export default function RegisterPage() {
               color="primary"
               className="w-full"
               isLoading={loading}
-              isDisabled={!captchaToken}
             >
               Create Account
             </Button>
