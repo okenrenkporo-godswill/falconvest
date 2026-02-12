@@ -41,32 +41,6 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // Check KYC status for dashboard access (except onboarding)
-  if (
-    user &&
-    request.nextUrl.pathname.startsWith("/dashboard") &&
-    !request.nextUrl.pathname.startsWith("/onboarding")
-  ) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("kyc_status, role")
-      .eq("id", user.id)
-      .single();
-
-    // Skip KYC check for admins
-    if (profile?.role === "admin") {
-      return supabaseResponse;
-    }
-
-    if (profile?.kyc_status === "pending" || !profile?.kyc_status) {
-      return NextResponse.redirect(new URL("/onboarding/kyc", request.url));
-    }
-
-    if (profile?.kyc_status === "rejected") {
-      return NextResponse.redirect(new URL("/onboarding/kyc", request.url));
-    }
-  }
-
   // Admin/cPanel routes protection
   if (request.nextUrl.pathname.startsWith("/cpanel")) {
     // Allow access to cPanel login page

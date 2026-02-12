@@ -18,12 +18,14 @@ const PACKAGES = [
     {
         name: "Bronze",
         price: "$1000",
+        amount: 1000,
         features: ["Basic Trading Access", "Standard Support", "5% Mining Power"],
         color: "default" as const
     },
     {
         name: "Silver",
         price: "$10,000",
+        amount: 10000,
         features: ["Advanced Trading Tools", "Priority Support", "10% Mining Power", "Low Fees"],
         color: "warning" as const,
         popular: false
@@ -31,6 +33,7 @@ const PACKAGES = [
     {
         name: "Gold",
         price: "$50,000",
+        amount: 50000,
         features: ["Zero Trading Fees", "24/7 VIP Support", "25% Mining Power", "Copy Trading Pro"],
         color: "secondary" as const,
         popular: true
@@ -38,12 +41,21 @@ const PACKAGES = [
     {
         name: "Premium",
         price: "$500,000+",
+        amount: 500000,
         features: ["Institutional Tools", "Dedicated Account Manager", "50% Mining Power", "Private Signals"],
         color: "primary" as const
     }
 ];
 
-export function PricingModal({ isOpen, onOpenChange }: { isOpen: boolean; onOpenChange: () => void }) {
+export function PricingModal({ 
+    isOpen, 
+    onOpenChange,
+    onSelectPackage 
+}: { 
+    isOpen: boolean; 
+    onOpenChange: () => void;
+    onSelectPackage?: (amount: number) => void;
+}) {
     return (
         <Modal
             isOpen={isOpen}
@@ -81,6 +93,18 @@ export function PricingModal({ isOpen, onOpenChange }: { isOpen: boolean; onOpen
                                                     </div>
                                                 ))}
                                             </div>
+
+                                            <Button
+                                                color={pkg.color}
+                                                variant="flat"
+                                                className="w-full mt-3"
+                                                onPress={() => {
+                                                    onSelectPackage?.(pkg.amount);
+                                                    onClose();
+                                                }}
+                                            >
+                                                Select {pkg.name}
+                                            </Button>
                                         </CardBody>
                                     </Card>
                                 ))}

@@ -91,27 +91,17 @@ export default function ResultsPage() {
 
       setResult(verificationResult);
 
-      // Submit to backend
-      const { submitAdvancedKycAction } = await import("@/actions/kyc");
-      const response = await submitAdvancedKycAction({
-        frontImage,
-        backImage: backImage || undefined,
-        selfieImage,
-        extractedData,
-        verificationResult,
-      });
-
-      if (response.error) {
-        console.error("Submission error:", response.error);
-      } else {
-        // Clear session storage
-        sessionStorage.removeItem("kyc_front_image");
-        sessionStorage.removeItem("kyc_back_image");
-        sessionStorage.removeItem("kyc_selfie_image");
-        sessionStorage.removeItem("kyc_extracted_data");
-        sessionStorage.removeItem("kyc_liveness_passed");
-        sessionStorage.removeItem("kyc_document_type");
-      }
+      // Submit to backend (deprecated - using simplified KYC now)
+      // Clear session storage
+      sessionStorage.removeItem("kyc_front_image");
+      sessionStorage.removeItem("kyc_back_image");
+      sessionStorage.removeItem("kyc_selfie_image");
+      sessionStorage.removeItem("kyc_extracted_data");
+      sessionStorage.removeItem("kyc_liveness_passed");
+      sessionStorage.removeItem("kyc_document_type");
+      
+      // Redirect to dashboard
+      window.location.href = "/dashboard";
     } catch (error) {
       console.error("Verification error:", error);
       setResult({

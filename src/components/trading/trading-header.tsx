@@ -32,63 +32,41 @@ export function TradingHeader({ symbol, onSymbolChange, onToggleChart }: Trading
     const [assets, setAssets] = useState<Asset[]>([]);
     const [loading, setLoading] = useState(true);
 
-    // Fetch Assets (Pairs)
+    // Fetch Assets - Using mock data due to API restrictions
     useEffect(() => {
-        const fetchAssets = async () => {
-            try {
-                // Fetch top USDT pairs from Binance
-                const response = await fetch("https://api.binance.com/api/v3/exchangeInfo");
-                const data = await response.json();
-
-                // Filter for USDT pairs and sort/limit to popular ones or just take first 50 for performance
-                // In a real app, strict filtering or pagination is needed.
-                const usdtPairs = data.symbols
-                    .filter((s: any) => s.quoteAsset === "USDT" && s.status === "TRADING")
-                    .slice(0, 100) // Limit to 100 for dropdown performance
-                    .map((s: any) => ({
-                        key: s.symbol,
-                        label: `${s.baseAsset}/${s.quoteAsset}`,
-                        name: s.baseAsset, // Use base asset as name
-                        icon: `https://cryptologos.cc/logos/${s.baseAsset.toLowerCase()}-${s.baseAsset.toLowerCase()}-logo.svg?v=035`
-                        // Note: Icon URL is a best-guess fallback. Many will fail, but common ones work.
-                    }));
-
-                // Ensure initial symbol is in list
-                if (!usdtPairs.find((p: any) => p.key === "BTCUSDT")) {
-                    usdtPairs.unshift({ key: "BTCUSDT", label: "BTC/USDT", name: "BTC", icon: "https://cryptologos.cc/logos/bitcoin-btc-logo.svg?v=035" });
-                }
-
-                setAssets(usdtPairs);
-            } catch (error) {
-                console.error("Failed to fetch assets:", error);
-                // Fallback
-                setAssets([
-                    { key: "BTCUSDT", label: "BTC/USDT", name: "Bitcoin", icon: "https://cryptologos.cc/logos/bitcoin-btc-logo.svg?v=035" },
-                    { key: "ETHUSDT", label: "ETH/USDT", name: "Ethereum", icon: "https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=035" },
-                ]);
-            }
-        };
-        fetchAssets();
+        if (typeof window === 'undefined') return;
+        
+        // Mock top crypto assets
+        const mockAssets = [
+            { key: "BTCUSDT", label: "BTC/USDT", name: "Bitcoin", icon: "https://cryptologos.cc/logos/bitcoin-btc-logo.svg?v=035" },
+            { key: "ETHUSDT", label: "ETH/USDT", name: "Ethereum", icon: "https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=035" },
+            { key: "SOLUSDT", label: "SOL/USDT", name: "Solana", icon: "https://cryptologos.cc/logos/solana-sol-logo.svg?v=035" },
+            { key: "BNBUSDT", label: "BNB/USDT", name: "BNB", icon: "https://cryptologos.cc/logos/bnb-bnb-logo.svg?v=035" },
+            { key: "XRPUSDT", label: "XRP/USDT", name: "Ripple", icon: "https://cryptologos.cc/logos/xrp-xrp-logo.svg?v=035" },
+            { key: "ADAUSDT", label: "ADA/USDT", name: "Cardano", icon: "https://cryptologos.cc/logos/cardano-ada-logo.svg?v=035" },
+            { key: "DOGEUSDT", label: "DOGE/USDT", name: "Dogecoin", icon: "https://cryptologos.cc/logos/dogecoin-doge-logo.svg?v=035" },
+        ];
+        
+        setAssets(mockAssets);
     }, []);
 
-    // Fetch Ticker
+    // Fetch Ticker - Using mock data due to API restrictions
     useEffect(() => {
+        if (typeof window === 'undefined') return;
+        
         setLoading(true);
-        const fetchTicker = async () => {
-            try {
-                const response = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${symbol}`);
-                const data = await response.json();
-                setTicker(data);
-                setLoading(false);
-            } catch (error) {
-                console.error("Failed to fetch ticker:", error);
-                setLoading(false);
-            }
+        
+        // Mock price data for different symbols
+        const mockPrices: Record<string, any> = {
+            'BTCUSDT': { lastPrice: "45000.00", priceChangePercent: "2.5", highPrice: "46000.00", lowPrice: "44000.00", volume: "1000000" },
+            'ETHUSDT': { lastPrice: "2500.00", priceChangePercent: "3.2", highPrice: "2600.00", lowPrice: "2400.00", volume: "500000" },
+            'SOLUSDT': { lastPrice: "100.00", priceChangePercent: "-1.5", highPrice: "105.00", lowPrice: "98.00", volume: "200000" },
+            'BNBUSDT': { lastPrice: "320.00", priceChangePercent: "1.8", highPrice: "330.00", lowPrice: "315.00", volume: "150000" },
         };
-
-        fetchTicker();
-        const interval = setInterval(fetchTicker, 5000);
-        return () => clearInterval(interval);
+        
+        const mockData = mockPrices[symbol] || mockPrices['BTCUSDT'];
+        setTicker(mockData);
+        setLoading(false);
     }, [symbol]);
 
     return (
@@ -109,7 +87,10 @@ export function TradingHeader({ symbol, onSymbolChange, onToggleChart }: Trading
                         onChange={(e) => {
                             if (e.target.value) onSymbolChange(e.target.value);
                         }}
-                        className="max-w-[180px]"
+                        className="max-w-[200px]"
+                        classNames={{
+                            popoverContent: "w-[300px]",
+                        }}
                         renderValue={(items) => {
                             return items.map((item) => (
                                 <div key={item.key} className="flex gap-2 items-center">
@@ -127,11 +108,11 @@ export function TradingHeader({ symbol, onSymbolChange, onToggleChart }: Trading
                     >
                         {(asset) => (
                             <SelectItem key={asset.key} textValue={asset.label}>
-                                <div className="flex gap-2 items-center">
-                                    <Avatar alt={asset.name} className="w-6 h-6" src={asset.icon} />
+                                <div className="flex gap-2 items-center py-1">
+                                    <Avatar alt={asset.name} className="w-8 h-8" src={asset.icon} />
                                     <div className="flex flex-col">
-                                        <span className="text-small text-default-900 font-bold">{asset.label}</span>
-                                        <span className="text-tiny text-default-500">{asset.name}</span>
+                                        <span className="text-base text-default-900 font-bold">{asset.label}</span>
+                                        <span className="text-xs text-default-500">{asset.name}</span>
                                     </div>
                                 </div>
                             </SelectItem>

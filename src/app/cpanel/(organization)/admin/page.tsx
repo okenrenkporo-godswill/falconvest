@@ -1,6 +1,8 @@
-import { Card, CardBody, CardHeader } from "@heroui/react";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { AdminDashboardContent } from "@/components/admin/admin-dashboard-content";
+
+export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
   const supabase = await createClient();
@@ -23,48 +25,6 @@ export default async function AdminDashboard() {
     redirect("/dashboard");
   }
 
-  const { count: totalUsers } = await supabase
-    .from("profiles")
-    .select("*", { count: "exact", head: true })
-    .eq("role", "user");
-
-  const { count: pendingKyc } = await supabase
-    .from("profiles")
-    .select("*", { count: "exact", head: true })
-    .eq("kyc_status", "pending");
-
-  return (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-
-      <div className="grid md:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader>
-            <h3 className="text-sm font-medium text-default-600">Total Users</h3>
-          </CardHeader>
-          <CardBody>
-            <p className="text-2xl font-bold">{totalUsers || 0}</p>
-          </CardBody>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <h3 className="text-sm font-medium text-default-600">Pending KYC</h3>
-          </CardHeader>
-          <CardBody>
-            <p className="text-2xl font-bold text-warning">{pendingKyc || 0}</p>
-          </CardBody>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <h3 className="text-sm font-medium text-default-600">Total Deposits</h3>
-          </CardHeader>
-          <CardBody>
-            <p className="text-2xl font-bold">$0.00</p>
-          </CardBody>
-        </Card>
-      </div>
-    </div>
-  );
+  return <AdminDashboardContent />;
 }
+

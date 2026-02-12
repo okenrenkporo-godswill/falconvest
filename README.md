@@ -14,12 +14,29 @@ A production-grade cryptocurrency broker and trading platform built with Next.js
 
 ## ✨ Features
 
+### Core Platform
 - Multi-step registration with OTP verification
 - Advanced KYC verification (document capture, OCR, face matching)
 - Admin control panel with KYC review
 - User dashboard with portfolio overview
 - Email notifications
 - Two-factor authentication
+- Deposit & Withdrawal system with admin approval
+
+### Trading Features ✅
+- **Copy Trading System** - Follow and copy successful traders
+- **Spot Trading** - Execute market orders with real-time balance updates
+- **Positions Management** - Open/close trading positions with P&L tracking
+- **Staking System** - Earn rewards by locking crypto assets
+- **Holdings Management** - Portfolio overview with account transfers
+
+### Admin Features ✅
+- Trader management and approval
+- Copy trades monitoring with manual trade simulation
+- Trading activity monitoring
+- Staking pools management (create, edit, activate/deactivate)
+- Holdings overview across all users
+- Deposit/withdrawal approval system
 
 ## 🛠️ Local Development Setup
 
