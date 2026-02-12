@@ -9,7 +9,11 @@ export const metadata: Metadata = {
   title: "MasterSync - Crypto Trading Platform",
   description: "Professional crypto broker for spot, futures, staking, and copy trading",
   icons: {
-    icon: "/images/logo.png",
+    icon: [
+      { url: "/images/logo.png" },
+      { url: "/favicon.ico" },
+    ],
+    apple: "/images/logo.png",
   },
 };
 
