@@ -28,6 +28,7 @@ const languages = [
 
 export default function Header() {
   const t = useTranslations("Header");
+  const router = useRouter();
   const currentLocale = useLocale();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openSection, setOpenSection] = useState<string | null>(null);
