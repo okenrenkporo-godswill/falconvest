@@ -47,9 +47,10 @@ export default function Header() {
     setMounted(true);
   }, []);
 
-  const switchLocale = (locale: string) => {
+  const switchLocale = async (locale: string) => {
+    await setUserLocale(locale as any);
     startTransition(() => {
-        setUserLocale(locale as any);
+      router.refresh();
     });
   };
 
