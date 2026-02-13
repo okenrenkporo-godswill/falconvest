@@ -1,34 +1,57 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useTransition } from "react";
 import { Button } from "@heroui/react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
 import { Sun, Moon, Globe, ChevronDown, Menu, X, TrendingUp, BarChart3, Wallet, CreditCard, ChevronRight, CandlestickChart } from "lucide-react";
+import { useTranslations, useLocale } from "next-intl";
+import { useRouter, usePathname } from 'next/navigation';
+import { setUserLocale } from '@/services/locale'; 
 
 const languages = [
-    { code: "ENG", name: "English" },
-    { code: "ESP", name: "Español" },
-    { code: "FRA", name: "Français" },
-    { code: "DEU", name: "Deutsch" },
-    { code: "JPN", name: "日本語" },
-    { code: "CHN", name: "中文" },
+    { code: "en", name: "English", flag: "🇬🇧" },
+    { code: "es", name: "Español", flag: "🇪🇸" },
+    { code: "fr", name: "Français", flag: "🇫🇷" },
+    { code: "de", name: "Deutsch", flag: "🇩🇪" },
+    { code: "ja", name: "日本語", flag: "🇯🇵" },
+    { code: "zh", name: "中文", flag: "🇨🇳" },
+    { code: "pt", name: "Português", flag: "🇵🇹" },
+    { code: "ar", name: "العربية", flag: "🇸🇦" },
+    { code: "ko", name: "한국어", flag: "🇰🇷" },
+    { code: "ru", name: "Русский", flag: "🇷🇺" },
+    { code: "hi", name: "हिन्दी", flag: "🇮🇳" },
+    { code: "tr", name: "Türkçe", flag: "🇹🇷" },
 ];
 
 export default function Header() {
+  const t = useTranslations("Header");
+  const currentLocale = useLocale();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openSection, setOpenSection] = useState<string | null>(null);
   const [isLangOpen, setIsLangOpen] = useState(false);
-  const [selectedLang, setSelectedLang] = useState(languages[0]);
+  const [selectedLang, setSelectedLang] = useState(languages.find(l => l.code === currentLocale) || languages[0]);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
+  // Update selected language when locale changes
+  useEffect(() => {
+    setSelectedLang(languages.find(l => l.code === currentLocale) || languages[0]);
+  }, [currentLocale]);
 
   // Avoid hydration mismatch
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const switchLocale = (locale: string) => {
+    startTransition(() => {
+        setUserLocale(locale);
+    });
+  };
 
   if (!mounted) return null;
 
@@ -53,25 +76,25 @@ export default function Header() {
                 {/* Offering Dropdown */}
                 <div className="relative group/offering py-4">
                     <button className="flex items-center gap-1.5 text-sm font-bold text-neutral-600 dark:text-neutral-400 group-hover/offering:text-[#FF6347] transition-colors">
-                        Offering <ChevronDown size={14} className="transition-transform group-hover/offering:rotate-180" />
+                        {t('offering')} <ChevronDown size={14} className="transition-transform group-hover/offering:rotate-180" />
                     </button>
                     <div className="absolute top-full left-0 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover/offering:opacity-100 group-hover/offering:translate-y-0 group-hover/offering:pointer-events-auto transition-all duration-300">
                         <div className="w-[480px] bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 rounded-3xl shadow-2xl p-8 backdrop-blur-xl">
                             <div className="grid grid-cols-2 gap-12">
                                 <div>
-                                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-900 dark:text-neutral-400 mb-6">Trading Markets</h3>
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-900 dark:text-neutral-400 mb-6">{t('tradingMarkets')}</h3>
                                     <div className="flex flex-col gap-4">
                                         <Link href="/markets/forex" className="group/link flex flex-col gap-1">
-                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">Forex Exchange</span>
-                                            <span className="text-[10px] text-neutral-500 font-medium italic">Institutional spreads from 0.0 pips</span>
+                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">{t('forexExchange')}</span>
+                                            <span className="text-[10px] text-neutral-500 font-medium italic">{t('forexDesc')}</span>
                                         </Link>
                                         <Link href="/markets/stocks" className="group/link flex flex-col gap-1">
-                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">Stock Markets</span>
-                                            <span className="text-[10px] text-neutral-500 font-medium italic">Global indices and elite equities</span>
+                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">{t('stockMarkets')}</span>
+                                            <span className="text-[10px] text-neutral-500 font-medium italic">{t('stocksDesc')}</span>
                                         </Link>
                                         <Link href="/markets/crypto" className="group/link flex flex-col gap-1">
-                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">Crypto Assets</span>
-                                            <span className="text-[10px] text-neutral-500 font-medium italic">24/7 direct blockchain access</span>
+                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">{t('cryptoAssets')}</span>
+                                            <span className="text-[10px] text-neutral-500 font-medium italic">{t('cryptoDesc')}</span>
                                         </Link>
                                     </div>
                                 </div>
@@ -84,18 +107,18 @@ export default function Header() {
                 {/* Social Dropdown */}
                 <div className="relative group/social py-4">
                     <button className="flex items-center gap-1.5 text-sm font-bold text-neutral-600 dark:text-neutral-400 group-hover/social:text-[#FF6347] transition-colors">
-                        Social <ChevronDown size={14} className="transition-transform group-hover/social:rotate-180" />
+                        {t('social')} <ChevronDown size={14} className="transition-transform group-hover/social:rotate-180" />
                     </button>
                     <div className="absolute top-full left-0 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover/social:opacity-100 group-hover/social:translate-y-0 group-hover/social:pointer-events-auto transition-all duration-300">
                         <div className="w-[320px] bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 rounded-3xl shadow-2xl p-6 backdrop-blur-xl">
                             <div className="flex flex-col gap-4">
                                 <Link href="/social" className="group/link flex flex-col gap-1">
-                                    <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">Social Hub</span>
-                                    <span className="text-[10px] text-neutral-500 font-medium">Connect with top institutional traders</span>
+                                    <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">{t('socialHub')}</span>
+                                    <span className="text-[10px] text-neutral-500 font-medium">{t('socialHubDesc')}</span>
                                 </Link>
                                 <Link href="/" className="group/link flex flex-col gap-1">
-                                    <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">Copy Trading</span>
-                                    <span className="text-[10px] text-neutral-500 font-medium">Automate your success with MasterSync</span>
+                                    <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">{t('copyTrading')}</span>
+                                    <span className="text-[10px] text-neutral-500 font-medium">{t('copyTradingDesc')}</span>
                                 </Link>
                             </div>
                         </div>
@@ -105,51 +128,51 @@ export default function Header() {
                 {/* Company Dropdown */}
                 <div className="relative group/company py-4">
                     <button className="flex items-center gap-1.5 text-sm font-bold text-neutral-600 dark:text-neutral-400 group-hover/company:text-[#FF6347] transition-colors">
-                        Company <ChevronDown size={14} className="transition-transform group-hover/company:rotate-180" />
+                        {t('company')} <ChevronDown size={14} className="transition-transform group-hover/company:rotate-180" />
                     </button>
                     
                     <div className="absolute top-full left-0 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover/company:opacity-100 group-hover/company:translate-y-0 group-hover/company:pointer-events-auto transition-all duration-300">
                         <div className="w-[520px] bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 rounded-3xl shadow-2xl p-8 backdrop-blur-xl">
                             <div className="grid grid-cols-2 gap-12">
                                 <div>
-                                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-900 dark:text-neutral-400 mb-6">About Us</h3>
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-900 dark:text-neutral-400 mb-6">{t('aboutUs')}</h3>
                                     <div className="flex flex-col gap-4">
                                         <Link href="/why-mastersync" className="group/link flex flex-col gap-1">
-                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">Why MasterSync</span>
-                                            <span className="text-[10px] text-neutral-500 font-medium">Our mission and institutional roots</span>
+                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">{t('whyMastersync')}</span>
+                                            <span className="text-[10px] text-neutral-500 font-medium">{t('whyMastersyncDesc')}</span>
                                         </Link>
                                         <Link href="/reviews" className="group/link flex flex-col gap-1">
-                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">Reviews</span>
-                                            <span className="text-[10px] text-neutral-500 font-medium">What our global traders say</span>
+                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">{t('reviews')}</span>
+                                            <span className="text-[10px] text-neutral-500 font-medium">{t('reviewsDesc')}</span>
                                         </Link>
                                         <Link href="/blog" className="group/link flex flex-col gap-1">
-                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">MasterSync Blog</span>
-                                            <span className="text-[10px] text-neutral-500 font-medium">Latest market insights and news</span>
+                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">{t('blog')}</span>
+                                            <span className="text-[10px] text-neutral-500 font-medium">{t('blogDesc')}</span>
                                         </Link>
                                         <Link href="/careers" className="group/link flex flex-col gap-1">
-                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">Careers</span>
-                                            <span className="text-[10px] text-neutral-500 font-medium italic">Join our global network</span>
+                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">{t('careers')}</span>
+                                            <span className="text-[10px] text-neutral-500 font-medium italic">{t('careersDesc')}</span>
                                         </Link>
                                     </div>
                                 </div>
                                 <div>
-                                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-900 dark:text-neutral-400 mb-6">Resources</h3>
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-900 dark:text-neutral-400 mb-6">{t('resources')}</h3>
                                     <div className="flex flex-col gap-4">
                                         <Link href="/investor-relations" className="group/link flex flex-col gap-1">
-                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">Investor Relations</span>
-                                            <span className="text-[10px] text-neutral-500 font-medium">Corporate data and governance</span>
+                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">{t('investorRelations')}</span>
+                                            <span className="text-[10px] text-neutral-500 font-medium">{t('investorRelationsDesc')}</span>
                                         </Link>
                                         <Link href="/help-center" className="group/link flex flex-col gap-1">
-                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">Help Center</span>
-                                            <span className="text-[10px] text-neutral-500 font-medium">Knowledge base and tutorials</span>
+                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">{t('helpCenter')}</span>
+                                            <span className="text-[10px] text-neutral-500 font-medium">{t('helpCenterDesc')}</span>
                                         </Link>
                                         <Link href="/legal" className="group/link flex flex-col gap-1">
-                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">Legal & Compliance</span>
-                                            <span className="text-[10px] text-neutral-500 font-medium">Protecting your institutional rights</span>
+                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">{t('legalCompliance')}</span>
+                                            <span className="text-[10px] text-neutral-500 font-medium">{t('legalComplianceDesc')}</span>
                                         </Link>
                                         <Link href="/contact" className="group/link flex flex-col gap-1">
-                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">Contact Us</span>
-                                            <span className="text-[10px] text-neutral-500 font-medium">24/7 Global Priority access</span>
+                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">{t('contactUs')}</span>
+                                            <span className="text-[10px] text-neutral-500 font-medium">{t('contactUsDesc')}</span>
                                         </Link>
                                     </div>
                                 </div>
@@ -158,7 +181,7 @@ export default function Header() {
                     </div>
                 </div>
 
-                <Link href="/partnerships" className="text-sm font-bold text-neutral-600 dark:text-neutral-400 hover:text-[#FF6347] transition-colors">Partnerships</Link>
+                <Link href="/partnerships" className="text-sm font-bold text-neutral-600 dark:text-neutral-400 hover:text-[#FF6347] transition-colors">{t('partnerships')}</Link>
             </div>
         </div>
 
@@ -170,7 +193,7 @@ export default function Header() {
                     onClick={() => setIsLangOpen(!isLangOpen)}
                     className="flex items-center gap-1.5 md:gap-2 text-[10px] md:text-sm font-bold text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors"
                 >
-                    <Globe size={16} className="md:w-[18px]" />
+                    <span className="text-base">{selectedLang.flag}</span>
                     <span className="uppercase tracking-widest">{selectedLang.code}</span>
                     <ChevronDown size={14} className={`transition-transform duration-300 ${isLangOpen ? 'rotate-180' : ''}`} />
                 </button>
@@ -188,12 +211,15 @@ export default function Header() {
                                 <button
                                     key={lang.code}
                                     onClick={() => {
-                                        setSelectedLang(lang);
                                         setIsLangOpen(false);
+                                        if (lang.code !== currentLocale) {
+                                            switchLocale(lang.code);
+                                        }
                                     }}
-                                    className={`w-full text-left px-5 py-3 text-sm flex items-center justify-between group hover:bg-black/5 dark:hover:bg-white/5 transition-colors ${selectedLang.code === lang.code ? 'text-[#FF6347] bg-black/5 dark:bg-white/5 font-black' : 'text-neutral-500 dark:text-neutral-400 font-medium'}`}
+                                    className={`w-full text-left px-5 py-3 text-sm flex items-center gap-3 group hover:bg-black/5 dark:hover:bg-white/5 transition-colors ${selectedLang.code === lang.code ? 'text-[#FF6347] bg-black/5 dark:bg-white/5 font-black' : 'text-neutral-500 dark:text-neutral-400 font-medium'}`}
                                 >
-                                    <span>{lang.name}</span>
+                                    <span className="text-lg">{lang.flag}</span>
+                                    <span className="flex-1">{lang.name}</span>
                                     {selectedLang.code === lang.code && (
                                         <div className="w-1.5 h-1.5 rounded-full bg-[#FF6347]" />
                                     )}
@@ -232,14 +258,14 @@ export default function Header() {
                     variant="light" 
                     className="text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 font-bold text-sm uppercase tracking-wider"
                 >
-                Login
+                {t('login')}
                 </Button>
                 <Button 
                     as={Link} 
                     href="/register" 
                     className="bg-[#FF6347] hover:bg-[#e05035] text-white font-black text-xs uppercase tracking-[0.15em] px-8 rounded-xl shadow-lg shadow-[#FF6347]/20"
                 >
-                Sign Up
+                {t('signUp')}
                 </Button>
             </div>
         </div>
@@ -272,7 +298,7 @@ export default function Header() {
                               onClick={() => setIsLangOpen(!isLangOpen)}
                               className="flex items-center gap-1.5 text-[10px] font-black text-neutral-500 uppercase tracking-widest"
                             >
-                                <Globe size={18} />
+                                <span className="text-lg">{selectedLang.flag}</span>
                                 <span>{selectedLang.code}</span>
                                 <ChevronDown size={14} className={isLangOpen ? 'rotate-180' : ''} />
                             </button>
@@ -293,10 +319,10 @@ export default function Header() {
                     {/* Grid Blocks (NAGA Style - Matching hambuger.png) */}
                     <div className="grid grid-cols-2 gap-4 mb-12">
                         {[
-                            { label: "Trade", icon: <CandlestickChart size={14} />, active: true, href: "/markets/forex" },
-                            { label: "Invest", icon: <BarChart3 size={24} />, href: "/markets/stocks" },
-                            { label: "Crypto", icon: <Wallet size={24} />, soon: true, href: "/markets/crypto" },
-                            { label: "Pay", icon: <CreditCard size={24} />, soon: true, href: "/register" }
+                            { label: t('menu.trade'), icon: <CandlestickChart size={14} />, active: true, href: "/markets/forex" },
+                            { label: t('menu.invest'), icon: <BarChart3 size={24} />, href: "/markets/stocks" },
+                            { label: t('menu.crypto'), icon: <Wallet size={24} />, soon: true, href: "/markets/crypto" },
+                            { label: t('menu.pay'), icon: <CreditCard size={24} />, soon: true, href: "/register" }
                         ].map((item, i) => (
                             <Link 
                               key={i} 
@@ -309,7 +335,7 @@ export default function Header() {
                                 </div>
                                 <div className="flex items-center justify-between w-full">
                                     <span className={`text-[15px] font-black uppercase tracking-tight ${item.active ? 'text-[#FF6347]' : 'text-neutral-500 dark:text-neutral-400'}`}>{item.label}</span>
-                                    {item.soon && <span className="text-[9px] font-black uppercase tracking-widest bg-[#FF6347] text-white px-2 py-0.5 rounded-full">Soon</span>}
+                                    {item.soon && <span className="text-[9px] font-black uppercase tracking-widest bg-[#FF6347] text-white px-2 py-0.5 rounded-full">{t('menu.soon')}</span>}
                                 </div>
                             </Link>
                         ))}
@@ -319,42 +345,42 @@ export default function Header() {
                     <div className="flex-1 space-y-2">
                         {[
                             { 
-                              label: "Social Hub", 
+                              label: t('socialHub'), 
                               subItems: [
-                                  { label: "Community Feed", href: "/social" },
-                                  { label: "Copy Trading", href: "/" },
+                                  { label: t('menu.communityFeed'), href: "/social" },
+                                  { label: t('copyTrading'), href: "/" },
                               ]
                             },
                             { 
-                              label: "Offering", 
+                              label: t('offering'), 
                               subItems: [
-                                  { label: "Forex", href: "/markets/forex" },
-                                  { label: "Stocks", href: "/markets/stocks" },
-                                  { label: "Crypto", href: "/markets/crypto" },
+                                  { label: t('forexExchange'), href: "/markets/forex" },
+                                  { label: t('stockMarkets'), href: "/markets/stocks" },
+                                  { label: t('cryptoAssets'), href: "/markets/crypto" },
                               ]
                             },
                             { 
-                              label: "Resources", 
+                              label: t('resources'), 
                               subItems: [
-                                  { label: "Help Center", href: "/help-center" },
-                                  { label: "Legal Documents", href: "/legal" },
-                                  { label: "Contact Us", href: "/contact" }
+                                  { label: t('helpCenter'), href: "/help-center" },
+                                  { label: t('menu.legalDocuments'), href: "/legal" },
+                                  { label: t('contactUs'), href: "/contact" }
                               ]
                             },
                             { 
-                              label: "Company", 
+                              label: t('company'), 
                               subItems: [
-                                  { label: "Why MasterSync", href: "/why-mastersync" },
-                                  { label: "Reviews", href: "/reviews" },
-                                  { label: "MasterSync Blog", href: "/blog" },
-                                  { label: "Careers", href: "/careers" },
-                                  { label: "Investor Relations", href: "/investor-relations" },
-                                  { label: "Contact Us", href: "/contact" },
-                                  { label: "Help Center", href: "/help-center" },
-                                  { label: "Legal Documents", href: "/legal" }
+                                  { label: t('whyMastersync'), href: "/why-mastersync" },
+                                  { label: t('reviews'), href: "/reviews" },
+                                  { label: t('blog'), href: "/blog" },
+                                  { label: t('careers'), href: "/careers" },
+                                  { label: t('investorRelations'), href: "/investor-relations" },
+                                  { label: t('contactUs'), href: "/contact" },
+                                  { label: t('helpCenter'), href: "/help-center" },
+                                  { label: t('menu.legalDocuments'), href: "/legal" }
                               ]
                             },
-                            { label: "Partnerships", href: "/partnerships" }
+                            { label: t('partnerships'), href: "/partnerships" }
                         ].map((item, i) => (
                             <div key={i} className="border-b border-black/5 dark:border-white/5 last:border-0">
                                 {item.subItems ? (
@@ -410,7 +436,7 @@ export default function Header() {
                           className="border-neutral-200 dark:border-neutral-800 font-black h-16 rounded-[1.5rem] text-xs uppercase bg-neutral-100 dark:bg-neutral-900 tracking-widest flex-1"
                           onClick={() => setIsMenuOpen(false)}
                         >
-                            Login
+                            {t('login')}
                         </Button>
                         <Button 
                           as={Link} 
@@ -418,7 +444,7 @@ export default function Header() {
                           className="bg-[#FF6347] text-white font-black h-16 rounded-[1.5rem] shadow-2xl shadow-[#FF6347]/30 text-xs uppercase tracking-widest flex-1"
                           onClick={() => setIsMenuOpen(false)}
                         >
-                            Get started
+                            {t('getStarted')}
                         </Button>
                     </div>
                 </div>

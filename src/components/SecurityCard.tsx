@@ -3,31 +3,34 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Shield, Lock, Fingerprint, Eye, CheckCircle2 } from "lucide-react";
-
-const securityFeatures = [
-  {
-    icon: <Lock className="text-[#FF6347]" size={28} />,
-    title: "Institutional Grade 2FA",
-    desc: "Multi-layered authentication ensuring only you access your assets."
-  },
-  {
-    icon: <Shield className="text-[#FF6347]" size={28} />,
-    title: "Cold Storage Protection",
-    desc: "98% of all digital assets are stored in disconnected offline environments."
-  },
-  {
-    icon: <Fingerprint className="text-[#FF6347]" size={28} />,
-    title: "Biometric Security",
-    desc: "Advanced biometric protocols for mobile and desktop transactions."
-  },
-  {
-    icon: <Eye className="text-[#FF6347]" size={28} />,
-    title: "Real-time Monitoring",
-    desc: "24/7 automated systems tracking for any suspicious activity."
-  }
-];
+import { useTranslations } from "next-intl";
 
 export default function SecurityCard() {
+  const t = useTranslations("SecurityCard");
+
+  const securityFeatures = [
+    {
+      icon: <Lock className="text-[#FF6347]" size={28} />,
+      title: t('securityFeatures.0.title'),
+      desc: t('securityFeatures.0.desc')
+    },
+    {
+      icon: <Shield className="text-[#FF6347]" size={28} />,
+      title: t('securityFeatures.1.title'),
+      desc: t('securityFeatures.1.desc')
+    },
+    {
+      icon: <Fingerprint className="text-[#FF6347]" size={28} />,
+      title: t('securityFeatures.2.title'),
+      desc: t('securityFeatures.2.desc')
+    },
+    {
+      icon: <Eye className="text-[#FF6347]" size={28} />,
+      title: t('securityFeatures.3.title'),
+      desc: t('securityFeatures.3.desc')
+    }
+  ];
+
   return (
     <section className="py-12 sm:py-16 md:py-20 lg:py-24 bg-white dark:bg-black transition-colors duration-500 overflow-hidden relative">
       {/* Background Ambience */}
@@ -50,19 +53,19 @@ export default function SecurityCard() {
                   <Shield className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" />
                 </div>
                 <div>
-                  <h3 className="text-base sm:text-lg md:text-xl font-black text-black dark:text-white uppercase tracking-tighter">Vault Protocol</h3>
+                  <h3 className="text-base sm:text-lg md:text-xl font-black text-black dark:text-white uppercase tracking-tighter">{t('vaultProtocol')}</h3>
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-[9px] sm:text-[10px] font-bold text-neutral-900 dark:text-neutral-500 uppercase tracking-widest">Active Protection</span>
+                    <span className="text-[9px] sm:text-[10px] font-bold text-neutral-900 dark:text-neutral-500 uppercase tracking-widest">{t('activeProtection')}</span>
                   </div>
                 </div>
               </div>
 
               <div className="space-y-3 sm:space-y-4 md:space-y-6">
                  {[
-                   { label: "Data Encryption", status: "AES-256" },
-                   { label: "Withdrawal Lock", status: "Enabled" },
-                   { label: "IP Whitelisting", status: "Active" }
+                   { label: t('features.dataEncryption'), status: t('features.aes256') },
+                   { label: t('features.withdrawalLock'), status: t('features.enabled') },
+                   { label: t('features.ipWhitelisting'), status: t('features.active') }
                  ].map((item, i) => (
                    <div key={i} className="flex items-center justify-between p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white dark:bg-black/40 border border-black/5 dark:border-white/5">
                       <span className="text-xs sm:text-sm font-bold text-neutral-600 dark:text-neutral-400">{item.label}</span>
@@ -75,10 +78,10 @@ export default function SecurityCard() {
               </div>
 
               <div className="mt-6 sm:mt-8 md:mt-10 p-4 sm:p-5 md:p-6 rounded-2xl sm:rounded-3xl bg-black dark:bg-[#050505] text-white">
-                 <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-[#FF6347] mb-1 sm:mb-2">Security Score</p>
+                 <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-[#FF6347] mb-1 sm:mb-2">{t('securityScore')}</p>
                  <div className="flex items-end gap-2 sm:gap-3">
                     <span className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter">99.8%</span>
-                    <span className="text-[10px] sm:text-xs font-bold text-neutral-600 dark:text-neutral-500 mb-1 sm:mb-2 italic">Institutional Grade</span>
+                    <span className="text-[10px] sm:text-xs font-bold text-neutral-600 dark:text-neutral-500 mb-1 sm:mb-2 italic">{t('institutionalGrade')}</span>
                  </div>
               </div>
             </div>
@@ -90,7 +93,7 @@ export default function SecurityCard() {
                className="absolute -top-3 -right-3 sm:-top-4 sm:-right-4 md:-top-6 md:-right-6 p-2.5 sm:p-3 md:p-4 rounded-xl sm:rounded-2xl bg-[#FF6347] text-white shadow-2xl z-20 flex items-center gap-2 sm:gap-3"
             >
               <Lock className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="text-[8px] sm:text-[9px] md:text-[10px] font-black uppercase tracking-widest">Secure Core</span>
+              <span className="text-[8px] sm:text-[9px] md:text-[10px] font-black uppercase tracking-widest">{t('secureCore')}</span>
             </motion.div>
           </motion.div>
 
@@ -104,14 +107,14 @@ export default function SecurityCard() {
           >
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#FF6347]/20 bg-[#FF6347]/5 mb-4 sm:mb-5 md:mb-6">
-                <span className="text-[9px] sm:text-[10px] font-black tracking-widest text-[#FF6347] uppercase">Safety First</span>
+                <span className="text-[9px] sm:text-[10px] font-black tracking-widest text-[#FF6347] uppercase">{t('safetyFirst')}</span>
               </div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-black dark:text-white tracking-tighter leading-tight mb-4 sm:mb-5 md:mb-6">
-                Your Assets Are <br className="hidden sm:block"/>
-                <span className="text-[#FF6347]">Guaranteed Secure.</span>
+                {t('headline.prefix')} <br className="hidden sm:block"/>
+                <span className="text-[#FF6347]">{t('headline.suffix')}</span>
               </h2>
               <p className="text-sm sm:text-base md:text-lg text-neutral-600 dark:text-neutral-400 font-medium max-w-lg leading-relaxed">
-                At MasterSync, we employ the most advanced security protocols in the industry to ensure your peace of mind.
+                {t('description')}
               </p>
             </div>
 

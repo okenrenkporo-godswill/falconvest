@@ -1,0 +1,491 @@
+{
+    "Header": {
+        "offering": "Ofrecimiento",
+        "tradingMarkets": "Mercados comerciales",
+        "forexExchange": "Intercambio de divisas",
+        "forexDesc": "Diferenciales institucionales desde 0.0 pips",
+        "stockMarkets": "Mercados de valores",
+        "stocksDesc": "Índices globales y acciones de élite",
+        "cryptoAssets": "Criptoactivos",
+        "cryptoDesc": "Acceso directo a blockchain 24/7",
+        "social": "Social",
+        "socialHub": "Centro social",
+        "socialHubDesc": "Conéctese con los mejores comerciantes institucionales",
+        "copyTrading": "Copiar comercio",
+        "copyTradingDesc": "Automatiza tu éxito con MasterSync",
+        "company": "Empresa",
+        "aboutUs": "Sobre nosotros",
+        "whyMastersync": "Por qué MasterSync",
+        "whyMastersyncDesc": "Nuestra misión y raíces institucionales",
+        "reviews": "Reseñas",
+        "reviewsDesc": "Lo que dicen nuestros comerciantes globales",
+        "blog": "MasterSync Blog",
+        "blogDesc": "Últimas perspectivas y noticias del mercado",
+        "careers": "Carreras",
+        "careersDesc": "Únete a nuestra red global",
+        "resources": "Recursos",
+        "investorRelations": "Relaciones con inversores",
+        "investorRelationsDesc": "Datos corporativos y gobernanza",
+        "helpCenter": "Centro de ayuda",
+        "helpCenterDesc": "Base de conocimientos y tutoriales",
+        "legalCompliance": "Legal y cumplimiento",
+        "legalComplianceDesc": "Protegiendo sus derechos institucionales",
+        "contactUs": "Contáctenos",
+        "contactUsDesc": "Acceso prioritario global 24/7",
+        "partnerships": "Asociaciones",
+        "login": "Acceso",
+        "signUp": "Inscribirse",
+        "getStarted": "Empezar",
+        "menu": {
+            "trade": "Comercio",
+            "invest": "Invertir",
+            "crypto": "Cripto",
+            "pay": "Pagar",
+            "soon": "Pronto",
+            "communityFeed": "Feed de la comunidad",
+            "legalDocuments": "Documentos legales"
+        }
+    },
+    "Hero": {
+        "badge": "Automatización de próxima generación",
+        "subtitle": "Copy trading de grado institucional, ahora <bold>totalmente automatizado</bold>. Sincronice con los mejores rendimientos al instante.",
+        "startFree": "Empezar gratis",
+        "copyTradeNow": "Copia el comercio ahora",
+        "stats": {
+            "uptime": "Tiempo de actividad",
+            "volume": "Volumen",
+            "latency": "Latencia"
+        },
+        "headlines": {
+            "0": {
+                "part1": "COPIA A LOS",
+                "part2": "EXPERTOS"
+            },
+            "1": {
+                "part1": "SINCRONIZA TUS",
+                "part2": "OPERACIONES"
+            },
+            "2": {
+                "part1": "DOMINA EL",
+                "part2": "MERCADO"
+            },
+            "3": {
+                "part1": "TRADING",
+                "part2": "REIMAGINADO"
+            }
+        },
+        "dashboardPlaceholder": "MasterSync copy trading"
+    },
+    "AutoCopyTrading": {
+        "masterBalance": "Balance Maestro",
+        "totalBalance": "Balance Total",
+        "activePositions": "Posiciones Activas",
+        "liveSync": "Sincronización en vivo",
+        "positions": {
+            "britishPound": "Libra Esterlina",
+            "ethereum": "Ethereum",
+            "euro": "Euro",
+            "solana": "Solana",
+            "forex": "Forex",
+            "crypto": "Cripto",
+            "long": "Largo"
+        },
+        "headline": {
+            "introducing": "Presentamos",
+            "autocopy": "Autocopia"
+        },
+        "description": "Aprenda, copie y opere con un solo clic. Aproveche la experiencia de otros y colabore con una creciente comunidad de traders.",
+        "cta": "Probar MasterSync Autocopia"
+    },
+    "TradingToolsSlider": {
+        "protection": {
+            "liveProtection": "Protección en vivo",
+            "tp": "TP",
+            "sl": "SL",
+            "balanceProtected": "Balance Protegido",
+            "poweredBy": "Desarrollado por"
+        },
+        "slides": {
+            "0": {
+                "category": "Herramientas para cada estilo de trading",
+                "title": "Analiza como un profesional",
+                "description": "Desde niveles de resistencia y soporte, análisis intradía y puntos de pivote hasta calendarios económicos, preferencias de estrategia y señales, nuestra integración con Trading Central es compatible con productos apalancados en Forex, materias primas, acciones, índices, bonos y ETF."
+            },
+            "1": {
+                "category": "Herramientas para cada estilo de trading",
+                "title": "Gráficos superiores con TradingView",
+                "description": "Nuestra integración con TradingView proporciona gráficos ultrarrápidos, más de 100 indicadores, reconocimiento de patrones, herramientas de dibujo y más, accesibles a través de la web, dispositivos móviles y escritorio."
+            },
+            "2": {
+                "category": "Herramientas para cada estilo de trading",
+                "title": "Protege tus posiciones",
+                "description": "Los operadores pueden salvaguardar sus posiciones con órdenes de Stop Loss y Take Profit. Además, MasterSync ofrece protección contra saldo negativo, asegurando que las pérdidas nunca excedan los fondos en su cuenta."
+            }
+        }
+    },
+    "TradingPlans": {
+        "headline": {
+            "prefix": "UN PLAN DE TRADING",
+            "suffix": "PARA TODOS"
+        },
+        "description": "Ofrecemos una variedad de cuentas de trading para adaptarse a cada estilo y nivel de experiencia. Ya sea que seas un scalper o un day trader, te cubrimos.",
+        "mostPopular": "Más Popular",
+        "minimumFunding": "Fondeo Mínimo",
+        "fundPlan": "Fondear Plan",
+        "disclaimer": "* Todas las cuentas de trading están sujetas al riesgo del mercado en tiempo real. Los proveedores de liquidez institucional verifican todo el fondeo Premium.",
+        "plans": {
+            "bronze": {
+                "name": "Bronce",
+                "features": {
+                    "pairs": "Más de 200 pares de trading",
+                    "leverage": "Apalancamiento hasta 1:500",
+                    "spreads": "Spreads desde 1.2 pips",
+                    "execution": "Ejecución Estándar",
+                    "support": "Soporte al cliente 24/5"
+                }
+            },
+            "silver": {
+                "name": "Plata",
+                "features": {
+                    "pairs": "Más de 300 pares de trading",
+                    "leverage": "Apalancamiento hasta 1:500",
+                    "spreads": "Spreads desde 0.8 pips",
+                    "execution": "Ejecución Prioritaria",
+                    "manager": "Gerente de Cuenta Dedicado"
+                }
+            },
+            "gold": {
+                "name": "Oro",
+                "features": {
+                    "pairs": "Más de 400 pares de trading",
+                    "swap": "Sin tarifas de Swap",
+                    "leverage": "Apalancamiento hasta 1:500",
+                    "spreads": "Spreads desde 0.8 pips",
+                    "trading": "Trading ECN Directo",
+                    "insights": "Insights de Mercado Exclusivos"
+                }
+            },
+            "premium": {
+                "name": "Premium",
+                "features": {
+                    "pairs": "Pares de Trading Ilimitados",
+                    "spreads": "Spreads Institucionales",
+                    "commissions": "Comisiones Ultra Bajas",
+                    "events": "Acceso a Eventos VIP",
+                    "concierge": "Conserje de Trading Personal",
+                    "risk": "Gestión de Riesgos Avanzada"
+                }
+            }
+        }
+    },
+    "FAQ": {
+        "headline": {
+            "prefix": "¿TIENES",
+            "suffix": "PREGUNTAS?"
+        },
+        "description": "Todo lo que necesitas saber sobre el ecosistema MasterSync.",
+        "contact": {
+            "text": "¿Aún tienes preguntas?",
+            "link": "Contacta a nuestro equipo de soporte 24/7."
+        },
+        "questions": {
+            "0": {
+                "question": "¿Cómo empezar a operar con MasterSync?",
+                "answer": "Comenzar su viaje es simple: \n1. Cree su cuenta segura de MasterSync.\n2. Complete nuestra verificación de identidad simplificada (KYC).\n3. Financie su cuenta a través de su billetera digital preferida o transferencia bancaria.\n4. Inicie el panel de control y comience a ejecutar operaciones al instante."
+            },
+            "1": {
+                "question": "¿Cómo crear una cuenta y confirmar su dirección de correo electrónico?",
+                "answer": "Visite la página de registro, ingrese sus datos y establezca una contraseña segura. Recibirá un código de verificación único en su bandeja de entrada; simplemente ingréselo en la plataforma para activar su cuenta y asegurar su perfil."
+            },
+            "2": {
+                "question": "¿Confirmar su identificación y elegibilidad para operar?",
+                "answer": "Como plataforma regulada, requerimos una identificación válida emitida por el gobierno y un comprobante de domicilio. Nuestro sistema de verificación impulsado por IA generalmente aprueba las cuentas en minutos, asegurando que cumpla con los estándares de elegibilidad financiera global."
+            },
+            "3": {
+                "question": "¿Cómo deposito dinero y financio mi cuenta?",
+                "answer": "MasterSync admite una amplia gama de métodos de financiación. Navegue a la sección 'Financiación' en su panel para elegir entre transferencias criptográficas instantáneas, tarjetas de crédito/débito o transferencias bancarias tradicionales. Todos los fondos se mantienen en cuentas segregadas de grado institucional."
+            },
+            "4": {
+                "question": "¿Es MasterSync un corredor regulado?",
+                "answer": "Sí, MasterSync opera bajo estrictos marcos regulatorios para proporcionar un entorno comercial seguro y transparente. Mantenemos altos requisitos de capital y nos sometemos a auditorías independientes periódicas para garantizar la protección del cliente."
+            },
+            "5": {
+                "question": "¿Cómo retirar dinero de MasterSync?",
+                "answer": "Los retiros se procesan rápidamente. Simplemente vaya a 'Mi billetera', seleccione 'Retirar' y elija su destino. La mayoría de los retiros de criptomonedas son instantáneos, mientras que las transferencias bancarias tradicionales suelen completarse en 1-2 días hábiles."
+            }
+        }
+    },
+    "SecurityCard": {
+        "vaultProtocol": "Protocolo de Bóveda",
+        "activeProtection": "Protección Activa",
+        "securityScore": "Puntuación de Seguridad",
+        "institutionalGrade": "Grado Institucional",
+        "secureCore": "Núcleo Seguro",
+        "safetyFirst": "Seguridad Primero",
+        "headline": {
+            "prefix": "Tus Activos Están",
+            "suffix": "Garantizados Seguros."
+        },
+        "description": "En MasterSync, empleamos los protocolos de seguridad más avanzados de la industria para garantizar su tranquilidad.",
+        "features": {
+            "dataEncryption": "Cifrado de Datos",
+            "aes256": "AES-256",
+            "withdrawalLock": "Bloqueo de Retiro",
+            "enabled": "Habilitado",
+            "ipWhitelisting": "Lista Blanca de IP",
+            "active": "Activo"
+        },
+        "securityFeatures": {
+            "0": {
+                "title": "2FA de Grado Institucional",
+                "desc": "Autenticación de múltiples capas que garantiza que solo usted acceda a sus activos."
+            },
+            "1": {
+                "title": "Protección de Almacenamiento en Frío",
+                "desc": "El 98% de todos los activos digitales se almacenan en entornos desconectados fuera de línea."
+            },
+            "2": {
+                "title": "Seguridad Biométrica",
+                "desc": "Protocolos biométricos avanzados para transacciones móviles y de escritorio."
+            },
+            "3": {
+                "title": "Seguimiento en Tiempo Real",
+                "desc": "Sistemas automatizados 24/7 que rastrean cualquier actividad sospechosa."
+            }
+        }
+    },
+    "AssetExplorer": {
+        "headline": {
+            "prefix": "Acceso global,",
+            "suffix": "potencial ilimitado."
+        },
+        "description": "Conéctese a los mercados más líquidos del mundo con ejecución de grado institucional. Navegue sin problemas por los principales activos en Forex, Acciones, Índices y Cripto en una plataforma diseñada para el trader sofisticado.",
+        "marketSegments": "Segmentos de Mercado",
+        "searchPlaceholder": "Buscar símbolos...",
+        "connecting": "Conectando al feed...",
+        "table": {
+            "instrument": "Instrumento",
+            "price": "Precio",
+            "spread": "Spread",
+            "change24h": "Cambio 24H",
+            "trend": "Tendencia",
+            "execution": "Ejecución",
+            "trade": "Operar"
+        },
+        "liveFeeds": "Feeds en Vivo Activos",
+        "liquidity": "Liquidez por MasterSync Institucional",
+        "categories": {
+            "Forex": "Forex",
+            "Shares": "Acciones",
+            "Indices": "Índices",
+            "ETFs": "ETFs",
+            "Cryptocurrencies": "Criptomonedas",
+            "Commodities": "Materias Primas"
+        }
+    },
+    "Footer": {
+        "brandDescription": "Revolucionando el trading de grado institucional a través de tecnología accesible, transparencia absoluta y seguridad inquebrantable.",
+        "badges": {
+            "secured": {
+                "title": "Asegurado y Verificado",
+                "desc": "Liquidez Bancaria de Nivel 1"
+            },
+            "global": {
+                "title": "Presencia Global",
+                "desc": "Con Licencia en 40+ Regiones"
+            },
+            "funding": {
+                "title": "Fondeo Seguro",
+                "desc": "Pagos Instantáneos 24/7"
+            }
+        },
+        "riskWarning": "Advertencia de Riesgo: Operar instrumentos financieros implica un riesgo significativo. El valor de las inversiones puede bajar tanto como subir y es posible que reciba menos de lo que invirtió originalmente. MasterSync Limited está autorizada y regulada por la Autoridad de Servicios Financieros (FSA). Asegúrese de comprender completamente los riesgos involucrados leyendo nuestra divulgación completa de riesgos o consultando a un asesor financiero independiente.",
+        "links": {
+            "compliance": "Cumplimiento",
+            "ethics": "Ética",
+            "security": "Seguridad"
+        },
+        "copyright": "© 2026 MasterSync Global. Todos los derechos reservados.",
+        "systemStatus": "Sistema en línea: LDN-01 Estable",
+        "panelCommon": {
+            "needMoreInfo": "¿Aún necesita más información?",
+            "fullHelpCenter": "Centro de Ayuda Completo"
+        },
+        "linkGroups": {
+            "markets": "Mercados",
+            "platforms": "Plataformas",
+            "pricing": "Precios y Términos",
+            "company": "Empresa",
+            "documentation": "Documentación",
+            "partnerships": "Asociaciones",
+            "help": "Ayuda y Soporte",
+            "social": "Centro Social",
+            "education": "Educación Gratuita",
+            "news": "Noticias y Análisis"
+        },
+        "linkLabels": {
+            "Forex": "Forex",
+            "CryptoX": "CryptoX",
+            "Shares": "Acciones",
+            "Real Stocks": "Acciones Reales",
+            "Crypto": "Cripto",
+            "Indices": "Índices",
+            "Commodities": "Materias Primas",
+            "Futures": "Futuros",
+            "ETFs": "ETFs",
+            "MasterSync Web": "MasterSync Web",
+            "Sync iOS": "Sync iOS",
+            "Sync Android": "Sync Android",
+            "MT5 Terminal": "Terminal MT5",
+            "Telegram Mini App": "Mini App de Telegram",
+            "Hours & Fees": "Horarios y Tarifas",
+            "Trading Holidays": "Feriados Comerciales",
+            "Deposit Methods": "Métodos de Depósito",
+            "Execution Policy": "Política de Ejecución",
+            "Spreads": "Spreads",
+            "Why MasterSync": "Por qué MasterSync",
+            "Sponsorship": "Patrocinio",
+            "Contact Us": "Contáctenos",
+            "Investors Relations": "Relaciones con Inversores",
+            "Reviews": "Reseñas",
+            "Careers": "Carreras",
+            "Legal Documents": "Documentos Legales",
+            "Privacy Policy": "Política de Privacidad",
+            "Cookie Policy": "Política de Cookies",
+            "Manage Cookies": "Gestionar Cookies",
+            "Institutional": "Institucional",
+            "Affiliates": "Afiliados",
+            "IB Program": "Programa IB",
+            "Help Center": "Centro de Ayuda",
+            "FAQ": "Preguntas Frecuentes",
+            "Contact us": "Contáctenos",
+            "Customer Support": "Atención al Cliente",
+            "Social Trading": "Trading Social",
+            "Copy Trading": "Copy Trading",
+            "Leaderboard": "Tabla de Clasificación",
+            "Become a Top Trader": "Convertirse en un Mejor Trader",
+            "Master Academy": "Academia Master",
+            "Encyclopedia": "Enciclopedia",
+            "Currency Converter": "Conversor de Moneda",
+            "Webinars": "Seminarios web",
+            "Market Updates": "Actualizaciones del Mercado",
+            "Earnings Calendar": "Calendario de Ganancias",
+            "Economic Calendar": "Calendario Económico",
+            "Sync Insights": "Sync Insights"
+        },
+        "panels": {
+            "help": {
+                "title": "Centro de Ayuda",
+                "description": "¿Cómo podemos ayudarle hoy?",
+                "items": {
+                    "0": {
+                        "title": "Verificación de Cuenta",
+                        "desc": "Guía para completar su proceso KYC."
+                    },
+                    "1": {
+                        "title": "Depósito y Retiro",
+                        "desc": "Pasos detallados para administrar sus fondos."
+                    },
+                    "2": {
+                        "title": "Plataformas de Trading",
+                        "desc": "Tutoriales sobre el uso de MT5 y Web Trader."
+                    },
+                    "3": {
+                        "title": "Configuración de Seguridad",
+                        "desc": "Habilite 2FA y asegure su cuenta."
+                    }
+                }
+            },
+            "faq": {
+                "title": "Preguntas Frecuentes Rápidas",
+                "description": "Preguntas comunes respondidas.",
+                "items": {
+                    "0": {
+                        "title": "¿Cuáles son las tarifas?",
+                        "desc": "Comienza en 0% para pares principales con spreads mínimos."
+                    },
+                    "1": {
+                        "title": "¿Están seguros mis datos?",
+                        "desc": "Utilizamos cifrado AES-256 y custodia institucional."
+                    },
+                    "2": {
+                        "title": "¿Apalancamiento máximo?",
+                        "desc": "Hasta 1:500 para cuentas profesionales elegibles."
+                    }
+                }
+            },
+            "legal": {
+                "title": "Política y Legal",
+                "description": "Transparencia y protección.",
+                "items": {
+                    "0": {
+                        "title": "Política de Privacidad",
+                        "desc": "Cómo manejamos y protegemos sus datos."
+                    },
+                    "1": {
+                        "title": "Términos de Servicio",
+                        "desc": "El acuerdo entre usted y MasterSync."
+                    },
+                    "2": {
+                        "title": "Divulgación de Riesgos",
+                        "desc": "Comprender la naturaleza del trading de CFD."
+                    }
+                }
+            },
+            "about": {
+                "title": "Sobre MasterSync",
+                "description": "Redefiniendo el estándar del trading.",
+                "items": {
+                    "0": {
+                        "title": "Nuestra Misión",
+                        "desc": "Democratizando las herramientas financieras institucionales."
+                    },
+                    "1": {
+                        "title": "Alcance Global",
+                        "desc": "Sirviendo a clientes en más de 120 países."
+                    },
+                    "2": {
+                        "title": "Innovación",
+                        "desc": "Construyendo la interfaz más intuitiva del mundo."
+                    }
+                }
+            },
+            "support": {
+                "title": "Atención al Cliente",
+                "description": "Asistencia técnica y comercial 24/7.",
+                "items": {
+                    "0": {
+                        "title": "Chat en Vivo",
+                        "desc": "Hable directamente con nuestro equipo técnico en segundos."
+                    },
+                    "1": {
+                        "title": "Sistema de Tickets",
+                        "desc": "Envíe una solicitud detallada para problemas complejos."
+                    },
+                    "2": {
+                        "title": "Soporte VIP",
+                        "desc": "Manejo prioritario para miembros Premium y Gold."
+                    }
+                }
+            },
+            "contact": {
+                "title": "Contáctenos",
+                "description": "Estamos aquí para escucharte.",
+                "items": {
+                    "0": {
+                        "title": "Sede Central",
+                        "desc": "Torre Sync, Distrito Financiero, Londres, Reino Unido."
+                    },
+                    "1": {
+                        "title": "Envíenos un Correo",
+                        "desc": "support@mastersync.global | partners@mastersync.global"
+                    },
+                    "2": {
+                        "title": "Llamada Directa",
+                        "desc": "+44 (20) 7946 0123 (UK) | +1 (800) 555-0199 (US)"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,31 +1,24 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 const nextConfig: NextConfig = {
   images: {
+    domains: ["res.cloudinary.com"],
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "npxptwvoifmbqytivgqp.supabase.co",
+        hostname: "res.cloudinary.com",
+        pathname: "/**",
       },
     ],
   },
   experimental: {
-    serverActions: {
-      bodySizeLimit: "3mb",
-    },
+    // serverActions: true, // Enabled by default in Next.js 15
   },
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      // Don't resolve 'fs' module on the client to prevent this error on build
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        path: false,
-        encoding: false,
-      };
-    }
-    return config;
-  },
+  // Ensure we don't have hydration mismatches from extensions/providers
+  reactStrictMode: false,
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

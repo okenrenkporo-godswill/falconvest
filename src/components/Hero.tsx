@@ -5,21 +5,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@heroui/react";
 import Link from "next/link";
 import PromoVideo from "./PromoVideo";
-// Removed unused Image import since we are using CSS placeholder
-
-const headlines = [
-  { part1: "COPY THE", part2: "EXPERTS" },
-  { part1: "SYNC YOUR", part2: "TRADES" },
-  { part1: "MASTER THE", part2: "MARKET" },
-  { part1: "TRADING", part2: "REIMAGINED" }
-];
+import { useTranslations } from "next-intl";
 
 export default function Hero() {
+  const t = useTranslations("Hero");
   const [index, setIndex] = React.useState(0);
+  const headlinesCount = 4; // We have 4 headlines defined in messages
 
   React.useEffect(() => {
     const timer = setInterval(() => {
-      setIndex((prev) => (prev + 1) % headlines.length);
+      setIndex((prev) => (prev + 1) % headlinesCount);
     }, 4000);
     return () => clearInterval(timer);
   }, []);
@@ -50,7 +45,7 @@ export default function Hero() {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF6347]"></span>
             </span>
             <span className="text-[10px] font-bold tracking-[0.2em] text-neutral-800 dark:text-neutral-300 uppercase">
-               Next-Gen Automation
+               {t('badge')}
             </span>
           </div>
  
@@ -66,10 +61,10 @@ export default function Hero() {
                 className="space-y-1"
               >
                 <h1 className="text-5xl md:text-7xl font-black text-black dark:text-white tracking-tighter leading-[0.95]">
-                  {headlines[index].part1}
+                  {t(`headlines.${index}.part1`)}
                 </h1>
                 <h1 className="text-5xl md:text-7xl font-black text-[#FF6347] tracking-tighter leading-[0.95] relative inline-block">
-                  {headlines[index].part2}
+                  {t(`headlines.${index}.part2`)}
                    {/* Underline decoration */}
                    <svg className="absolute w-full h-3 -bottom-1 left-0 text-[#FF6347] opacity-60" viewBox="0 0 100 10" preserveAspectRatio="none">
                       <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="2" fill="none" />
@@ -81,7 +76,9 @@ export default function Hero() {
  
           {/* Subtitle */}
           <p className="text-lg md:text-xl text-neutral-600 dark:text-neutral-400 leading-relaxed font-medium max-w-lg">
-            Institutional-grade copy trading, now <span className="text-black dark:text-white font-bold decoration-[#FF6347]/50 underline underline-offset-4 decoration-2">fully automated</span>. Sync with top performers instantly.
+            {t.rich('subtitle', {
+              bold: (chunks) => <span className="text-black dark:text-white font-bold decoration-[#FF6347]/50 underline underline-offset-4 decoration-2">{chunks}</span>
+            })}
           </p>
  
           {/* CTAs */}
@@ -91,7 +88,7 @@ export default function Hero() {
               href="/register"
               className="bg-[#FF6347] text-white font-black h-14 px-10 text-sm uppercase tracking-widest rounded-full hover:scale-105 transition-transform shadow-xl shadow-[#FF6347]/25 w-full sm:w-auto"
             >
-              Start Free
+              {t('startFree')}
             </Button>
             <Button 
               as={Link}
@@ -99,7 +96,7 @@ export default function Hero() {
               variant="bordered"
               className="border-black/10 dark:border-white/10 text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 h-14 px-10 text-sm uppercase tracking-widest rounded-full backdrop-blur-sm w-full sm:w-auto"
             >
-              Copy trade now 
+              {t('copyTradeNow')}
             </Button>
           </div>
 
@@ -107,15 +104,15 @@ export default function Hero() {
            <div className="flex gap-8 pt-8 border-t border-black/5 dark:border-white/5 w-full">
               <div>
                 <p className="text-2xl font-black text-black dark:text-white">24/7</p>
-                <p className="text-xs text-neutral-500 font-bold uppercase tracking-wider">Uptime</p>
+                <p className="text-xs text-neutral-500 font-bold uppercase tracking-wider">{t('stats.uptime')}</p>
               </div>
               <div>
                 <p className="text-2xl font-black text-black dark:text-white">$500M+</p>
-                <p className="text-xs text-neutral-500 font-bold uppercase tracking-wider">Volume</p>
+                <p className="text-xs text-neutral-500 font-bold uppercase tracking-wider">{t('stats.volume')}</p>
               </div>
               <div>
                 <p className="text-2xl font-black text-black dark:text-white">0.05s</p>
-                <p className="text-xs text-neutral-500 font-bold uppercase tracking-wider">Latency</p>
+                <p className="text-xs text-neutral-500 font-bold uppercase tracking-wider">{t('stats.latency')}</p>
               </div>
            </div>
         </motion.div>
@@ -149,7 +146,7 @@ export default function Hero() {
                </div>
                {/* Center text for placeholder */}
                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-neutral-700 font-bold text-lg tracking-widest uppercase">MasterSync copy trading</span>
+                  <span className="text-neutral-700 font-bold text-lg tracking-widest uppercase">{t('dashboardPlaceholder')}</span>
                </div>
            </div>
 
