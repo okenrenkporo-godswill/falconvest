@@ -19,6 +19,15 @@ const nextConfig: NextConfig = {
   },
   // Ensure we don't have hydration mismatches from extensions/providers
   reactStrictMode: false,
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+      };
+    }
+    return config;
+  },
 };
 
 export default withNextIntl(nextConfig);

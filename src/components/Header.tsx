@@ -49,7 +49,7 @@ export default function Header() {
 
   const switchLocale = (locale: string) => {
     startTransition(() => {
-        setUserLocale(locale);
+        setUserLocale(locale as any);
     });
   };
 
