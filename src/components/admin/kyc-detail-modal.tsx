@@ -3,7 +3,11 @@
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Chip, Textarea, Input } from "@heroui/react";
 import { Alert } from "@heroui/react";
 import { useState, useEffect } from "react";
-import { getKycVerificationDetails, approveKycWithOverride, rejectKycWithReason } from "@/actions/admin";
+import {
+  getKycVerificationDetails,
+  approveKycWithOverride,
+  rejectKycWithReason,
+} from "@/actions/admin";
 import { addToast } from "@heroui/toast";
 
 interface KycDetailModalProps {
@@ -12,7 +16,11 @@ interface KycDetailModalProps {
   userId: string;
 }
 
-export function KycDetailModal({ isOpen, onClose, userId }: KycDetailModalProps) {
+export function KycDetailModal({
+  isOpen,
+  onClose,
+  userId,
+}: KycDetailModalProps) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>(null);
   const [notes, setNotes] = useState("");
@@ -76,7 +84,10 @@ export function KycDetailModal({ isOpen, onClose, userId }: KycDetailModalProps)
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
       age--;
     }
     return age;
@@ -104,9 +115,9 @@ export function KycDetailModal({ isOpen, onClose, userId }: KycDetailModalProps)
         <ModalContent>
           <ModalHeader>KYC Verification Review</ModalHeader>
           <ModalBody className="py-8">
-            <Alert color="warning">
-              No verification data found. The user may have submitted documents but verification hasn't been processed yet.
-            </Alert>
+            <div className="p-4 rounded-lg bg-warning-50 border border-warning-200 text-warning-800">
+              <p className="text-sm font-medium">No verification data found. The user may have submitted documents but verification hasn't been processed yet.</p>
+            </div>
             {data?.documentUrls && (
               <div className="mt-4">
                 <p className="text-sm font-medium mb-3">Uploaded Documents</p>
@@ -114,19 +125,31 @@ export function KycDetailModal({ isOpen, onClose, userId }: KycDetailModalProps)
                   {data.documentUrls.id_front && (
                     <div>
                       <p className="text-xs text-default-600 mb-1">Front</p>
-                      <img src={data.documentUrls.id_front} alt="ID Front" className="w-full h-32 object-cover rounded border" />
+                      <img
+                        src={data.documentUrls.id_front}
+                        alt="ID Front"
+                        className="w-full h-32 object-cover rounded border"
+                      />
                     </div>
                   )}
                   {data.documentUrls.id_back && (
                     <div>
                       <p className="text-xs text-default-600 mb-1">Back</p>
-                      <img src={data.documentUrls.id_back} alt="ID Back" className="w-full h-32 object-cover rounded border" />
+                      <img
+                        src={data.documentUrls.id_back}
+                        alt="ID Back"
+                        className="w-full h-32 object-cover rounded border"
+                      />
                     </div>
                   )}
                   {data.documentUrls.selfie && (
                     <div>
                       <p className="text-xs text-default-600 mb-1">Selfie</p>
-                      <img src={data.documentUrls.selfie} alt="Selfie" className="w-full h-32 object-cover rounded border" />
+                      <img
+                        src={data.documentUrls.selfie}
+                        alt="Selfie"
+                        className="w-full h-32 object-cover rounded border"
+                      />
                     </div>
                   )}
                 </div>
@@ -134,7 +157,9 @@ export function KycDetailModal({ isOpen, onClose, userId }: KycDetailModalProps)
             )}
           </ModalBody>
           <ModalFooter>
-            <Button variant="light" onPress={onClose}>Close</Button>
+            <Button variant="light" onPress={onClose}>
+              Close
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
@@ -152,7 +177,8 @@ export function KycDetailModal({ isOpen, onClose, userId }: KycDetailModalProps)
           <div>
             <h3 className="text-xl font-bold">KYC Verification Review</h3>
             <p className="text-sm text-default-500 font-normal">
-              {userProfile?.first_name} {userProfile?.last_name} ({userProfile?.email})
+              {userProfile?.first_name} {userProfile?.last_name} (
+              {userProfile?.email})
             </p>
           </div>
         </ModalHeader>
@@ -160,7 +186,15 @@ export function KycDetailModal({ isOpen, onClose, userId }: KycDetailModalProps)
           {/* Status */}
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium">Status</span>
-            <Chip color={verification?.status === "passed" ? "success" : verification?.status === "manual_review" ? "warning" : "danger"}>
+            <Chip
+              color={
+                verification?.status === "passed"
+                  ? "success"
+                  : verification?.status === "manual_review"
+                    ? "warning"
+                    : "danger"
+              }
+            >
               {verification?.status || "N/A"}
             </Chip>
           </div>
@@ -171,26 +205,40 @@ export function KycDetailModal({ isOpen, onClose, userId }: KycDetailModalProps)
             <div className="grid grid-cols-3 gap-4">
               <div className="border rounded-lg p-3 text-center">
                 <p className="text-xs text-default-600 mb-1">Face Match</p>
-                <Chip color={getScoreColor(verification?.face_match_score || 0)} size="lg">
+                <Chip
+                  color={getScoreColor(verification?.face_match_score || 0)}
+                  size="lg"
+                >
                   {verification?.face_match_score?.toFixed(0) || 0}%
                 </Chip>
               </div>
               <div className="border rounded-lg p-3 text-center">
                 <p className="text-xs text-default-600 mb-1">Liveness</p>
-                <Chip color={verification?.liveness_score ? "success" : "danger"} size="lg">
+                <Chip
+                  color={verification?.liveness_score ? "success" : "danger"}
+                  size="lg"
+                >
                   {verification?.liveness_score ? "✓ Passed" : "✗ Failed"}
                 </Chip>
               </div>
               <div className="border rounded-lg p-3 text-center">
                 <p className="text-xs text-default-600 mb-1">OCR Confidence</p>
-                <Chip color={getScoreColor(verification?.ocr_confidence_score || 0)} size="lg">
+                <Chip
+                  color={getScoreColor(verification?.ocr_confidence_score || 0)}
+                  size="lg"
+                >
                   {verification?.ocr_confidence_score?.toFixed(0) || 0}%
                 </Chip>
               </div>
             </div>
             <div className="mt-3 text-center">
-              <p className="text-xs text-default-600 mb-1">Overall Confidence</p>
-              <Chip color={getScoreColor(verification?.overall_confidence || 0)} size="lg">
+              <p className="text-xs text-default-600 mb-1">
+                Overall Confidence
+              </p>
+              <Chip
+                color={getScoreColor(verification?.overall_confidence || 0)}
+                size="lg"
+              >
                 {verification?.overall_confidence?.toFixed(0) || 0}%
               </Chip>
             </div>
@@ -203,19 +251,31 @@ export function KycDetailModal({ isOpen, onClose, userId }: KycDetailModalProps)
               {documentUrls?.id_front && (
                 <div>
                   <p className="text-xs text-default-600 mb-1">Front</p>
-                  <img src={documentUrls.id_front} alt="ID Front" className="w-full h-32 object-cover rounded border" />
+                  <img
+                    src={documentUrls.id_front}
+                    alt="ID Front"
+                    className="w-full h-32 object-cover rounded border"
+                  />
                 </div>
               )}
               {documentUrls?.id_back && (
                 <div>
                   <p className="text-xs text-default-600 mb-1">Back</p>
-                  <img src={documentUrls.id_back} alt="ID Back" className="w-full h-32 object-cover rounded border" />
+                  <img
+                    src={documentUrls.id_back}
+                    alt="ID Back"
+                    className="w-full h-32 object-cover rounded border"
+                  />
                 </div>
               )}
               {documentUrls?.selfie && (
                 <div>
                   <p className="text-xs text-default-600 mb-1">Selfie</p>
-                  <img src={documentUrls.selfie} alt="Selfie" className="w-full h-32 object-cover rounded border" />
+                  <img
+                    src={documentUrls.selfie}
+                    alt="Selfie"
+                    className="w-full h-32 object-cover rounded border"
+                  />
                 </div>
               )}
             </div>
@@ -228,7 +288,9 @@ export function KycDetailModal({ isOpen, onClose, userId }: KycDetailModalProps)
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-default-600">Name:</span>
-                  <span>{docData.given_names} {docData.surname}</span>
+                  <span>
+                    {docData.given_names} {docData.surname}
+                  </span>
                 </div>
                 {docData.date_of_birth && (
                   <div className="flex justify-between">
@@ -257,7 +319,9 @@ export function KycDetailModal({ isOpen, onClose, userId }: KycDetailModalProps)
                 {docData.expiry_date && (
                   <div className="flex justify-between">
                     <span className="text-default-600">Expiry:</span>
-                    <span>{new Date(docData.expiry_date).toLocaleDateString()}</span>
+                    <span>
+                      {new Date(docData.expiry_date).toLocaleDateString()}
+                    </span>
                   </div>
                 )}
               </div>
@@ -271,13 +335,21 @@ export function KycDetailModal({ isOpen, onClose, userId }: KycDetailModalProps)
               <div className="flex gap-4 text-sm">
                 <div className="flex items-center gap-2">
                   <span className="text-default-600">Blink:</span>
-                  <span className={liveness.blink_detected ? "text-success" : "text-danger"}>
+                  <span
+                    className={
+                      liveness.blink_detected ? "text-success" : "text-danger"
+                    }
+                  >
                     {liveness.blink_detected ? "✓ Detected" : "✗ Not Detected"}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-default-600">Smile:</span>
-                  <span className={liveness.smile_detected ? "text-success" : "text-danger"}>
+                  <span
+                    className={
+                      liveness.smile_detected ? "text-success" : "text-danger"
+                    }
+                  >
                     {liveness.smile_detected ? "✓ Detected" : "✗ Not Detected"}
                   </span>
                 </div>

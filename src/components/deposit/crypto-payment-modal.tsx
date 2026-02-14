@@ -2,11 +2,15 @@
 
 import {
     Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button,
-    Input, Select, SelectItem, Tabs, Tab, SharedSelection
+    Input, Select, SelectItem, Tabs, Tab, SharedSelection, useDisclosure, Skeleton
 } from "@heroui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Copy } from "lucide-react";
 import Image from "next/image";
+import { ProofUploadModal } from "./proof-upload-modal";
+import { submitDepositProof } from "@/actions/deposits";
+import { getActivePlatformWallets } from "@/actions/wallets";
+import { getAvailableCoins } from "@/actions/coins";
 
 export function CryptoPaymentModal({
     isOpen,
@@ -21,19 +25,77 @@ export function CryptoPaymentModal({
 }) {
     const [selectedCoin, setSelectedCoin] = useState<string>("BTC");
     const [key, setKey] = useState<string>("send");
+    const [walletAddress, setWalletAddress] = useState<string>("");
+    const [selectedWallet, setSelectedWallet] = useState<any>(null);
+    const [isLoadingWallet, setIsLoadingWallet] = useState(false);
+    const [coins, setCoins] = useState<Array<{label: string; value: string; icon: string; logo?: string}>>([]);
+    const [cryptoAmount, setCryptoAmount] = useState<string>("0");
+    const [isLoadingRate, setIsLoadingRate] = useState(false);
+    const { isOpen: isProofOpen, onOpen: onProofOpen, onOpenChange: onProofOpenChange } = useDisclosure();
 
-    // Placeholder addresses
-    const ADDRESSES: Record<string, string> = {
-        BTC: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
-        ETH: "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
-        USDT: "TJ8p3yE5gqA2x9Rz7y4w1Qv6tL8u9o0p8"
-    };
+    // Fetch conversion rate when coin or amount changes
+    useEffect(() => {
+        const fetchRate = async () => {
+            const usdAmount = parseFloat(amount.replace(/[^0-9.]/g, ""));
+            if (!usdAmount || !selectedCoin) {
+                setCryptoAmount("0");
+                return;
+            }
 
-    const COINS = [
-        { label: "Bitcoin (BTC)", value: "BTC", icon: "₿" },
-        { label: "Ethereum (ETH)", value: "ETH", icon: "Ξ" },
-        { label: "Tether (USDT - TRX)", value: "USDT", icon: "₮" },
-    ];
+            setIsLoadingRate(true);
+            try {
+                const coinIds: Record<string, string> = {
+                    'BTC': 'bitcoin',
+                    'ETH': 'ethereum',
+                    'USDT': 'tether',
+                    'USDC': 'usd-coin',
+                    'BNB': 'binancecoin',
+                    'SOL': 'solana',
+                    'XRP': 'ripple',
+                    'ADA': 'cardano',
+                    'DOGE': 'dogecoin',
+                };
+
+                const coinId = coinIds[selectedCoin] || selectedCoin.toLowerCase();
+                const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd`);
+                const data = await response.json();
+                
+                const rate = data[coinId]?.usd || 1;
+                const crypto = usdAmount / rate;
+                setCryptoAmount(crypto.toFixed(8));
+            } catch (error) {
+                console.error("Failed to fetch rate:", error);
+                setCryptoAmount("0");
+            } finally {
+                setIsLoadingRate(false);
+            }
+        };
+
+        fetchRate();
+    }, [selectedCoin, amount]);
+
+    useEffect(() => {
+        getAvailableCoins().then(setCoins);
+    }, []);
+
+    useEffect(() => {
+        if (isOpen && selectedCoin) {
+            // Clear previous wallet and show loading
+            setWalletAddress("");
+            setSelectedWallet(null);
+            setIsLoadingWallet(true);
+            
+            // Get platform wallet for selected coin
+            getActivePlatformWallets().then((wallets) => {
+                const wallet = wallets.find(w => w.symbol === selectedCoin);
+                if (wallet) {
+                    setWalletAddress(wallet.wallet_address);
+                    setSelectedWallet(wallet);
+                }
+                setIsLoadingWallet(false);
+            });
+        }
+    }, [isOpen, selectedCoin]);
 
     const handleSelectionChange = (keys: SharedSelection) => {
         // Current yields a Set, so we take the first value
@@ -45,7 +107,7 @@ export function CryptoPaymentModal({
     };
 
     return (
-        <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="lg" backdrop="blur">
+        <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="lg" backdrop="blur" scrollBehavior="inside">
             <ModalContent>
                 {(onClose) => (
                     <>
@@ -75,40 +137,84 @@ export function CryptoPaymentModal({
                                                 if (val) setSelectedCoin(val as string);
                                             }}
                                         >
-                                            {COINS.map((coin) => (
-                                                <SelectItem key={coin.value} startContent={coin.icon}>
+                                            {coins.map((coin) => (
+                                                <SelectItem 
+                                                    key={coin.value} 
+                                                    startContent={
+                                                        coin.logo ? (
+                                                            <img src={coin.logo} alt={coin.value} className="w-5 h-5 rounded-full" />
+                                                        ) : (
+                                                            <span>{coin.icon}</span>
+                                                        )
+                                                    }
+                                                >
                                                     {coin.label}
                                                 </SelectItem>
                                             ))}
                                         </Select>
 
-                                        <div className="flex flex-col items-center justify-center p-6 bg-default-100 rounded-lg">
-                                            {/* Placeholder QR Code */}
-                                            <div className="w-48 h-48 bg-white p-2 rounded-lg shadow-sm flex items-center justify-center mb-4 relative">
-                                                {/* Using standard img for external QR API is fine, or unoptimized Image */}
-                                                <Image
-                                                    src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ADDRESSES[selectedCoin] || "address"}`}
-                                                    alt="QR Code"
-                                                    width={150}
-                                                    height={150}
-                                                    unoptimized
-                                                    className="object-contain"
-                                                />
+                                        {/* Conversion Display */}
+                                        <div className="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-lg p-4">
+                                            <div className="flex justify-between items-center">
+                                                <div>
+                                                    <p className="text-xs text-default-500 mb-1">You're depositing</p>
+                                                    <p className="text-2xl font-bold text-primary">{amount}</p>
+                                                </div>
+                                                <div className="text-right">
+                                                    <p className="text-xs text-default-500 mb-1">You need to send</p>
+                                                    {isLoadingRate ? (
+                                                        <Skeleton className="h-8 w-32 rounded-lg" />
+                                                    ) : (
+                                                        <p className="text-2xl font-bold">{cryptoAmount} {selectedCoin}</p>
+                                                    )}
+                                                </div>
                                             </div>
+                                        </div>
 
-                                            <div className="w-full">
-                                                <p className="text-xs text-default-500 mb-1 font-medium uppercase text-center">Wallet Address</p>
-                                                <Input
-                                                    readOnly
-                                                    value={ADDRESSES[selectedCoin] || "Select a coin"}
-                                                    endContent={
-                                                        <Button isIconOnly size="sm" variant="light" onPress={() => navigator.clipboard.writeText(ADDRESSES[selectedCoin])}>
-                                                            <Copy size={16} />
-                                                        </Button>
-                                                    }
-                                                    classNames={{ input: "text-center font-mono text-xs sm:text-sm" }}
-                                                />
+                                        {isLoadingWallet ? (
+                                            <div className="flex flex-col items-center justify-center p-6 bg-default-100 rounded-lg">
+                                                <Skeleton className="w-48 h-48 rounded-lg mb-4" />
+                                                <div className="w-full space-y-2">
+                                                    <Skeleton className="h-3 w-32 rounded-lg mx-auto" />
+                                                    <Skeleton className="h-10 w-full rounded-lg" />
+                                                </div>
                                             </div>
+                                        ) : (
+                                            <div className="flex flex-col items-center justify-center p-6 bg-default-100 rounded-lg">
+                                                {/* Placeholder QR Code */}
+                                                <div className="w-48 h-48 bg-white p-2 rounded-lg shadow-sm flex items-center justify-center mb-4 relative">
+                                                    {/* Using standard img for external QR API is fine, or unoptimized Image */}
+                                                    <Image
+                                                        src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${walletAddress || "loading"}`}
+                                                        alt="QR Code"
+                                                        width={150}
+                                                        height={150}
+                                                        unoptimized
+                                                        className="object-contain"
+                                                    />
+                                                </div>
+
+                                                <div className="w-full">
+                                                    <p className="text-xs text-default-500 mb-1 font-medium uppercase text-center">Wallet Address</p>
+                                                    <Input
+                                                        readOnly
+                                                        value={walletAddress || "Loading..."}
+                                                        endContent={
+                                                            <Button isIconOnly size="sm" variant="light" onPress={() => navigator.clipboard.writeText(walletAddress)}>
+                                                                <Copy size={16} />
+                                                            </Button>
+                                                        }
+                                                        classNames={{ input: "text-center font-mono text-xs sm:text-sm" }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Warning Message */}
+                                        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 mt-4">
+                                            <p className="text-xs text-red-700 dark:text-red-300">
+                                                <strong>⚠️ Important:</strong> Please send only <strong>{coins.find(c => c.value === selectedCoin)?.label.split(' ')[0]}</strong> to this address. Sending any other token may result in permanent loss.
+                                            </p>
                                         </div>
                                     </div>
                                 </Tab>
@@ -147,8 +253,7 @@ export function CryptoPaymentModal({
                             </Button>
                             {key === "send" && (
                                 <Button className="bg-zinc-900 text-white dark:bg-zinc-100 dark:text-black" onPress={() => {
-                                    // Validate Logic Here
-                                    onClose();
+                                    onProofOpen();
                                 }}>
                                     I've Sent It
                                 </Button>
@@ -157,6 +262,27 @@ export function CryptoPaymentModal({
                     </>
                 )}
             </ModalContent>
+
+            <ProofUploadModal
+                isOpen={isProofOpen}
+                onOpenChange={() => {
+                    onProofOpenChange();
+                    onOpenChange();
+                }}
+                walletAddress={walletAddress}
+                amount={`${cryptoAmount} ${selectedCoin}`}
+                accountType={accountType}
+                onSubmit={async (proofImage) => {
+                    await submitDepositProof({
+                        coin: selectedCoin,
+                        amount: parseFloat(cryptoAmount),
+                        walletAddress: walletAddress,
+                        walletId: selectedWallet?.id,
+                        accountType,
+                        proofImage
+                    });
+                }}
+            />
         </Modal>
     );
 }

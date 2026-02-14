@@ -6,8 +6,35 @@ import KycSubmittedEmail from "@/emails/kyc-submitted-email";
 import KycApprovedEmail from "@/emails/kyc-approved-email";
 import KycRejectedEmail from "@/emails/kyc-rejected-email";
 import { AdminLoginEmail } from "@/emails/admin-login-email";
+import DepositConfirmedEmail from "@/emails/deposit-confirmed-email";
+import DepositRejectedEmail from "@/emails/deposit-rejected-email";
+import WithdrawalConfirmedEmail from "@/emails/withdrawal-confirmed-email";
+import WithdrawalRejectedEmail from "@/emails/withdrawal-rejected-email";
 
 const resend = new Resend(env.RESEND_API_KEY);
+
+const ADMIN_EMAIL = "admin@mastersync.live";
+
+// Admin notification helper
+async function sendAdminNotification(subject: string, html: string) {
+  if (!env.RESEND_API_KEY) {
+    console.warn("RESEND_API_KEY not configured, skipping admin notification");
+    return;
+  }
+
+  try {
+    const result = await resend.emails.send({
+      from: "MasterSync Alerts <alerts@mastersync.live>",
+      to: ADMIN_EMAIL,
+      subject: `[Admin Alert] ${subject}`,
+      html,
+    });
+    console.log("Admin notification sent successfully:", result);
+  } catch (error) {
+    console.error("Failed to send admin notification:", error);
+    throw error; // Re-throw to see the actual error
+  }
+}
 
 export async function sendOtpEmail(email: string, code: string) {
   if (!env.RESEND_API_KEY) {
@@ -65,7 +92,11 @@ export async function sendKycApprovedEmail(email: string, name: string) {
   });
 }
 
-export async function sendKycRejectedEmail(email: string, name: string, reason?: string) {
+export async function sendKycRejectedEmail(
+  email: string,
+  name: string,
+  reason?: string,
+) {
   if (!env.RESEND_API_KEY) {
     console.warn("RESEND_API_KEY not configured, skipping email");
     return;
@@ -83,7 +114,7 @@ export async function sendAdminLoginEmail(
   email: string,
   adminName: string,
   ipAddress?: string,
-  userAgent?: string
+  userAgent?: string,
 ) {
   if (!env.RESEND_API_KEY) {
     console.warn("RESEND_API_KEY not configured, skipping email");
@@ -101,4 +132,191 @@ export async function sendAdminLoginEmail(
     subject: "🔐 Admin Login Alert - MasterSync",
     react: AdminLoginEmail({ adminName, loginTime, ipAddress, userAgent }),
   });
+}
+
+export async function sendDepositConfirmedEmail(
+  email: string,
+  name: string,
+  amount: number,
+  coin: string,
+  accountType: string,
+) {
+  if (!env.RESEND_API_KEY) {
+    console.warn("RESEND_API_KEY not configured, skipping email");
+    return;
+  }
+
+  await resend.emails.send({
+    from: "MasterSync <deposits@mastersync.live>",
+    to: email,
+    subject: "✓ Deposit Confirmed - Funds Available",
+    react: DepositConfirmedEmail({ name, amount, coin, accountType }),
+  });
+}
+
+export async function sendDepositRejectedEmail(
+  email: string,
+  name: string,
+  amount: number,
+  coin: string,
+  reason?: string,
+) {
+  if (!env.RESEND_API_KEY) {
+    console.warn("RESEND_API_KEY not configured, skipping email");
+    return;
+  }
+
+  await resend.emails.send({
+    from: "MasterSync <deposits@mastersync.live>",
+    to: email,
+    subject: "Action Required: Deposit Verification",
+    react: DepositRejectedEmail({ name, amount, coin, reason }),
+  });
+}
+
+export async function sendWithdrawalConfirmedEmail(
+  email: string,
+  name: string,
+  amount: number,
+  coin: string,
+  address: string,
+) {
+  if (!env.RESEND_API_KEY) {
+    console.warn("RESEND_API_KEY not configured, skipping email");
+    return;
+  }
+
+  await resend.emails.send({
+    from: "MasterSync <withdrawals@mastersync.live>",
+    to: email,
+    subject: "✓ Withdrawal Processed Successfully",
+    react: WithdrawalConfirmedEmail({ name, amount, coin, address }),
+  });
+}
+
+export async function sendWithdrawalRejectedEmail(
+  email: string,
+  name: string,
+  amount: number,
+  coin: string,
+  reason?: string,
+) {
+  if (!env.RESEND_API_KEY) {
+    console.warn("RESEND_API_KEY not configured, skipping email");
+    return;
+  }
+
+  await resend.emails.send({
+    from: "MasterSync <withdrawals@mastersync.live>",
+    to: email,
+    subject: "Withdrawal Request Declined",
+    react: WithdrawalRejectedEmail({ name, amount, coin, reason }),
+  });
+}
+
+// Admin Notifications
+export async function notifyAdminUserLogin(
+  userEmail: string,
+  userName: string,
+) {
+  await sendAdminNotification(
+    "User Login",
+    `<p><strong>User logged in:</strong></p>
+    <p>Name: ${userName}</p>
+    <p>Email: ${userEmail}</p>
+    <p>Time: ${new Date().toLocaleString()}</p>`,
+  );
+}
+
+export async function notifyAdminNewAccount(
+  userEmail: string,
+  userName: string,
+) {
+  await sendAdminNotification(
+    "New Account Created",
+    `<p><strong>New user registered:</strong></p>
+    <p>Name: ${userName}</p>
+    <p>Email: ${userEmail}</p>
+    <p>Time: ${new Date().toLocaleString()}</p>`,
+  );
+}
+
+export async function notifyAdminDeposit(
+  userEmail: string,
+  amount: number,
+  asset: string,
+) {
+  await sendAdminNotification(
+    "New Deposit Request",
+    `<p><strong>User submitted deposit:</strong></p>
+    <p>Email: ${userEmail}</p>
+    <p>Amount: ${amount} ${asset}</p>
+    <p>Time: ${new Date().toLocaleString()}</p>
+    <p><a href="https://app.mastersync.live/cpanel/deposits">Review Deposits</a></p>`,
+  );
+}
+
+export async function notifyAdminWithdrawal(
+  userEmail: string,
+  amount: number,
+  asset: string,
+) {
+  await sendAdminNotification(
+    "New Withdrawal Request",
+    `<p><strong>User requested withdrawal:</strong></p>
+    <p>Email: ${userEmail}</p>
+    <p>Amount: ${amount} ${asset}</p>
+    <p>Time: ${new Date().toLocaleString()}</p>
+    <p><a href="https://app.mastersync.live/cpanel/withdrawals">Review Withdrawals</a></p>`,
+  );
+}
+
+export async function notifyAdminStake(
+  userEmail: string,
+  amount: number,
+  asset: string,
+  pool: string,
+) {
+  await sendAdminNotification(
+    "New Stake",
+    `<p><strong>User staked assets:</strong></p>
+    <p>Email: ${userEmail}</p>
+    <p>Amount: ${amount} ${asset}</p>
+    <p>Pool: ${pool}</p>
+    <p>Time: ${new Date().toLocaleString()}</p>`,
+  );
+}
+
+export async function notifyAdminTrade(
+  userEmail: string,
+  pair: string,
+  side: string,
+  amount: number,
+  total: number,
+) {
+  await sendAdminNotification(
+    "New Trade",
+    `<p><strong>User executed trade:</strong></p>
+    <p>Email: ${userEmail}</p>
+    <p>Pair: ${pair}</p>
+    <p>Side: ${side.toUpperCase()}</p>
+    <p>Amount: ${amount}</p>
+    <p>Total: $${total.toFixed(2)}</p>
+    <p>Time: ${new Date().toLocaleString()}</p>`,
+  );
+}
+
+export async function notifyAdminCopyTrade(
+  userEmail: string,
+  traderName: string,
+  amount: number,
+) {
+  await sendAdminNotification(
+    "New Copy Trade",
+    `<p><strong>User started copy trading:</strong></p>
+    <p>Email: ${userEmail}</p>
+    <p>Trader: ${traderName}</p>
+    <p>Amount: $${amount.toFixed(2)}</p>
+    <p>Time: ${new Date().toLocaleString()}</p>`,
+  );
 }

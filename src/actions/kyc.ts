@@ -1,401 +1,108 @@
 "use server";
 
-import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
-const uploadKycSchema = z.object({
-  documentType: z.string(),
-  filePath: z.string(),
-});
-
-export async function uploadKycAction(formData: FormData) {
+export async function submitKycAction(formData: FormData) {
+  
   const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
+  
+  const { data: { user } } = await supabase.auth.getUser();
+  
   if (!user) {
-    return { error: "Unauthorized" };
+    console.error("No user found");
+    return { error: "Not authenticated" };
   }
 
-  const frontFile = formData.get("frontFile") as File;
-  const backFile = formData.get("backFile") as File | null;
+  const fullName = formData.get("fullName") as string;
+  const idNumber = formData.get("idNumber") as string;
+  const frontId = formData.get("frontId") as File;
+  const backId = formData.get("backId") as File;
 
-  if (!frontFile) {
-    return { error: "Front of ID is required" };
+
+  if (!fullName || !idNumber || !frontId || !backId) {
+    console.error("Missing fields");
+    return { error: "All fields are required" };
   }
 
-  // Validate file size (5MB max)
-  if (frontFile.size > 5 * 1024 * 1024) {
-    return { error: "Front file is too large (max 5MB)" };
+  // Upload documents to Supabase Storage
+  const timestamp = Date.now();
+  
+  const { data: frontData, error: frontError } = await supabase.storage
+    .from("kyc-documents")
+    .upload(`${user.id}/front-${timestamp}.${frontId.name.split('.').pop()}`, frontId);
+
+  if (frontError) {
+    console.error("Front ID upload error:", frontError);
+    return { error: "Failed to upload front ID" };
   }
 
-  if (backFile && backFile.size > 5 * 1024 * 1024) {
-    return { error: "Back file is too large (max 5MB)" };
+  const { data: backData, error: backError } = await supabase.storage
+    .from("kyc-documents")
+    .upload(`${user.id}/back-${timestamp}.${backId.name.split('.').pop()}`, backId);
+
+  if (backError) {
+    console.error("Back ID upload error:", backError);
+    return { error: "Failed to upload back ID" };
   }
 
-  // Validate file type
-  const allowedTypes = ["image/jpeg", "image/png", "application/pdf"];
-  if (!allowedTypes.includes(frontFile.type)) {
-    return { error: "Invalid file type. Please upload JPG, PNG, or PDF" };
-  }
+  // Get public URLs
+  const { data: { publicUrl: frontUrl } } = supabase.storage
+    .from("kyc-documents")
+    .getPublicUrl(frontData.path);
 
-  if (backFile && !allowedTypes.includes(backFile.type)) {
-    return { error: "Invalid file type for back. Please upload JPG, PNG, or PDF" };
-  }
+  const { data: { publicUrl: backUrl } } = supabase.storage
+    .from("kyc-documents")
+    .getPublicUrl(backData.path);
 
-  try {
-    // Upload front file
-    const frontFileName = `${user.id}/${Date.now()}-front-${frontFile.name}`;
-    const { error: frontUploadError } = await supabase.storage
-      .from("kyc-documents")
-      .upload(frontFileName, frontFile);
+  console.log("Public URLs:", { frontUrl, backUrl });
 
-    if (frontUploadError) {
-      console.error("Front upload error:", frontUploadError);
-      return { error: "Failed to upload front of ID" };
-    }
-
-    // Insert front submission
-    const { error: frontInsertError } = await supabase.from("kyc_submissions").insert({
+  // Insert KYC submission
+  console.log("Inserting KYC submission...");
+  const { error: insertError } = await supabase
+    .from("kyc_submissions")
+    .insert({
       user_id: user.id,
-      document_type: "id_front",
-      file_path: frontFileName,
-      status: "pending",
+      full_name: fullName,
+      id_number: idNumber,
+      document_front_url: frontUrl,
+      document_back_url: backUrl,
+      status: "pending"
     });
 
-    if (frontInsertError) {
-      console.error("Front insert error:", frontInsertError);
-      return { error: "Failed to save front document" };
-    }
-
-    // Upload back file if provided
-    if (backFile) {
-      const backFileName = `${user.id}/${Date.now()}-back-${backFile.name}`;
-      const { error: backUploadError } = await supabase.storage
-        .from("kyc-documents")
-        .upload(backFileName, backFile);
-
-      if (backUploadError) {
-        console.error("Back upload error:", backUploadError);
-        // Don't fail if back upload fails
-      } else {
-        await supabase.from("kyc_submissions").insert({
-          user_id: user.id,
-          document_type: "id_back",
-          file_path: backFileName,
-          status: "pending",
-        });
-      }
-    }
-
-    // Update profile KYC status
-    await supabase
-      .from("profiles")
-      .update({ kyc_status: "pending" })
-      .eq("id", user.id);
-
-    revalidatePath("/dashboard");
-    return { success: true };
-  } catch (error) {
-    console.error("KYC upload error:", error);
-    return { error: "An error occurred during upload" };
+  if (insertError) {
+    console.error("Insert error:", insertError);
+    return { error: "Failed to submit KYC" };
   }
-}
-
-export async function uploadKycDocumentAction(data: z.infer<typeof uploadKycSchema>) {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return { error: "Unauthorized" };
-  }
-
-  const { error } = await supabase.from("kyc_submissions").insert({
-    user_id: user.id,
-    document_type: data.documentType,
-    file_path: data.filePath,
-    status: "pending",
-  });
-
-  if (error) {
-    return { error: error.message };
-  }
+  console.log("KYC submission inserted successfully");
 
   // Update profile KYC status
-  await supabase
+  console.log("Updating profile KYC status...");
+  const { error: updateError } = await supabase
     .from("profiles")
     .update({ kyc_status: "pending" })
     .eq("id", user.id);
 
+  if (updateError) {
+    console.error("Profile update error:", updateError);
+  }
+
+  revalidatePath("/dashboard");
   revalidatePath("/dashboard/account");
   return { success: true };
 }
 
 export async function getKycStatus() {
   const supabase = await createClient();
+  
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return null;
-  }
-
-  const { data } = await supabase
+  const { data: profile } = await supabase
     .from("profiles")
-    .select("kyc_status, kyc_rejection_reason")
+    .select("kyc_status")
     .eq("id", user.id)
     .single();
 
-  return data;
-}
-
-// Advanced KYC submission
-export async function submitAdvancedKycAction(data: {
-  frontImage: string;
-  backImage?: string;
-  selfieImage: string;
-  extractedData: any;
-  verificationResult: any;
-}) {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return { error: "Unauthorized" };
-  }
-
-  try {
-    // Get user profile for email
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("first_name, last_name, email")
-      .eq("id", user.id)
-      .single();
-
-    const userName = profile && profile.first_name && profile.last_name
-      ? `${profile.first_name} ${profile.last_name}`.trim() 
-      : (profile?.email || user.email || "User").split("@")[0];
-
-    // Convert base64 to blob and upload
-    const frontBlob = base64ToBlob(data.frontImage);
-    const selfieBlob = base64ToBlob(data.selfieImage);
-    const backBlob = data.backImage ? base64ToBlob(data.backImage) : null;
-
-    const timestamp = Date.now();
-    const frontPath = `${user.id}/${timestamp}-front.jpg`;
-    const selfiePath = `${user.id}/${timestamp}-selfie.jpg`;
-    const backPath = data.backImage ? `${user.id}/${timestamp}-back.jpg` : null;
-
-    console.log("Uploading files:", { frontPath, selfiePath, backPath });
-    console.log("Blob sizes:", { 
-      front: frontBlob.size, 
-      selfie: selfieBlob.size, 
-      back: backBlob?.size 
-    });
-
-    // Use service role for uploads (bypasses RLS)
-    const { createClient: createServiceClient } = await import("@supabase/supabase-js");
-    const { env } = await import("@/env");
-    const serviceSupabase = createServiceClient(
-      env.NEXT_PUBLIC_SUPABASE_URL,
-      env.SUPABASE_SERVICE_ROLE_KEY
-    );
-
-    // Upload front
-    const { error: frontError } = await serviceSupabase.storage
-      .from("kyc-documents")
-      .upload(frontPath, frontBlob, { contentType: "image/jpeg", upsert: false });
-
-    if (frontError) {
-      console.error("Front upload error details:", frontError);
-      throw new Error(`Failed to upload front image: ${frontError.message}`);
-    }
-
-    // Upload selfie
-    const { error: selfieError } = await serviceSupabase.storage
-      .from("kyc-documents")
-      .upload(selfiePath, selfieBlob, { contentType: "image/jpeg", upsert: false });
-
-    if (selfieError) {
-      console.error("Selfie upload error details:", selfieError);
-      throw new Error(`Failed to upload selfie: ${selfieError.message}`);
-    }
-
-    // Upload back if exists
-    if (backBlob && backPath) {
-      await serviceSupabase.storage
-        .from("kyc-documents")
-        .upload(backPath, backBlob, { contentType: "image/jpeg", upsert: false });
-    }
-
-    console.log("All files uploaded successfully");
-
-    // Create submission records using service role (already initialized above)
-
-    // Create submission records
-    const { data: frontSubmission, error: frontSubError } = await serviceSupabase
-      .from("kyc_submissions")
-      .insert({
-        user_id: user.id,
-        document_type: "id_front",
-        file_path: frontPath,
-        status: "pending",
-      })
-      .select()
-      .single();
-
-    if (frontSubError) {
-      console.error("Front submission error:", frontSubError);
-      throw new Error(`Failed to create front submission: ${frontSubError.message}`);
-    }
-
-    if (backPath) {
-      await serviceSupabase.from("kyc_submissions").insert({
-        user_id: user.id,
-        document_type: "id_back",
-        file_path: backPath,
-        status: "pending",
-      });
-    }
-
-    const { data: selfieSubmission } = await serviceSupabase
-      .from("kyc_submissions")
-      .insert({
-        user_id: user.id,
-        document_type: "selfie",
-        file_path: selfiePath,
-        status: "pending",
-      })
-      .select()
-      .single();
-
-    console.log("Saving extracted document data...");
-    console.log("Extracted data:", data.extractedData);
-    // Save extracted document data
-    const { data: insertedDoc, error: docDataError } = await serviceSupabase.from("kyc_document_data").insert({
-      user_id: user.id,
-      submission_id: frontSubmission.id,
-      given_names: data.extractedData.givenNames,
-      surname: data.extractedData.surname,
-      date_of_birth: data.extractedData.dateOfBirth,
-      gender: data.extractedData.gender,
-      nationality: data.extractedData.nationality,
-      document_number: data.extractedData.documentNumber,
-      expiry_date: data.extractedData.expiryDate,
-      mrz_line1: data.extractedData.mrzLine1,
-      mrz_line2: data.extractedData.mrzLine2,
-      mrz_valid: data.extractedData.mrzValid,
-      ocr_confidence: data.extractedData.confidence,
-      raw_ocr_text: data.extractedData.rawText,
-    }).select();
-    console.log("Inserted doc data:", insertedDoc);
-    if (docDataError) console.error("Document data error:", docDataError);
-
-    console.log("Saving liveness check...");
-    // Save liveness check
-    const { error: livenessError } = await serviceSupabase.from("kyc_liveness_checks").insert({
-      user_id: user.id,
-      challenges_given: ["face_detection"],
-      challenges_passed: data.verificationResult.liveness.passed ? ["face_detection"] : [],
-      blink_detected: false,
-      smile_detected: false,
-      passed: data.verificationResult.liveness.passed,
-      confidence_score: 100,
-    });
-    if (livenessError) console.error("Liveness error:", livenessError);
-
-    console.log("Saving face match...");
-    // Save face match
-    const { error: faceMatchError } = await serviceSupabase.from("kyc_face_matches").insert({
-      user_id: user.id,
-      similarity_score: data.verificationResult.faceMatch.score,
-      euclidean_distance: (1 - data.verificationResult.faceMatch.score / 100) * 0.6,
-      is_match: data.verificationResult.faceMatch.passed,
-    });
-    if (faceMatchError) console.error("Face match error:", faceMatchError);
-
-    console.log("Saving verification result...");
-    // Save overall verification result
-    const { error: verificationError } = await serviceSupabase.from("kyc_verification_results").insert({
-      user_id: user.id,
-      face_match_score: data.verificationResult.faceMatch.score,
-      liveness_score: data.verificationResult.liveness.passed ? 100 : 0,
-      ocr_confidence_score: data.extractedData.confidence || 0,
-      overall_confidence: data.verificationResult.overall.confidence,
-      status: data.verificationResult.overall.status,
-      failure_reasons: data.verificationResult.overall.status === "failed" ? ["Low confidence"] : [],
-      verified_at: data.verificationResult.overall.status === "passed" ? new Date().toISOString() : null,
-    });
-    if (verificationError) console.error("Verification result error:", verificationError);
-
-    console.log("Updating profile KYC status...");
-    // Update profile KYC status
-    const newStatus = data.verificationResult.overall.status === "passed" ? "auto_verified" : "pending";
-    const { error: profileError } = await serviceSupabase
-      .from("profiles")
-      .update({ kyc_status: newStatus })
-      .eq("id", user.id);
-    if (profileError) console.error("Profile update error:", profileError);
-
-    console.log("Sending email notification...");
-    // Send appropriate email
-    const { sendKycSubmittedEmail, sendKycApprovedEmail } = await import("@/lib/email");
-    
-    if (newStatus === "auto_verified") {
-      await sendKycApprovedEmail(user.email!, userName);
-    } else {
-      await sendKycSubmittedEmail(user.email!, userName);
-    }
-
-    console.log("KYC submission completed successfully");
-    revalidatePath("/dashboard");
-    return { success: true, status: newStatus };
-  } catch (error: any) {
-    console.error("Advanced KYC submission error:", error);
-    return { error: error.message || "Failed to submit KYC" };
-  }
-}
-
-function base64ToBlob(base64: string): Blob {
-  try {
-    // Remove data URL prefix if present
-    const base64Data = base64.includes(',') ? base64.split(',')[1] : base64;
-    const contentType = base64.includes(',') 
-      ? base64.split(',')[0].split(':')[1].split(';')[0]
-      : 'image/jpeg';
-    
-    // Decode base64
-    const byteCharacters = atob(base64Data);
-    const byteArrays = [];
-    
-    // Convert to byte array in chunks
-    const sliceSize = 512;
-    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-      const slice = byteCharacters.slice(offset, offset + sliceSize);
-      const byteNumbers = new Array(slice.length);
-      
-      for (let i = 0; i < slice.length; i++) {
-        byteNumbers[i] = slice.charCodeAt(i);
-      }
-      
-      const byteArray = new Uint8Array(byteNumbers);
-      byteArrays.push(byteArray);
-    }
-    
-    return new Blob(byteArrays, { type: contentType });
-  } catch (error) {
-    console.error("base64ToBlob error:", error);
-    throw new Error("Failed to convert image data");
-  }
+  return profile?.kyc_status || "pending";
 }

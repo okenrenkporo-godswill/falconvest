@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Tabs,
@@ -9,15 +9,24 @@ import {
   Input,
   Select,
   SelectItem,
-  useDisclosure
+  useDisclosure,
 } from "@heroui/react";
 import { useState } from "react";
 import { PricingModal } from "@/components/deposit/pricing-modal";
 import { CryptoPaymentModal } from "@/components/deposit/crypto-payment-modal";
-import { Wallet, Info, ArrowUpRight, ShieldCheck, TrendingUp, Bitcoin } from "lucide-react";
+import {
+  Wallet,
+  Info,
+  ArrowUpRight,
+  ShieldCheck,
+  TrendingUp,
+  Bitcoin,
+} from "lucide-react";
 
-import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect } from "react";
+import { DepositHistory } from "@/components/deposit/deposit-history";
+import { getUserDeposits } from "@/actions/deposits";
+import { useSearchParams } from "next/navigation";
 
 function DepositContent() {
   const searchParams = useSearchParams();
@@ -25,21 +34,37 @@ function DepositContent() {
 
   const [amount, setAmount] = useState("");
   const [accountType, setAccountType] = useState("trading");
+  const [deposits, setDeposits] = useState<any[]>([]);
+  const [isLoadingDeposits, setIsLoadingDeposits] = useState(true);
 
   useEffect(() => {
     if (walletParam) {
-      // Map param to id if needed, or just set if matches
-      if (['trading', 'holdings', 'staking'].includes(walletParam)) {
+      if (["trading", "holdings", "staking"].includes(walletParam)) {
         setAccountType(walletParam);
       }
     }
   }, [walletParam]);
 
-  const { isOpen: isPricingOpen, onOpen: onPricingOpen, onOpenChange: onPricingOpenChange } = useDisclosure();
-  const { isOpen: isPaymentOpen, onOpen: onPaymentOpen, onOpenChange: onPaymentOpenChange } = useDisclosure();
+  useEffect(() => {
+    setIsLoadingDeposits(true);
+    getUserDeposits().then((data) => {
+      setDeposits(data);
+      setIsLoadingDeposits(false);
+    });
+  }, []);
+
+  const {
+    isOpen: isPricingOpen,
+    onOpen: onPricingOpen,
+    onOpenChange: onPricingOpenChange,
+  } = useDisclosure();
+  const {
+    isOpen: isPaymentOpen,
+    onOpen: onPaymentOpen,
+    onOpenChange: onPaymentOpenChange,
+  } = useDisclosure();
 
   const handleDeposit = () => {
-    // Validation: Check amount > 0
     if (!amount || parseFloat(amount) <= 0) return;
     onPaymentOpen();
   };
@@ -54,7 +79,9 @@ function DepositContent() {
         <h1 className="text-3xl font-bold bg-gradient-to-r from-default-900 to-default-500 bg-clip-text text-transparent">
           Fund Your Account
         </h1>
-        <p className="text-default-500 mt-1">Select an account type and choose your preferred payment method.</p>
+        <p className="text-default-500 mt-1">
+          Select an account type and choose your preferred payment method.
+        </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -62,7 +89,6 @@ function DepositContent() {
         <div className="lg:col-span-2 space-y-6">
           <Card className="border-none shadow-sm dark:bg-content1/50">
             <CardBody className="gap-6 p-6">
-
               {/* Account Selection */}
               <div>
                 <label className="text-sm font-medium text-default-600 mb-2 block">
@@ -79,13 +105,17 @@ function DepositContent() {
                       onClick={() => setAccountType(type.id)}
                       className={`
                         flex flex-col items-center justify-center p-4 rounded-xl border transition-all duration-200
-                        ${accountType === type.id
-                          ? "bg-primary/10 border-primary text-primary"
-                          : "bg-default-50 border-transparent hover:bg-default-100 text-default-500"}
+                        ${
+                          accountType === type.id
+                            ? "bg-primary/10 border-primary text-primary"
+                            : "bg-default-50 border-transparent hover:bg-default-100 text-default-500"
+                        }
                       `}
                     >
                       <type.icon size={24} className="mb-2" />
-                      <span className="text-xs font-semibold">{type.label}</span>
+                      <span className="text-xs font-semibold">
+                        {type.label}
+                      </span>
                     </button>
                   ))}
                 </div>
@@ -94,7 +124,9 @@ function DepositContent() {
               {/* Amount Input */}
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <label className="text-sm font-medium text-default-600">Step 2: Enter Amount</label>
+                  <label className="text-sm font-medium text-default-600">
+                    Step 2: Enter Amount
+                  </label>
                   <Button
                     size="sm"
                     variant="light"
@@ -107,7 +139,9 @@ function DepositContent() {
                   </Button>
                 </div>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-default-400 text-xl font-bold">$</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-default-400 text-xl font-bold">
+                    $
+                  </span>
                   <input
                     type="number"
                     value={amount}
@@ -129,7 +163,6 @@ function DepositContent() {
                   Confirm Deposits
                 </Button>
               </div>
-
             </CardBody>
           </Card>
 
@@ -137,11 +170,16 @@ function DepositContent() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="p-4 rounded-xl bg-blue-50/50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30">
               <div className="flex gap-3">
-                <div className="mt-1"><Info size={20} className="text-blue-500" /></div>
+                <div className="mt-1">
+                  <Info size={20} className="text-blue-500" />
+                </div>
                 <div>
-                  <h4 className="font-semibold text-blue-700 dark:text-blue-400 text-sm">Instant Credit</h4>
+                  <h4 className="font-semibold text-blue-700 dark:text-blue-400 text-sm">
+                    Instant Credit
+                  </h4>
                   <p className="text-xs text-blue-600/80 dark:text-blue-400/70 mt-1">
-                    Deposits via crypto are credited automatically after 1-3 network confirmations.
+                    Deposits via crypto are credited automatically after 1-3
+                    network confirmations.
                   </p>
                 </div>
               </div>
@@ -149,11 +187,16 @@ function DepositContent() {
 
             <div className="p-4 rounded-xl bg-green-50/50 dark:bg-green-900/10 border border-green-100 dark:border-green-900/30">
               <div className="flex gap-3">
-                <div className="mt-1"><ShieldCheck size={20} className="text-green-500" /></div>
+                <div className="mt-1">
+                  <ShieldCheck size={20} className="text-green-500" />
+                </div>
                 <div>
-                  <h4 className="font-semibold text-green-700 dark:text-green-400 text-sm">Secure Processing</h4>
+                  <h4 className="font-semibold text-green-700 dark:text-green-400 text-sm">
+                    Secure Processing
+                  </h4>
                   <p className="text-xs text-green-600/80 dark:text-green-400/70 mt-1">
-                    All transactions are encrypted and processed through secure generic gateways.
+                    All transactions are encrypted and processed through secure
+                    generic gateways.
                   </p>
                 </div>
               </div>
@@ -166,7 +209,10 @@ function DepositContent() {
           <Card className="bg-gradient-to-br from-default-900 to-default-800 text-white border-none">
             <CardBody className="p-6">
               <h3 className="font-bold text-lg mb-1">Need Crypto?</h3>
-              <p className="text-default-300 text-sm mb-4">You can buy Bitcoin, Ethereum and more directly from our partners.</p>
+              <p className="text-default-300 text-sm mb-4">
+                You can buy Bitcoin, Ethereum and more directly from our
+                partners.
+              </p>
               <Button
                 className="w-full bg-white text-black font-semibold"
                 endContent={<ArrowUpRight size={16} />}
@@ -183,13 +229,32 @@ function DepositContent() {
       </div>
 
       {/* Modals */}
-      <PricingModal isOpen={isPricingOpen} onOpenChange={onPricingOpenChange} />
+      <PricingModal 
+        isOpen={isPricingOpen} 
+        onOpenChange={onPricingOpenChange}
+        onSelectPackage={(packageAmount) => {
+          setAmount(packageAmount.toString());
+        }}
+      />
       <CryptoPaymentModal
         isOpen={isPaymentOpen}
-        onOpenChange={onPaymentOpenChange}
+        onOpenChange={() => {
+          onPaymentOpenChange();
+          setIsLoadingDeposits(true);
+          getUserDeposits().then((data) => {
+            setDeposits(data);
+            setIsLoadingDeposits(false);
+          });
+        }}
         accountType={accountType.toUpperCase()}
         amount={`$${amount || "0.00"}`}
       />
+
+      {/* Deposit History */}
+      <div className="mt-8">
+        <h2 className="text-xl font-bold mb-4">Deposit History</h2>
+        <DepositHistory deposits={deposits} isLoading={isLoadingDeposits} />
+      </div>
     </div>
   );
 }

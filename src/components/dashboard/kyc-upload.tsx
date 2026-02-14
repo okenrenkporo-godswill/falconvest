@@ -1,7 +1,6 @@
 "use client";
 
 import { Button, Card, CardBody, CardHeader, Chip } from "@heroui/react";
-import { uploadKycDocumentAction } from "@/actions/kyc";
 import { useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -55,13 +54,9 @@ export function KycUpload({ kycStatus, rejectionReason }: KycUploadProps) {
 
       if (uploadError) throw uploadError;
 
-      // Save to database
-      await uploadKycDocumentAction({
-        documentType: "government_id",
-        filePath: uploadData.path,
-      });
-
-      window.location.reload();
+      // Save to database (deprecated - using simplified KYC)
+      // Redirect to account page for KYC submission
+      window.location.href = "/dashboard/account?openKyc=true";
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");
     } finally {
