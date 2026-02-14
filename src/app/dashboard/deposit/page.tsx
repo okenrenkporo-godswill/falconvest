@@ -126,7 +126,7 @@ function DepositContent() {
                   startContent={<Wallet size={20} />}
                   onPress={handleDeposit}
                 >
-                  Confirm Deposit
+                  Confirm Deposits
                 </Button>
               </div>
 
