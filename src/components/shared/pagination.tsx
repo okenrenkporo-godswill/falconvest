@@ -13,7 +13,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
   if (totalPages <= 1) return null;
 
   const pages = [];
-  const showPages = 5;
+  const showPages = 3; // Reduced for better mobile fit
   let startPage = Math.max(1, currentPage - Math.floor(showPages / 2));
   let endPage = Math.min(totalPages, startPage + showPages - 1);
 
@@ -26,7 +26,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
   }
 
   return (
-    <div className="flex items-center justify-center gap-2 mt-6">
+    <div className="flex items-center justify-center gap-1 sm:gap-2 mt-6 flex-wrap overflow-x-auto max-w-full pb-2">
       <Button
         isIconOnly
         size="sm"

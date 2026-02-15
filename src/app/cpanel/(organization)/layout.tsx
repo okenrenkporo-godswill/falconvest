@@ -4,8 +4,9 @@ import { useState } from "react";
 import { Button, Avatar, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { 
-  LayoutDashboard, Users, FileCheck, Wallet, ArrowDownToLine, 
+import { ThemeToggle } from "@/components/theme-toggle";
+import {
+  LayoutDashboard, Users, FileCheck, Wallet, ArrowDownToLine,
   ArrowUpFromLine, TrendingUp, UserCog, Menu, X, LogOut, Settings, Copy, Lock, Briefcase
 } from "lucide-react";
 
@@ -38,13 +39,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Mobile Header */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-background border-b px-4 py-3 flex items-center justify-between">
         <h1 className="text-xl font-bold">Control Panel</h1>
-        <Button
-          isIconOnly
-          variant="light"
-          onPress={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
-          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </Button>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Button
+            isIconOnly
+            variant="light"
+            onPress={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </Button>
+        </div>
       </div>
 
       {/* Sidebar */}
@@ -82,40 +86,42 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </nav>
 
           {/* User Menu */}
-          <div className="p-4 border-t">
-            <Dropdown placement="top">
-              <DropdownTrigger>
-                <Button variant="light" className="w-full justify-start">
-                  <div className="flex items-center gap-3">
-                    <Avatar size="sm" name="Admin" />
-                    <div className="text-left">
-                      <p className="text-sm font-semibold">Admin User</p>
-                      <p className="text-xs text-default-500">admin@mastersync.com</p>
+          <div className="p-4 border-t flex items-center gap-2">
+            <div className="flex-1 min-w-0">
+              <Dropdown placement="top">
+                <DropdownTrigger>
+                  <Button variant="light" className="w-full justify-start px-2">
+                    <div className="flex items-center gap-2 overflow-hidden">
+                      <Avatar size="sm" name="Admin" className="flex-shrink-0" />
+                      <div className="text-left overflow-hidden">
+                        <p className="text-sm font-semibold truncate">Admin User</p>
+                      </div>
                     </div>
-                  </div>
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu>
-                <DropdownItem key="settings" startContent={<Settings size={16} />}>
-                  Settings
-                </DropdownItem>
-                <DropdownItem 
-                  key="logout" 
-                  color="danger" 
-                  startContent={<LogOut size={16} />}
-                  onPress={handleLogout}
-                >
-                  Logout
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu>
+                  <DropdownItem key="settings" startContent={<Settings size={16} />}>
+                    Settings
+                  </DropdownItem>
+                  <DropdownItem
+                    key="logout"
+                    color="danger"
+                    startContent={<LogOut size={16} />}
+                    onPress={handleLogout}
+                  >
+                    Logout
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </div>
+            <ThemeToggle />
           </div>
         </div>
       </aside>
 
       {/* Overlay for mobile */}
       {isMobileMenuOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 z-30 lg:hidden"
           onClick={() => setIsMobileMenuOpen(false)}
         />

@@ -28,7 +28,7 @@ export function CryptoPaymentModal({
     const [walletAddress, setWalletAddress] = useState<string>("");
     const [selectedWallet, setSelectedWallet] = useState<any>(null);
     const [isLoadingWallet, setIsLoadingWallet] = useState(false);
-    const [coins, setCoins] = useState<Array<{label: string; value: string; icon: string; logo?: string}>>([]);
+    const [coins, setCoins] = useState<Array<{ label: string; value: string; icon: string; logo?: string }>>([]);
     const [cryptoAmount, setCryptoAmount] = useState<string>("0");
     const [isLoadingRate, setIsLoadingRate] = useState(false);
     const { isOpen: isProofOpen, onOpen: onProofOpen, onOpenChange: onProofOpenChange } = useDisclosure();
@@ -59,7 +59,7 @@ export function CryptoPaymentModal({
                 const coinId = coinIds[selectedCoin] || selectedCoin.toLowerCase();
                 const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd`);
                 const data = await response.json();
-                
+
                 const rate = data[coinId]?.usd || 1;
                 const crypto = usdAmount / rate;
                 setCryptoAmount(crypto.toFixed(8));
@@ -84,7 +84,7 @@ export function CryptoPaymentModal({
             setWalletAddress("");
             setSelectedWallet(null);
             setIsLoadingWallet(true);
-            
+
             // Get platform wallet for selected coin
             getActivePlatformWallets().then((wallets) => {
                 const wallet = wallets.find(w => w.symbol === selectedCoin);
@@ -138,8 +138,8 @@ export function CryptoPaymentModal({
                                             }}
                                         >
                                             {coins.map((coin) => (
-                                                <SelectItem 
-                                                    key={coin.value} 
+                                                <SelectItem
+                                                    key={coin.value}
                                                     startContent={
                                                         coin.logo ? (
                                                             <img src={coin.logo} alt={coin.value} className="w-5 h-5 rounded-full" />
@@ -276,6 +276,7 @@ export function CryptoPaymentModal({
                     await submitDepositProof({
                         coin: selectedCoin,
                         amount: parseFloat(cryptoAmount),
+                        usdAmount: parseFloat(amount.replace(/[^0-9.]/g, "")),
                         walletAddress: walletAddress,
                         walletId: selectedWallet?.id,
                         accountType,

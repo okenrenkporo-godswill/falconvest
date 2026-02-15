@@ -1,19 +1,35 @@
 "use client";
 
-import { Card, CardBody, Skeleton, Chip, Tabs, Tab } from "@heroui/react";
+import { Card, CardBody, Skeleton, Chip, Tabs, Tab, Button, addToast } from "@heroui/react"; // Added addToast
 import { useEffect, useState } from "react";
 import { getUserDetails } from "@/actions/admin-user-details";
-import { ArrowLeft, User, Wallet, TrendingUp, ArrowDownCircle, ArrowUpCircle, Lock, ShieldCheck } from "lucide-react";
+import { adminStopCopyTrade } from "@/actions/admin-copy-trades"; // Use quiet action to prevent reload
+import { ArrowLeft, User, Wallet, TrendingUp, ArrowDownCircle, ArrowUpCircle, Lock, ShieldCheck, Plus } from "lucide-react"; // Added Plus
 import Link from "next/link";
 import Image from "next/image";
+import { AddCopyTradeResultModal } from "./add-copy-trade-result-modal";
+import { UpdateBalanceModal } from "./update-balance-modal"; // Import new modal
+
+import { getCryptoPrices } from "@/lib/crypto-prices"; // Import price fetcher
 
 export function UserDetailsContent({ userId }: { userId: string }) {
   const [data, setData] = useState<any>(null);
+  const [prices, setPrices] = useState<Record<string, number>>({}); // Prices state
   const [isLoading, setIsLoading] = useState(true);
+  const [isCopyTradeModalOpen, setIsCopyTradeModalOpen] = useState(false);
+  const [isBalanceModalOpen, setIsBalanceModalOpen] = useState(false);
+  const [selectedCopyTrade, setSelectedCopyTrade] = useState("");
+  const [selectedTraderName, setSelectedTraderName] = useState("");
 
   useEffect(() => {
-    getUserDetails(userId).then((result) => {
+    getUserDetails(userId).then(async (result) => {
       setData(result);
+      if (result?.balances) {
+        // Fetch prices for all assets in balance
+        const assets = Array.from(new Set(result.balances.map((b: any) => b.asset))) as string[];
+        const fetchedPrices = await getCryptoPrices(assets);
+        setPrices(fetchedPrices);
+      }
       setIsLoading(false);
     });
   }, [userId]);
@@ -47,7 +63,12 @@ export function UserDetailsContent({ userId }: { userId: string }) {
     );
   }
 
-  const totalBalance = data.balances.reduce((sum: number, b: any) => sum + Number(b.amount), 0);
+  // Calculate total balance using real-time prices
+  const totalBalance = data.balances.reduce((sum: number, b: any) => {
+    const price = prices[b.asset] || 0;
+    const value = Number(b.amount) * price;
+    return sum + value;
+  }, 0);
 
   return (
     <div className="space-y-6">
@@ -79,6 +100,7 @@ export function UserDetailsContent({ userId }: { userId: string }) {
           </CardBody>
         </Card>
 
+        {/* ... (other stats cards unchanged) ... */}
         <Card className="border-none shadow-sm dark:bg-zinc-900">
           <CardBody className="p-4">
             <div className="flex items-center gap-3">
@@ -107,18 +129,16 @@ export function UserDetailsContent({ userId }: { userId: string }) {
           </CardBody>
         </Card>
 
-        <Card className={`border-none shadow-sm ${
-          data.profile.kyc_status === "manually_verified" || data.profile.kyc_status === "auto_verified"
-            ? "bg-success-50 dark:bg-success-900/20"
-            : "bg-warning-50 dark:bg-warning-900/20"
-        }`}>
+        <Card className={`border-none shadow-sm ${data.profile.kyc_status === "manually_verified" || data.profile.kyc_status === "auto_verified"
+          ? "bg-success-50 dark:bg-success-900/20"
+          : "bg-warning-50 dark:bg-warning-900/20"
+          }`}>
           <CardBody className="p-4">
             <div className="flex items-center gap-3">
-              <div className={`p-2 ${
-                data.profile.kyc_status === "manually_verified" || data.profile.kyc_status === "auto_verified"
-                  ? "bg-success/10"
-                  : "bg-warning/10"
-              } rounded-lg`}>
+              <div className={`p-2 ${data.profile.kyc_status === "manually_verified" || data.profile.kyc_status === "auto_verified"
+                ? "bg-success/10"
+                : "bg-warning/10"
+                } rounded-lg`}>
                 <ShieldCheck size={20} className={
                   data.profile.kyc_status === "manually_verified" || data.profile.kyc_status === "auto_verified"
                     ? "text-success"
@@ -133,8 +153,8 @@ export function UserDetailsContent({ userId }: { userId: string }) {
                     data.profile.kyc_status === "manually_verified" || data.profile.kyc_status === "auto_verified"
                       ? "success"
                       : data.profile.kyc_status === "pending"
-                      ? "warning"
-                      : "danger"
+                        ? "warning"
+                        : "danger"
                   }
                 >
                   {data.profile.kyc_status || "unverified"}
@@ -225,19 +245,40 @@ export function UserDetailsContent({ userId }: { userId: string }) {
         <CardBody className="p-0">
           <Tabs aria-label="User data tabs" className="p-4">
             <Tab key="balances" title="Balances">
-              <div className="space-y-3 pt-4">
+              <div className="flex justify-between items-center bg-default-50 p-3 rounded-lg mb-4">
+                <h3 className="font-semibold">User Balances</h3>
+                <Button
+                  size="sm"
+                  color="primary"
+                  startContent={<Plus size={16} />}
+                  onPress={() => setIsBalanceModalOpen(true)}
+                >
+                  Update Balance
+                </Button>
+              </div>
+              <div className="space-y-3">
                 {data.balances.length === 0 ? (
                   <p className="text-sm text-default-500 text-center py-8">No balances</p>
                 ) : (
-                  data.balances.map((balance: any) => (
-                    <div key={balance.id} className="flex justify-between items-center p-3 bg-default-50 dark:bg-default-50/5 rounded-lg">
-                      <div>
-                        <p className="font-semibold">{balance.asset}</p>
-                        <p className="text-xs text-default-500">{balance.account_type}</p>
+                  data.balances.map((balance: any) => {
+                    const price = prices[balance.asset] || 0;
+                    const usdValue = Number(balance.amount) * price;
+                    return (
+                      <div key={balance.id} className="flex justify-between items-center p-3 bg-default-50 dark:bg-default-50/5 rounded-lg">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <p className="font-semibold">{balance.asset}</p>
+                            <span className="text-xs text-default-500">(${price.toLocaleString()})</span>
+                          </div>
+                          <p className="text-xs text-default-500">{balance.account_type}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-bold">${usdValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                          <p className="text-xs text-default-500">{Number(balance.amount).toFixed(8)} {balance.asset}</p>
+                        </div>
                       </div>
-                      <p className="font-bold">{Number(balance.amount).toFixed(8)}</p>
-                    </div>
-                  ))
+                    )
+                  })
                 )}
               </div>
             </Tab>
@@ -301,7 +342,7 @@ export function UserDetailsContent({ userId }: { userId: string }) {
                         size="sm"
                         color={
                           deposit.status === "confirmed" ? "success" :
-                          deposit.status === "pending" ? "warning" : "danger"
+                            deposit.status === "pending" ? "warning" : "danger"
                         }
                       >
                         {deposit.status}
@@ -327,7 +368,7 @@ export function UserDetailsContent({ userId }: { userId: string }) {
                         size="sm"
                         color={
                           withdrawal.status === "completed" ? "success" :
-                          withdrawal.status === "pending" ? "warning" : "danger"
+                            withdrawal.status === "pending" ? "warning" : "danger"
                         }
                       >
                         {withdrawal.status}
@@ -363,9 +404,129 @@ export function UserDetailsContent({ userId }: { userId: string }) {
                 )}
               </div>
             </Tab>
+
+            <Tab key="copy-trading" title="Copy Trading">
+              <div className="space-y-6 pt-4">
+                {/* Active Subscriptions */}
+                <div>
+                  <h3 className="text-sm font-semibold text-default-500 mb-3">Active Subscriptions</h3>
+                  {data.copyTrades?.length === 0 ? (
+                    <p className="text-sm text-default-500 text-center py-4 bg-default-50 rounded-lg">No active copy trades</p>
+                  ) : (
+                    <div className="space-y-3">
+                      {data.copyTrades?.map((ct: any) => (
+                        <div key={ct.id} className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-default-50 dark:bg-default-50/5 rounded-lg gap-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-default-200 overflow-hidden">
+                              {(ct.traders?.avatar || ct.traders?.avatar_url) && (
+                                <img
+                                  src={ct.traders.avatar || ct.traders.avatar_url}
+                                  alt={ct.traders?.name || "Trader"}
+                                  className="w-full h-full object-cover"
+                                />
+                              )}
+                            </div>
+                            <div>
+                              <p className="font-bold">{ct.traders?.name || "Unknown Trader"}</p>
+                              <div className="flex gap-2 text-xs text-default-500">
+                                <span>Total Profit: ${ct.total_profit?.toFixed(2)}</span>
+                                <span>•</span>
+                                <span>Trades: {ct.total_trades}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-3 w-full sm:w-auto">
+                            <Chip size="sm" color={ct.status === 'active' ? 'success' : 'default'} variant="flat">
+                              {ct.status}
+                            </Chip>
+                            {ct.status === 'active' && (
+                              <Button
+                                size="sm"
+                                color="danger"
+                                variant="flat"
+                                onPress={async () => {
+                                  const result = await adminStopCopyTrade(ct.id);
+                                  if (result.success) {
+                                    addToast({ title: "Copy trade stopped", color: "success" });
+                                    getUserDetails(userId).then(setData);
+                                  } else {
+                                    addToast({ title: result.error || "Failed to stop", color: "danger" });
+                                  }
+                                }}
+                              >
+                                Stop
+                              </Button>
+                            )}
+                            <Button
+                              size="sm"
+                              color="primary"
+                              variant="flat"
+                              onPress={() => {
+                                setSelectedCopyTrade(ct.id);
+                                setSelectedTraderName(ct.traders?.name);
+                                setIsCopyTradeModalOpen(true);
+                              }}
+                            >
+                              Add Outcome
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Trade History */}
+                <div>
+                  <h3 className="text-sm font-semibold text-default-500 mb-3">Copy Trade History</h3>
+                  {data.copyTradePositions?.length === 0 ? (
+                    <p className="text-sm text-default-500 text-center py-8">No copy trade history</p>
+                  ) : (
+                    <div className="space-y-2">
+                      {data.copyTradePositions?.map((pos: any) => (
+                        <div key={pos.id} className="flex justify-between items-center p-3 border border-default-100 dark:border-default-50/10 rounded-lg">
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-bold text-sm">{pos.pair}</span>
+                              <span className={`text-xs px-1.5 py-0.5 rounded ${pos.side === 'buy' ? 'bg-success-100 text-success-700' : 'bg-danger-100 text-danger-700'}`}>
+                                {pos.side.toUpperCase()}
+                              </span>
+                            </div>
+                            <p className="text-xs text-default-500 mt-0.5">
+                              Trader: {pos.traders?.name} • {new Date(pos.created_at).toLocaleDateString()}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className={`font-bold text-sm ${pos.profit_loss >= 0 ? 'text-success' : 'text-danger'}`}>
+                              {pos.profit_loss >= 0 ? '+' : ''}{pos.profit_loss} USDT
+                            </p>
+                            <p className="text-xs text-default-500">Entry: {pos.entry_price}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </Tab>
           </Tabs>
         </CardBody>
       </Card>
+
+      <AddCopyTradeResultModal
+        isOpen={isCopyTradeModalOpen}
+        onOpenChange={() => setIsCopyTradeModalOpen(false)}
+        copyTradeId={selectedCopyTrade}
+        traderName={selectedTraderName}
+      />
+
+      <UpdateBalanceModal
+        isOpen={isBalanceModalOpen}
+        onOpenChange={() => setIsBalanceModalOpen(false)}
+        userId={userId}
+        existingAssets={data?.balances?.map((b: any) => b.asset) || []}
+      />
     </div>
   );
 }

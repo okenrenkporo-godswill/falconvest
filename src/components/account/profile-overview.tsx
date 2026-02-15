@@ -45,7 +45,7 @@ export function ProfileOverview({ openKycModal }: ProfileOverviewProps) {
     const loadUserData = async () => {
         const supabase = createClient();
         const { data: { user } } = await supabase.auth.getUser();
-        
+
         if (user) {
             const { data: profile } = await supabase
                 .from("profiles")
@@ -105,8 +105,8 @@ export function ProfileOverview({ openKycModal }: ProfileOverviewProps) {
                         <div>
                             <h2 className="text-2xl font-bold">{userData.name || "User"}</h2>
                             <div className="flex items-center gap-2 text-default-500 text-sm mt-1">
-                                <span>UID: 8439201</span>
-                                <Copy size={12} className="cursor-pointer hover:text-primary" />
+
+
                             </div>
                             <div className="flex items-center gap-2 mt-2">
                                 <Chip
@@ -129,8 +129,7 @@ export function ProfileOverview({ openKycModal }: ProfileOverviewProps) {
 
                     {/* Stats / Join Date */}
                     <div className="text-right hidden md:block">
-                        <p className="text-default-400 text-xs uppercase font-bold">Member Since</p>
-                        <p className="text-lg font-mono">Nov 2024</p>
+
                         <Button size="sm" variant="flat" className="mt-2" onPress={onEditOpen}>
                             Edit Profile
                         </Button>

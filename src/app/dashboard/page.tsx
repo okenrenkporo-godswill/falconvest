@@ -7,6 +7,8 @@ import { AccountTabs } from "@/components/dashboard/account-tabs";
 import { ArrowDownCircle, ArrowUpCircle, Users2, Pickaxe } from "lucide-react";
 import { MobileBannerBoxes } from "@/components/dashboard/market-ticker";
 
+import { getCryptoPrices } from "@/lib/crypto-prices";
+
 export const revalidate = 30; // Cache for 30 seconds
 
 export default async function DashboardPage() {
@@ -39,28 +41,39 @@ export default async function DashboardPage() {
     .from("platform_wallets")
     .select("symbol, logo_url");
 
-  // Map logos to balances
-  const balancesWithLogos = balances?.map((balance) => ({
-    ...balance,
-    logo_url: wallets?.find((w) => w.symbol === balance.asset)?.logo_url,
-  }));
+  // Get current crypto prices
+  const uniqueAssets = [...new Set(balances?.map((b) => b.asset) || [])];
+  const prices = await getCryptoPrices(uniqueAssets);
+
+  // Map logos and calculate USD value for balances
+  const balancesWithLogos = balances?.map((balance) => {
+    const price = prices[balance.asset] || (["USDT", "USDC"].includes(balance.asset) ? 1 : 0);
+    const usdValue = Number(balance.amount) * price;
+
+    return {
+      ...balance,
+      logo_url: wallets?.find((w) => w.symbol === balance.asset)?.logo_url,
+      usd_value: usdValue,
+      current_price: price
+    };
+  });
 
   const totalBalance =
-    balances?.reduce((sum, b) => sum + Number(b.amount), 0) || 0;
+    balancesWithLogos?.reduce((sum, b) => sum + b.usd_value, 0) || 0;
 
   // Calculate balances by account type
   const tradingBalance =
-    balances
+    balancesWithLogos
       ?.filter((b) => b.account_type === "trading")
-      .reduce((sum, b) => sum + Number(b.amount), 0) || 0;
+      .reduce((sum, b) => sum + b.usd_value, 0) || 0;
   const holdingsBalance =
-    balances
+    balancesWithLogos
       ?.filter((b) => b.account_type === "holdings")
-      .reduce((sum, b) => sum + Number(b.amount), 0) || 0;
+      .reduce((sum, b) => sum + b.usd_value, 0) || 0;
   const stakingBalance =
-    balances
+    balancesWithLogos
       ?.filter((b) => b.account_type === "staking")
-      .reduce((sum, b) => sum + Number(b.amount), 0) || 0;
+      .reduce((sum, b) => sum + b.usd_value, 0) || 0;
 
   // Get recent deposits and withdrawals
   const { data: recentDeposits } = await supabase
@@ -268,11 +281,10 @@ export default async function DashboardPage() {
                 >
                   <div className="flex items-center gap-3">
                     <div
-                      className={`p-2 rounded-full ${
-                        activity.type === "deposit"
+                      className={`p-2 rounded-full ${activity.type === "deposit"
                           ? "bg-success/10"
                           : "bg-warning/10"
-                      }`}
+                        }`}
                     >
                       {activity.type === "deposit" ? (
                         <ArrowDownCircle className="w-4 h-4 text-success" />
@@ -297,13 +309,12 @@ export default async function DashboardPage() {
                     </p>
                     <p className="text-xs">
                       <span
-                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-                          activity.status === "completed"
+                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${activity.status === "completed"
                             ? "bg-success/10 text-success"
                             : activity.status === "pending"
-                            ? "bg-warning/10 text-warning"
-                            : "bg-danger/10 text-danger"
-                        }`}
+                              ? "bg-warning/10 text-warning"
+                              : "bg-danger/10 text-danger"
+                          }`}
                       >
                         {activity.status}
                       </span>

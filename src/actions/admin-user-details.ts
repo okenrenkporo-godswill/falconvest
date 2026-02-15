@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function getUserDetails(userId: string) {
-  
+
   const adminClient = createAdminClient();
 
   // Get user profile
@@ -75,6 +75,28 @@ export async function getUserDetails(userId: string) {
     .select("*, staking_pools(*)")
     .eq("user_id", userId);
 
+  // Get copy trades (subscriptions)
+  const { data: copyTrades } = await adminClient
+    .from("copy_trades")
+    .select(`
+      *,
+      traders (*)
+    `)
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+
+  // Get copy trade positions (history)
+  const { data: copyTradePositions } = await adminClient
+    .from("copy_trade_positions")
+    .select(`
+      *,
+      traders (
+        name
+      )
+    `)
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(20);
 
   return {
     profile,
@@ -85,5 +107,7 @@ export async function getUserDetails(userId: string) {
     deposits: deposits || [],
     withdrawals: withdrawals || [],
     stakes: stakes || [],
+    copyTrades: copyTrades || [],
+    copyTradePositions: copyTradePositions || [],
   };
 }

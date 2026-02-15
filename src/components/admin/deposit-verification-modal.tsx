@@ -31,7 +31,7 @@ interface DepositVerificationModalProps {
     proof_path: string;
     status: string;
     created_at: string;
-    profiles: {
+    profiles?: {
       email: string;
       first_name: string;
       last_name: string;
@@ -105,11 +105,11 @@ export function DepositVerificationModal({
                       <div>
                         <p className="text-default-500">User</p>
                         <p className="font-semibold">
-                          {deposit.profiles.first_name}{" "}
-                          {deposit.profiles.last_name}
+                          {deposit.profiles?.first_name || "Unknown"}{" "}
+                          {deposit.profiles?.last_name || "User"}
                         </p>
                         <p className="text-xs text-default-400">
-                          {deposit.profiles.email}
+                          {deposit.profiles?.email || "No email"}
                         </p>
                       </div>
 
