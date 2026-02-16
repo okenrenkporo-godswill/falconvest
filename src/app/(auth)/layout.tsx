@@ -2,20 +2,18 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Turnstile } from "@marsidev/react-turnstile";
-import { env } from "@/env";
-import { CaptchaProvider, useCaptcha } from "@/contexts/captcha-context";
+import { Card, CardBody, Divider } from "@heroui/react";
 
-import { Card, CardBody,Divider} from "@heroui/react";
-
-function AuthLayoutContent({ children }: { children: React.ReactNode }) {
-  const { captchaToken, setCaptchaToken, turnstileRef } = useCaptcha();
-
+export default function AuthLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
-      <header className=" bg-background">
-        <div className="w-full max-w-md py-7 mx-auto ">
+      <header className="bg-background">
+        <div className="w-full max-w-md py-7 mx-auto">
           <Card isBlurred shadow="none" className="w-full max-w-md">
             <CardBody>
               <Link href="/" className="flex items-center gap-2">
@@ -34,36 +32,7 @@ function AuthLayoutContent({ children }: { children: React.ReactNode }) {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1">
-        {children}
-        {/* Global CAPTCHA*/}
-        {env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && (
-          <div className="relative overflow-hidden w-full max-w-md py-7 mx-auto">
-            <Card isBlurred shadow="none" className="w-full max-w-md">
-              <CardBody>
-                <Turnstile
-                  className="border-none"
-                  options={{
-                    size: "flexible",
-                    language: "en",
-                  }}
-                  ref={turnstileRef}
-                  siteKey={env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-                  onSuccess={(token) => setCaptchaToken(token)}
-                  onError={() => {
-                    setCaptchaToken("bypass-token");
-                    console.warn("Turnstile failed, using bypass");
-                  }}
-                  onExpire={() => {
-                    setCaptchaToken(undefined);
-                    turnstileRef.current?.reset();
-                  }}
-                />
-              </CardBody>
-            </Card>
-          </div>
-        )}
-      </main>
+      <main className="flex-1">{children}</main>
 
       <Divider />
 
@@ -107,17 +76,5 @@ function AuthLayoutContent({ children }: { children: React.ReactNode }) {
         </div>
       </footer>
     </div>
-  );
-}
-
-export default function AuthLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <CaptchaProvider>
-      <AuthLayoutContent>{children}</AuthLayoutContent>
-    </CaptchaProvider>
   );
 }

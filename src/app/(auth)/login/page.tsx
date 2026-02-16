@@ -14,7 +14,6 @@ import { Alert, addToast, InputOtp } from "@heroui/react";
 import Link from "next/link";
 import { loginAction, loginVerifyOtpAction } from "@/actions/auth";
 import { useState } from "react";
-import { useCaptcha } from "@/contexts/captcha-context";
 
 export default function LoginPage() {
   const [step, setStep] = useState<"credentials" | "otp">("credentials");
@@ -23,7 +22,6 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
-  const { captchaToken, resetCaptcha } = useCaptcha();
 
   async function handleResendOtp() {
     setResending(true);
@@ -60,17 +58,6 @@ export default function LoginPage() {
   async function handleCredentialsSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    // Check CAPTCHA first
-    if (!captchaToken) {
-      setError("Please complete the CAPTCHA verification");
-      addToast({
-        title: "Error",
-        description: "Please complete the CAPTCHA verification",
-        color: "danger",
-      });
-      return;
-    }
-
     setLoading(true);
     setError("");
 
@@ -90,8 +77,6 @@ export default function LoginPage() {
           description: result.error,
           color: "danger",
         });
-        // Reset captcha on error
-        resetCaptcha();
         setLoading(false);
       } else {
         addToast({
@@ -104,8 +89,6 @@ export default function LoginPage() {
       }
     } catch (error) {
       setError("An error occurred");
-      // Reset captcha on error
-      resetCaptcha();
       setLoading(false);
     }
   }
