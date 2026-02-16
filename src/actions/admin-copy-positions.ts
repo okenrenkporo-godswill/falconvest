@@ -13,7 +13,7 @@ export async function adminCreateCopyPosition(data: {
   profitLoss: number;
 }) {
   console.log("🎯 Admin creating copy position:", data);
-  
+
   const adminClient = createAdminClient();
 
   // Get copy trade details
@@ -55,12 +55,12 @@ export async function adminCreateCopyPosition(data: {
   // Update copy trade totals
   const newProfit = copyTrade.total_profit + data.profitLoss;
   const newTrades = copyTrade.total_trades + 1;
-  
-  console.log("📊 Updating copy trade totals:", { 
-    oldProfit: copyTrade.total_profit, 
-    newProfit, 
-    oldTrades: copyTrade.total_trades, 
-    newTrades 
+
+  console.log("📊 Updating copy trade totals:", {
+    oldProfit: copyTrade.total_profit,
+    newProfit,
+    oldTrades: copyTrade.total_trades,
+    newTrades
   });
 
   await adminClient

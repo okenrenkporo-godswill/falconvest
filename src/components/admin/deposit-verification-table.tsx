@@ -27,7 +27,7 @@ interface Deposit {
   proof_path: string;
   status: string;
   created_at: string;
-  profiles: {
+  profiles?: {
     email: string;
     first_name: string;
     last_name: string;
@@ -59,9 +59,9 @@ export function DepositVerificationTable({ deposits }: { deposits: Deposit[] | n
     if (searchQuery) {
       filtered = filtered.filter(
         (d) =>
-          d.profiles.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          d.profiles.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          d.profiles.last_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          d.profiles?.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          d.profiles?.first_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          d.profiles?.last_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
           d.coin.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
@@ -120,17 +120,17 @@ export function DepositVerificationTable({ deposits }: { deposits: Deposit[] | n
                 <TableCell>
                   <div>
                     <p className="font-medium text-sm">
-                      {deposit.profiles.first_name} {deposit.profiles.last_name}
+                      {deposit.profiles?.first_name || "Unknown"} {deposit.profiles?.last_name || "User"}
                     </p>
-                    <p className="text-xs text-default-400">{deposit.profiles.email}</p>
+                    <p className="text-xs text-default-400">{deposit.profiles?.email || "No email"}</p>
                   </div>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
                     {deposit.platform_wallets?.logo_url ? (
-                      <img 
-                        src={deposit.platform_wallets.logo_url} 
-                        alt={deposit.coin} 
+                      <img
+                        src={deposit.platform_wallets.logo_url}
+                        alt={deposit.coin}
                         className="w-6 h-6 rounded-full object-cover"
                       />
                     ) : (

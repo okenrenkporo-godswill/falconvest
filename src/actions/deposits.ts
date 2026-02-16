@@ -7,6 +7,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 export async function submitDepositProof(data: {
   coin: string;
   amount: number;
+  usdAmount: number;
   walletAddress: string;
   walletId?: string;
   accountType: string;
@@ -47,7 +48,7 @@ export async function submitDepositProof(data: {
 
     // Get wallet_id - use provided walletId or lookup by coin
     let walletId = data.walletId;
-    
+
     if (!walletId) {
       const { data: wallet } = await supabase
         .from("platform_wallets")
@@ -56,7 +57,7 @@ export async function submitDepositProof(data: {
         .eq("status", "active")
         .limit(1)
         .single();
-      
+
       walletId = wallet?.id;
     }
 
@@ -66,7 +67,7 @@ export async function submitDepositProof(data: {
       wallet_id: walletId || null,
       coin: data.coin,
       amount: data.amount,
-      usd_value: data.amount,
+      usd_value: data.usdAmount,
       wallet_address: data.walletAddress,
       account_type: data.accountType.toLowerCase(),
       proof_path: fileName,
@@ -146,9 +147,9 @@ export async function getUserDeposits() {
   // Map deposits with wallet info
   const depositsWithWallets = (deposits || []).map((deposit) => {
     // Try to find wallet by wallet_id first, then by coin symbol
-    const wallet = wallets?.find((w) => w.id === deposit.wallet_id) || 
-                   wallets?.find((w) => w.symbol === deposit.coin);
-    
+    const wallet = wallets?.find((w) => w.id === deposit.wallet_id) ||
+      wallets?.find((w) => w.symbol === deposit.coin);
+
     return {
       ...deposit,
       wallets: wallet ? {

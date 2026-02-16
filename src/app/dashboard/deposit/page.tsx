@@ -105,10 +105,9 @@ function DepositContent() {
                       onClick={() => setAccountType(type.id)}
                       className={`
                         flex flex-col items-center justify-center p-4 rounded-xl border transition-all duration-200
-                        ${
-                          accountType === type.id
-                            ? "bg-primary/10 border-primary text-primary"
-                            : "bg-default-50 border-transparent hover:bg-default-100 text-default-500"
+                        ${accountType === type.id
+                          ? "bg-primary/10 border-primary text-primary"
+                          : "bg-default-50 border-transparent hover:bg-default-100 text-default-500"
                         }
                       `}
                     >
@@ -160,7 +159,7 @@ function DepositContent() {
                   startContent={<Wallet size={20} />}
                   onPress={handleDeposit}
                 >
-                  Confirm Deposit
+                  Confirm Deposits
                 </Button>
               </div>
             </CardBody>
@@ -229,8 +228,8 @@ function DepositContent() {
       </div>
 
       {/* Modals */}
-      <PricingModal 
-        isOpen={isPricingOpen} 
+      <PricingModal
+        isOpen={isPricingOpen}
         onOpenChange={onPricingOpenChange}
         onSelectPackage={(packageAmount) => {
           setAmount(packageAmount.toString());
