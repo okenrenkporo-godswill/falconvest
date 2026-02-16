@@ -274,7 +274,6 @@ export async function completeProfileAction(formData: FormData) {
     city: formData.get("city"),
     address: formData.get("address"),
     password: formData.get("password"),
-    captchaToken: formData.get("captchaToken"),
   });
 
   console.log(
@@ -334,7 +333,7 @@ export async function completeProfileAction(formData: FormData) {
       return { error: profileError.message };
     }
 
-    // Sign in the user with captcha token
+    // Sign in the user
     const supabase = await createClient();
     const { error: signInError } = await supabase.auth.signInWithPassword({
       email: data.email,
@@ -373,7 +372,7 @@ export async function completeProfileAction(formData: FormData) {
     return { error: authError.message };
   }
 
-  // Sign in the newly created user with captcha token
+  // Sign in the newly created user
   const supabase = await createClient();
   const signInOptions: any = {
     email: data.email,

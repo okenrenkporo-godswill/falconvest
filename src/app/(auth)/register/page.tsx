@@ -231,16 +231,42 @@ export default function RegisterPage() {
       const result = await completeProfileAction(formData);
 
       if (result?.error) {
-        setError(result.error);
+        const errorMsg = result.error.toLowerCase();
+        
+        // Map server errors to specific fields
+        if (errorMsg.includes('username') && errorMsg.includes('unique')) {
+          newErrors.username = "This username is already taken";
+        } else if (errorMsg.includes('email') && errorMsg.includes('unique')) {
+          setError("This email is already registered");
+        } else if (errorMsg.includes('phone')) {
+          newErrors.phone = "Invalid phone number format";
+        } else if (errorMsg.includes('country')) {
+          newErrors.country = "Please select a valid country";
+        } else {
+          setError(result.error);
+        }
+
+        // Show field-specific errors or general error
+        if (Object.keys(newErrors).length > 0) {
+          setErrors(newErrors);
+        }
+
         addToast({
           title: "Error",
-          description: result.error,
+          description: Object.keys(newErrors).length > 0 
+            ? "Please fix the errors in the form" 
+            : result.error,
           color: "danger",
         });
         setLoading(false);
       }
     } catch (error) {
-      setError("An error occurred");
+      setError("An unexpected error occurred. Please try again.");
+      addToast({
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
+        color: "danger",
+      });
       setLoading(false);
     }
   }
@@ -542,6 +568,12 @@ export default function RegisterPage() {
           </p>
         </CardHeader>
         <CardBody className="gap-6">
+          {error && (
+            <Alert color="danger" title="Error" variant="flat">
+              {error}
+            </Alert>
+          )}
+          
           <Form
             validationErrors={errors}
             onSubmit={handleStep3}
