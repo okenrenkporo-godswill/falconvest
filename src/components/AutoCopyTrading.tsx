@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import PhoneFrame from "./PhoneFrame";
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 // Helper component for the Dashboard Content inside phones
 const PhoneDashboardContent = ({ 
@@ -12,13 +13,15 @@ const PhoneDashboardContent = ({
     balance = 12450.00, 
     profit = "+24.5%", 
     isMaster = false,
-    showSignal = false 
+    showSignal = false,
+    t
 }: { 
     type: string; 
     balance?: number; 
     profit?: string; 
     isMaster?: boolean;
     showSignal?: boolean;
+    t: any; // Passing translation function
 }) => {
     const [liveBalance, setLiveBalance] = React.useState(balance);
 
@@ -58,7 +61,7 @@ const PhoneDashboardContent = ({
             <div className="absolute top-0 right-0 p-3 opacity-20 text-purple-500">
                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
             </div>
-            <p className="text-neutral-400 text-xs font-medium uppercase tracking-wider mb-1">{isMaster ? "Master Balance" : "Total Balance"}</p>
+            <p className="text-neutral-400 text-xs font-medium uppercase tracking-wider mb-1">{isMaster ? t('masterBalance') : t('totalBalance')}</p>
             <h3 className="text-3xl font-bold text-white mb-2">
                 ${liveBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </h3>
@@ -76,8 +79,8 @@ const PhoneDashboardContent = ({
         {/* Active Positions Section */}
         <div className="flex-1 overflow-y-auto no-scrollbar mask-gradient-b">
             <div className="flex items-center justify-between mb-4 sticky top-0 bg-neutral-950/95 backdrop-blur z-10 py-2">
-                <h4 className="text-white font-bold text-sm">Active Positions</h4>
-                <span className="text-[10px] text-[#FF6347] bg-[#FF6347]/5 border border-[#FF6347]/10 px-2 py-0.5 rounded-full animate-pulse font-bold">● Live Sync</span>
+                <h4 className="text-white font-bold text-sm">{t('activePositions')}</h4>
+                <span className="text-[10px] text-[#FF6347] bg-[#FF6347]/5 border border-[#FF6347]/10 px-2 py-0.5 rounded-full animate-pulse font-bold">● {t('liveSync')}</span>
             </div>
 
             <div className="space-y-3 pb-4">
@@ -92,10 +95,10 @@ const PhoneDashboardContent = ({
                )}
                
                {[
-                 { symbol: "GBP/USD", name: "British Pound", type: "Forex", profit: "+$540.20", amt: "1.5 Lot", icon: "£", color: "text-blue-400 bg-blue-400/10" },
-                 { symbol: "ETH/USD", name: "Ethereum", type: "Crypto", profit: "+$856.20", amt: "4.2 ETH", icon: "Ξ", color: "text-purple-400 bg-purple-400/10" },
-                 { symbol: "EUR/USD", name: "Euro", type: "Forex", profit: "+$320.50", amt: "1.0 Lot", icon: "€", color: "text-blue-400 bg-blue-400/10" },
-                 { symbol: "SOL/USD", name: "Solana", type: "Crypto", profit: "+$1,240.00", amt: "145 SOL", icon: "◎", color: "text-purple-400 bg-purple-400/10" },
+                 { symbol: "GBP/USD", nameKey: "britishPound", typeKey: "forex", profit: "+$540.20", amt: "1.5 Lot", icon: "£", color: "text-blue-400 bg-blue-400/10" },
+                 { symbol: "ETH/USD", nameKey: "ethereum", typeKey: "crypto", profit: "+$856.20", amt: "4.2 ETH", icon: "Ξ", color: "text-purple-400 bg-purple-400/10" },
+                 { symbol: "EUR/USD", nameKey: "euro", typeKey: "forex", profit: "+$320.50", amt: "1.0 Lot", icon: "€", color: "text-blue-400 bg-blue-400/10" },
+                 { symbol: "SOL/USD", nameKey: "solana", typeKey: "crypto", profit: "+$1,240.00", amt: "145 SOL", icon: "◎", color: "text-purple-400 bg-purple-400/10" },
                ].map((item, i) => (
                    <motion.div 
                         key={i}
@@ -110,7 +113,7 @@ const PhoneDashboardContent = ({
                            </div>
                            <div className="text-left">
                                <p className="text-white text-xs font-bold">{item.symbol}</p>
-                               <p className="text-neutral-500 text-[10px]">{item.name} • Long</p>
+                               <p className="text-neutral-500 text-[10px]">{t(`positions.${item.nameKey}`)} • {t('positions.long')}</p>
                            </div>
                        </div>
                        <div className="text-right">
@@ -135,6 +138,8 @@ const PhoneDashboardContent = ({
 };
 
 export default function AutoCopyTrading() {
+  const t = useTranslations("AutoCopyTrading");
+
   return (
     <section className="relative w-full py-24 px-4 overflow-hidden bg-transparent">
       
@@ -153,7 +158,7 @@ export default function AutoCopyTrading() {
                     className="relative z-10 origin-bottom-right"
                 >
                     <PhoneFrame>
-                        <PhoneDashboardContent type="master" balance={84250.00} profit="+450%" isMaster={true} />
+                        <PhoneDashboardContent type="master" balance={84250.00} profit="+450%" isMaster={true} t={t} />
                     </PhoneFrame>
                 </motion.div>
 
@@ -216,7 +221,7 @@ export default function AutoCopyTrading() {
                     className="relative z-10 origin-bottom-left"
                 >
                     <PhoneFrame>
-                        <PhoneDashboardContent type="user" balance={12450.00} profit="+24.5%" isMaster={false} showSignal={true} />
+                        <PhoneDashboardContent type="user" balance={12450.00} profit="+24.5%" isMaster={false} showSignal={true} t={t} />
                     </PhoneFrame>
                 </motion.div>
 
@@ -231,7 +236,7 @@ export default function AutoCopyTrading() {
                     transition={{ duration: 0.6 }}
                     className="text-5xl md:text-7xl font-bold text-black dark:text-white tracking-tight leading-[1.1]"
                 >
-                    Introducing <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF6347] to-[#e05035]">Autocopy</span>
+                    {t('headline.introducing')} <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF6347] to-[#e05035]">{t('headline.autocopy')}</span>
                 </motion.h2>
 
                 <motion.p 
@@ -241,7 +246,7 @@ export default function AutoCopyTrading() {
                     transition={{ duration: 0.6, delay: 0.2 }}
                     className="text-xl text-neutral-600 dark:text-neutral-400 leading-relaxed"
                 >
-                    Learn, copy, and trade in one click. Tap into the experience of others and collaborate with a growing community of traders.
+                    {t('description')}
                 </motion.p>
 
                 <motion.div
@@ -252,7 +257,7 @@ export default function AutoCopyTrading() {
                 >
                     <Link href="/register">
                         <button className="bg-[#FF6347] hover:bg-[#e05035] text-white text-lg font-bold px-8 py-4 rounded-xl shadow-lg shadow-[#FF6347]/20 transition-all transform hover:-translate-y-1">
-                            Try MasterSync Autocopy
+                            {t('cta')}
                         </button>
                     </Link>
                 </motion.div>

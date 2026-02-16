@@ -1,0 +1,491 @@
+{
+    "Header": {
+        "offering": "Offering",
+        "tradingMarkets": "Trading Markets",
+        "forexExchange": "Forex Exchange",
+        "forexDesc": "Institutional spreads from 0.0 pips",
+        "stockMarkets": "Stock Markets",
+        "stocksDesc": "Global indices and elite equities",
+        "cryptoAssets": "Crypto Assets",
+        "cryptoDesc": "24/7 direct blockchain access",
+        "social": "Social",
+        "socialHub": "Social Hub",
+        "socialHubDesc": "Connect with top institutional traders",
+        "copyTrading": "Copy Trading",
+        "copyTradingDesc": "Automate your success with MasterSync",
+        "company": "Company",
+        "aboutUs": "About Us",
+        "whyMastersync": "Why MasterSync",
+        "whyMastersyncDesc": "Our mission and institutional roots",
+        "reviews": "Reviews",
+        "reviewsDesc": "What our global traders say",
+        "blog": "MasterSync Blog",
+        "blogDesc": "Latest market insights and news",
+        "careers": "Careers",
+        "careersDesc": "Join our global network",
+        "resources": "Resources",
+        "investorRelations": "Investor Relations",
+        "investorRelationsDesc": "Corporate data and governance",
+        "helpCenter": "Help Center",
+        "helpCenterDesc": "Knowledge base and tutorials",
+        "legalCompliance": "Legal & Compliance",
+        "legalComplianceDesc": "Protecting your institutional rights",
+        "contactUs": "Contact Us",
+        "contactUsDesc": "24/7 Global Priority access",
+        "partnerships": "Partnerships",
+        "login": "Login",
+        "signUp": "Sign Up",
+        "getStarted": "Get started",
+        "menu": {
+            "trade": "Trade",
+            "invest": "Invest",
+            "crypto": "Crypto",
+            "pay": "Pay",
+            "soon": "Soon",
+            "communityFeed": "Community Feed",
+            "legalDocuments": "Legal Documents"
+        }
+    },
+    "Hero": {
+        "badge": "Next-Gen Automation",
+        "subtitle": "Institutional-grade copy trading, now <bold>fully automated</bold>. Sync with top performers instantly.",
+        "startFree": "Start Free",
+        "copyTradeNow": "Copy trade now",
+        "stats": {
+            "uptime": "Uptime",
+            "volume": "Volume",
+            "latency": "Latency"
+        },
+        "headlines": {
+            "0": {
+                "part1": "COPY THE",
+                "part2": "EXPERTS"
+            },
+            "1": {
+                "part1": "SYNC YOUR",
+                "part2": "TRADES"
+            },
+            "2": {
+                "part1": "MASTER THE",
+                "part2": "MARKET"
+            },
+            "3": {
+                "part1": "TRADING",
+                "part2": "REIMAGINED"
+            }
+        },
+        "dashboardPlaceholder": "MasterSync copy trading"
+    },
+    "AutoCopyTrading": {
+        "masterBalance": "Master Balance",
+        "totalBalance": "Total Balance",
+        "activePositions": "Active Positions",
+        "liveSync": "Live Sync",
+        "positions": {
+            "britishPound": "British Pound",
+            "ethereum": "Ethereum",
+            "euro": "Euro",
+            "solana": "Solana",
+            "forex": "Forex",
+            "crypto": "Crypto",
+            "long": "Long"
+        },
+        "headline": {
+            "introducing": "Introducing",
+            "autocopy": "Autocopy"
+        },
+        "description": "Learn, copy, and trade in one click. Tap into the experience of others and collaborate with a growing community of traders.",
+        "cta": "Try MasterSync Autocopy"
+    },
+    "TradingToolsSlider": {
+        "protection": {
+            "liveProtection": "Live Protection",
+            "tp": "TP",
+            "sl": "SL",
+            "balanceProtected": "Balance Protected",
+            "poweredBy": "Powered by"
+        },
+        "slides": {
+            "0": {
+                "category": "Tools for every trading style",
+                "title": "Analyse like a pro",
+                "description": "From resistance and support levels, intraday analysis, and pivot price points to Economic Calendars, strategy preferences, and signals, our integration with Trading Central is compatible with leveraged products on Forex, commodities, shares, indices, bonds, and ETFs."
+            },
+            "1": {
+                "category": "Tools for every trading style",
+                "title": "Superior charting with TradingView",
+                "description": "Our TradingView integration provides lightning-fast charts, 100+ indicators, pattern recognition, drawing tools, and more—accessible across web, mobile, and desktop."
+            },
+            "2": {
+                "category": "Tools for every trading style",
+                "title": "Protect your positions",
+                "description": "Traders can safeguard their positions with Stop Loss and Take Profit orders. Additionally, MasterSync offers negative balance protection, ensuring that losses will never exceed the funds in your account."
+            }
+        }
+    },
+    "TradingPlans": {
+        "headline": {
+            "prefix": "A TRADING PLAN",
+            "suffix": "FOR EVERY ONE"
+        },
+        "description": "We offer a variety of trading accounts to match every trading style across all levels of experience. Whether you’re a scalper or day trader, we have you covered.",
+        "mostPopular": "Most Popular",
+        "minimumFunding": "Minimum Funding",
+        "fundPlan": "Fund Plan",
+        "disclaimer": "* All trading accounts are subject to real-time market risk. Institutional liquidity providers verify all Premium funding.",
+        "plans": {
+            "bronze": {
+                "name": "Bronze",
+                "features": {
+                    "pairs": "200+ Trading Pairs",
+                    "leverage": "Leverage up to 1:500",
+                    "spreads": "Spreads from 1.2 pips",
+                    "execution": "Standard Execution",
+                    "support": "24/5 Customer Support"
+                }
+            },
+            "silver": {
+                "name": "Silver",
+                "features": {
+                    "pairs": "300+ Trading Pairs",
+                    "leverage": "Leverage up to 1:500",
+                    "spreads": "Spreads from 0.8 pips",
+                    "execution": "Priority Execution",
+                    "manager": "Dedicated Account Manager"
+                }
+            },
+            "gold": {
+                "name": "Gold",
+                "features": {
+                    "pairs": "400+ Trading Pairs",
+                    "swap": "No Swap Fees",
+                    "leverage": "Leverage up to 1:500",
+                    "spreads": "Spreads from 0.8 pips",
+                    "trading": "Direct ECN Trading",
+                    "insights": "Exclusive Market Insights"
+                }
+            },
+            "premium": {
+                "name": "Premium",
+                "features": {
+                    "pairs": "Unlimited Trading Pairs",
+                    "spreads": "Institutional Spreads",
+                    "commissions": "Ultra-Low Commissions",
+                    "events": "VIP Events Access",
+                    "concierge": "Personal Trading Concierge",
+                    "risk": "Advanced Risk Management"
+                }
+            }
+        }
+    },
+    "FAQ": {
+        "headline": {
+            "prefix": "GOT",
+            "suffix": "QUESTIONS?"
+        },
+        "description": "Everything you need to know about the MasterSync ecosystem.",
+        "contact": {
+            "text": "Still have questions?",
+            "link": "Contact our 24/7 support team."
+        },
+        "questions": {
+            "0": {
+                "question": "How to start trading with MasterSync?",
+                "answer": "Starting your journey is simple: \n1. Create your secure MasterSync account.\n2. Complete our streamlined identity verification (KYC).\n3. Fund your account via your preferred digital wallet or bank transfer.\n4. Launch the dashboard and start executing trades instantly."
+            },
+            "1": {
+                "question": "How to create an account and confirm your email address?",
+                "answer": "Visit the registration page, enter your details, and set a strong password. You'll receive a unique verification code in your inbox—simply enter this on the platform to activate your account and secure your profile."
+            },
+            "2": {
+                "question": "Confirm your identification and eligibility for trading?",
+                "answer": "As a regulated platform, we require a valid government-issued ID and proof of address. Our AI-driven verification system usually clears accounts within minutes, ensuring you meet global financial eligibility standards."
+            },
+            "3": {
+                "question": "How do I deposit money and fund my account?",
+                "answer": "MasterSync supports a wide range of funding methods. Navigate to the 'Funding' section in your dashboard to choose between instant crypto transfers, credit/debit cards, or traditional wire transfers. All funds are held in segregated, institutional-grade accounts."
+            },
+            "4": {
+                "question": "Is MasterSync a regulated broker?",
+                "answer": "Yes, MasterSync operates under strict regulatory frameworks to provide a secure and transparent trading environment. We maintain high capital requirements and undergo regular independent audits to ensure client protection."
+            },
+            "5": {
+                "question": "How to withdraw money from MasterSync?",
+                "answer": "Withdrawals are processed swiftly. Simply go to 'My Wallet', select 'Withdraw', and choose your destination. Most crypto withdrawals are instant, while traditional bank transfers typically complete within 1-2 business days."
+            }
+        }
+    },
+    "SecurityCard": {
+        "vaultProtocol": "Vault Protocol",
+        "activeProtection": "Active Protection",
+        "securityScore": "Security Score",
+        "institutionalGrade": "Institutional Grade",
+        "secureCore": "Secure Core",
+        "safetyFirst": "Safety First",
+        "headline": {
+            "prefix": "Your Assets Are",
+            "suffix": "Guaranteed Secure."
+        },
+        "description": "At MasterSync, we employ the most advanced security protocols in the industry to ensure your peace of mind.",
+        "features": {
+            "dataEncryption": "Data Encryption",
+            "aes256": "AES-256",
+            "withdrawalLock": "Withdrawal Lock",
+            "enabled": "Enabled",
+            "ipWhitelisting": "IP Whitelisting",
+            "active": "Active"
+        },
+        "securityFeatures": {
+            "0": {
+                "title": "Institutional Grade 2FA",
+                "desc": "Multi-layered authentication ensuring only you access your assets."
+            },
+            "1": {
+                "title": "Cold Storage Protection",
+                "desc": "98% of all digital assets are stored in disconnected offline environments."
+            },
+            "2": {
+                "title": "Biometric Security",
+                "desc": "Advanced biometric protocols for mobile and desktop transactions."
+            },
+            "3": {
+                "title": "Real-time Monitoring",
+                "desc": "24/7 automated systems tracking for any suspicious activity."
+            }
+        }
+    },
+    "AssetExplorer": {
+        "headline": {
+            "prefix": "Global access,",
+            "suffix": "unlimited potential."
+        },
+        "description": "Connect to the world's most liquid markets with institutional-grade execution. Seamlessly navigate top assets across Forex, Stocks, Indices, and Crypto on a platform designed for the sophisticated trader.",
+        "marketSegments": "Market Segments",
+        "searchPlaceholder": "Search symbols...",
+        "connecting": "Connecting to feed...",
+        "table": {
+            "instrument": "Instrument",
+            "price": "Price",
+            "spread": "Spread",
+            "change24h": "24H Change",
+            "trend": "Trend",
+            "execution": "Execution",
+            "trade": "Trade"
+        },
+        "liveFeeds": "Live Feeds Active",
+        "liquidity": "Liquidity by MasterSync Institutional",
+        "categories": {
+            "Forex": "Forex",
+            "Shares": "Shares",
+            "Indices": "Indices",
+            "ETFs": "ETFs",
+            "Cryptocurrencies": "Cryptocurrencies",
+            "Commodities": "Commodities"
+        }
+    },
+    "Footer": {
+        "brandDescription": "Revolutionizing institutional-grade trading through accessible technology, absolute transparency, and unyielding security.",
+        "badges": {
+            "secured": {
+                "title": "Secured & Verified",
+                "desc": "Tier-1 Bank Liquidity"
+            },
+            "global": {
+                "title": "Global Presence",
+                "desc": "Licensed in 40+ Regions"
+            },
+            "funding": {
+                "title": "Safe Funding",
+                "desc": "Instant Payouts 24/7"
+            }
+        },
+        "riskWarning": "Risk Warning: Trading financial instruments involves significant risk. The value of investments can go down as well as up and you may receive back less than you originally invested. MasterSync Limited is authorized and regulated by the Financial Services Authority (FSA). Please ensure you fully understand the risks involved by reading our full risk disclosure or consulting an independent financial advisor.",
+        "links": {
+            "compliance": "Compliance",
+            "ethics": "Ethics",
+            "security": "Security"
+        },
+        "copyright": "© 2026 MasterSync Global. All Rights Reserved.",
+        "systemStatus": "System Online: LDN-01 Stable",
+        "panelCommon": {
+            "needMoreInfo": "Still need more information?",
+            "fullHelpCenter": "Full Help Center"
+        },
+        "linkGroups": {
+            "markets": "Markets",
+            "platforms": "Platforms",
+            "pricing": "Pricing & Terms",
+            "company": "Company",
+            "documentation": "Documentation",
+            "partnerships": "Partnerships",
+            "help": "Help & Support",
+            "social": "Social Hub",
+            "education": "Free Education",
+            "news": "News & Analysis"
+        },
+        "linkLabels": {
+            "Forex": "Forex",
+            "CryptoX": "CryptoX",
+            "Shares": "Shares",
+            "Real Stocks": "Real Stocks",
+            "Crypto": "Crypto",
+            "Indices": "Indices",
+            "Commodities": "Commodities",
+            "Futures": "Futures",
+            "ETFs": "ETFs",
+            "MasterSync Web": "MasterSync Web",
+            "Sync iOS": "Sync iOS",
+            "Sync Android": "Sync Android",
+            "MT5 Terminal": "MT5 Terminal",
+            "Telegram Mini App": "Telegram Mini App",
+            "Hours & Fees": "Hours & Fees",
+            "Trading Holidays": "Trading Holidays",
+            "Deposit Methods": "Deposit Methods",
+            "Execution Policy": "Execution Policy",
+            "Spreads": "Spreads",
+            "Why MasterSync": "Why MasterSync",
+            "Sponsorship": "Sponsorship",
+            "Contact Us": "Contact Us",
+            "Investors Relations": "Investors Relations",
+            "Reviews": "Reviews",
+            "Careers": "Careers",
+            "Legal Documents": "Legal Documents",
+            "Privacy Policy": "Privacy Policy",
+            "Cookie Policy": "Cookie Policy",
+            "Manage Cookies": "Manage Cookies",
+            "Institutional": "Institutional",
+            "Affiliates": "Affiliates",
+            "IB Program": "IB Program",
+            "Help Center": "Help Center",
+            "FAQ": "FAQ",
+            "Contact us": "Contact us",
+            "Customer Support": "Customer Support",
+            "Social Trading": "Social Trading",
+            "Copy Trading": "Copy Trading",
+            "Leaderboard": "Leaderboard",
+            "Become a Top Trader": "Become a Top Trader",
+            "Master Academy": "Master Academy",
+            "Encyclopedia": "Encyclopedia",
+            "Currency Converter": "Currency Converter",
+            "Webinars": "Webinars",
+            "Market Updates": "Market Updates",
+            "Earnings Calendar": "Earnings Calendar",
+            "Economic Calendar": "Economic Calendar",
+            "Sync Insights": "Sync Insights"
+        },
+        "panels": {
+            "help": {
+                "title": "Help Center",
+                "description": "How can we assist you today?",
+                "items": {
+                    "0": {
+                        "title": "Account Verification",
+                        "desc": "Guide to completing your KYC process."
+                    },
+                    "1": {
+                        "title": "Deposit & Withdrawal",
+                        "desc": "Detailed steps for managing your funds."
+                    },
+                    "2": {
+                        "title": "Trading Platforms",
+                        "desc": "Tutorials on using MT5 and Web Trader."
+                    },
+                    "3": {
+                        "title": "Security Settings",
+                        "desc": "Enable 2FA and secure your account."
+                    }
+                }
+            },
+            "faq": {
+                "title": "Quick FAQ",
+                "description": "Common questions answered.",
+                "items": {
+                    "0": {
+                        "title": "What are the fees?",
+                        "desc": "Starts at 0% for major pairs with minimal spreads."
+                    },
+                    "1": {
+                        "title": "Is my data secure?",
+                        "desc": "We use AES-256 encryption and institutional custody."
+                    },
+                    "2": {
+                        "title": "Max leverage?",
+                        "desc": "Up to 1:500 for eligible professional accounts."
+                    }
+                }
+            },
+            "legal": {
+                "title": "Policy & Legal",
+                "description": "Transparency and protection.",
+                "items": {
+                    "0": {
+                        "title": "Privacy Policy",
+                        "desc": "How we handle and protect your data."
+                    },
+                    "1": {
+                        "title": "Terms of Service",
+                        "desc": "The agreement between you and MasterSync."
+                    },
+                    "2": {
+                        "title": "Risk Disclosure",
+                        "desc": "Understanding the nature of CFD trading."
+                    }
+                }
+            },
+            "about": {
+                "title": "About MasterSync",
+                "description": "Redefining the standard of trading.",
+                "items": {
+                    "0": {
+                        "title": "Our Mission",
+                        "desc": "Democratizing institutional financial tools."
+                    },
+                    "1": {
+                        "title": "Global Reach",
+                        "desc": "Serving clients in over 120 countries."
+                    },
+                    "2": {
+                        "title": "Innovation",
+                        "desc": "Building the world's most intuitive interface."
+                    }
+                }
+            },
+            "support": {
+                "title": "Customer Support",
+                "description": "24/7 technical and trading assistance.",
+                "items": {
+                    "0": {
+                        "title": "Live Chat",
+                        "desc": "Speak directly with our technical team in seconds."
+                    },
+                    "1": {
+                        "title": "Ticket System",
+                        "desc": "Submit a detailed request for complex issues."
+                    },
+                    "2": {
+                        "title": "VIP Support",
+                        "desc": "Priority handling for Premium and Gold members."
+                    }
+                }
+            },
+            "contact": {
+                "title": "Contact Us",
+                "description": "We're here to hear from you.",
+                "items": {
+                    "0": {
+                        "title": "Office HQ",
+                        "desc": "Sync Tower, Financial District, London, UK."
+                    },
+                    "1": {
+                        "title": "Email Us",
+                        "desc": "support@mastersync.global | partners@mastersync.global"
+                    },
+                    "2": {
+                        "title": "Call Direct",
+                        "desc": "+44 (20) 7946 0123 (UK) | +1 (800) 555-0199 (US)"
+                    }
+                }
+            }
+        }
+    }
+}

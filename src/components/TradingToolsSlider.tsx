@@ -3,9 +3,10 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 // Protection Animation Component
-const ProtectionAnimation = () => {
+const ProtectionAnimation = ({ t }: { t: any }) => {
     return (
         <div className="w-full h-full bg-white dark:bg-black relative overflow-hidden flex flex-col items-center justify-center p-8 transition-colors duration-500">
             {/* Background Grid */}
@@ -20,17 +21,17 @@ const ProtectionAnimation = () => {
                          <div className="w-2 h-2 rounded-full bg-[#FF6347] animate-pulse"></div>
                          <span className="text-black dark:text-white text-xs font-bold">BTC/USD</span>
                     </div>
-                    <span className="text-neutral-500 dark:text-neutral-400 text-xs text-[10px]">Live Protection</span>
+                    <span className="text-neutral-500 dark:text-neutral-400 text-xs text-[10px]">{t('protection.liveProtection')}</span>
                 </div>
 
                 {/* Take Profit Line (Target) */}
                 <div className="absolute top-[25%] left-0 right-0 border-t border-dashed border-green-500/50 flex items-center justify-end px-2">
-                    <span className="text-[10px] text-green-500 font-bold bg-green-500/10 px-1 rounded">TP: $48,500</span>
+                    <span className="text-[10px] text-green-500 font-bold bg-green-500/10 px-1 rounded">{t('protection.tp')}: $48,500</span>
                 </div>
 
                 {/* Stop Loss Line (Protection) */}
                 <div className="absolute bottom-[25%] left-0 right-0 border-t border-dashed border-red-500/50 flex items-center justify-end px-2 z-10">
-                    <span className="text-[10px] text-red-500 font-bold bg-red-500/10 px-1 rounded">SL: $42,200</span>
+                    <span className="text-[10px] text-red-500 font-bold bg-red-500/10 px-1 rounded">{t('protection.sl')}: $42,200</span>
                 </div>
 
                 {/* Chart Line Path */}
@@ -64,14 +65,14 @@ const ProtectionAnimation = () => {
                     className="absolute bottom-[20%] left-1/2 -translate-x-1/2 bg-neutral-900/90 border border-green-500 text-green-500 px-3 py-1.5 rounded-lg shadow-[0_0_20px_rgba(34,197,94,0.3)] flex items-center gap-2 z-20"
                 >
                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                     <span className="text-xs font-bold whitespace-nowrap">Balance Protected</span>
+                     <span className="text-xs font-bold whitespace-nowrap">{t('protection.balanceProtected')}</span>
                 </motion.div>
 
             </div>
 
              {/* MasterSync Branding */}
              <div className="absolute bottom-6 flex flex-col items-center gap-1 opacity-50">
-                <span className="text-[10px] text-neutral-500 uppercase tracking-widest">Powered by</span>
+                <span className="text-[10px] text-neutral-500 uppercase tracking-widest">{t('protection.poweredBy')}</span>
                 <div className="flex items-center gap-1.5 grayscale">
                     <div className="w-4 h-4 relative">
                          <Image src="/images/logo.png" alt="Logo" fill className="object-contain" />
@@ -83,37 +84,28 @@ const ProtectionAnimation = () => {
     );
 };
 
-const slides = [
-  {
-    id: 1,
-    category: "Tools for every trading style",
-    title: "Analyse like a pro",
-    description: "From resistance and support levels, intraday analysis, and pivot price points to Economic Calendars, strategy preferences, and signals, our integration with Trading Central is compatible with leveraged products on Forex, commodities, shares, indices, bonds, and ETFs.",
-    mediaType: "video",
-    src: "/images/trading.mp4", 
-  },
-  {
-    id: 2,
-    category: "Tools for every trading style",
-    title: "Superior charting with TradingView",
-    description: "Our TradingView integration provides lightning-fast charts, 100+ indicators, pattern recognition, drawing tools, and more—accessible across web, mobile, and desktop.",
-    mediaType: "video",
-    src: "/images/view.mp4", 
-  },
-  {
-    id: 3,
-    category: "Tools for every trading style",
-    title: "Protect your positions",
-    description: "Traders can safeguard their positions with Stop Loss and Take Profit orders. Additionally, MasterSync offers negative balance protection, ensuring that losses will never exceed the funds in your account.",
-    mediaType: "animation", // Changed to animation
-    src: "",
-  },
-
-];
-
 export default function TradingToolsSlider() {
+  const t = useTranslations("TradingToolsSlider");
   const [currentSlide, setCurrentSlide] = useState(0);
   const [progress, setProgress] = useState(0);
+
+  const slides = [
+    {
+      id: 1,
+      mediaType: "video",
+      src: "/images/trading.mp4", 
+    },
+    {
+      id: 2,
+      mediaType: "video",
+      src: "/images/view.mp4", 
+    },
+    {
+      id: 3,
+      mediaType: "animation",
+      src: "",
+    },
+  ];
 
   useEffect(() => {
     const duration = 8000; // 8 seconds per slide
@@ -157,16 +149,16 @@ export default function TradingToolsSlider() {
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-[1px] bg-[#FF6347]"></div>
                     <span className="text-[#FF6347] font-bold uppercase tracking-wider text-sm">
-                        {slides[currentSlide].category}
+                        {t(`slides.${currentSlide}.category`)}
                     </span>
                 </div>
                 
                 <h2 className="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-white leading-tight">
-                  {slides[currentSlide].title}
+                  {t(`slides.${currentSlide}.title`)}
                 </h2>
                 
                 <p className="text-neutral-600 dark:text-neutral-400 text-lg leading-relaxed max-w-xl">
-                  {slides[currentSlide].description}
+                  {t(`slides.${currentSlide}.description`)}
                 </p>
               </motion.div>
             </AnimatePresence>
@@ -223,7 +215,7 @@ export default function TradingToolsSlider() {
                             className="w-full h-full object-cover"
                         />
                     ) : slides[currentSlide].mediaType === "animation" ? (
-                        <ProtectionAnimation />
+                        <ProtectionAnimation t={t} />
                     ) : (
                         <div className="w-full h-full relative">
                              {/* Placeholder pattern if image missing */}
@@ -233,7 +225,7 @@ export default function TradingToolsSlider() {
                              {slides[currentSlide].src && (
                                 <Image 
                                     src={slides[currentSlide].src} 
-                                    alt={slides[currentSlide].title} 
+                                    alt={t(`slides.${currentSlide}.title`)} 
                                     fill 
                                     className="object-cover"
                                 />

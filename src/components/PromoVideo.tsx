@@ -5,35 +5,50 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
 // Candlestick Component
-const CandlestickBackground = () => (
-  <div className="absolute inset-0 z-0 opacity-20 flex gap-2 justify-center overflow-hidden pointer-events-none">
-    {[...Array(10)].map((_, i) => {
-      const height = Math.random() * 60 + 20;
-      const isGreen = Math.random() > 0.5;
-      const color = isGreen ? "bg-green-500" : "bg-red-500";
-      const delay = Math.random() * 2;
-      return (
-        <motion.div
-           key={i}
-           initial={{ y: 200, opacity: 0 }}
-           animate={{ y: -200, opacity: [0, 1, 0] }}
-           transition={{ 
-             duration: Math.random() * 5 + 5, 
-             repeat: Infinity, 
-             ease: "linear",
-             delay: delay 
-           }}
-           className="flex flex-col items-center"
-           style={{ marginTop: `${Math.random() * 200}px` }}
-        >
-           <div className={`w-[1px] h-10 ${color}`}></div>
-           <div className={`w-3 ${color}`} style={{ height: `${height}px` }}></div>
-           <div className={`w-[1px] h-10 ${color}`}></div>
-        </motion.div>
-      )
-    })}
-  </div>
-);
+// Candlestick Component
+const CandlestickBackground = () => {
+  const [candles, setCandles] = useState<any[]>([]);
+
+  useEffect(() => {
+    const newCandles = [...Array(10)].map(() => ({
+      height: Math.random() * 60 + 20,
+      isGreen: Math.random() > 0.5,
+      delay: Math.random() * 2,
+      duration: Math.random() * 5 + 5,
+      marginTop: Math.random() * 200
+    }));
+    setCandles(newCandles);
+  }, []);
+
+  if (candles.length === 0) return null;
+
+  return (
+    <div className="absolute inset-0 z-0 opacity-20 flex gap-2 justify-center overflow-hidden pointer-events-none">
+      {candles.map((candle, i) => {
+        const color = candle.isGreen ? "bg-green-500" : "bg-red-500";
+        return (
+          <motion.div
+             key={i}
+             initial={{ y: 200, opacity: 0 }}
+             animate={{ y: -200, opacity: [0, 1, 0] }}
+             transition={{ 
+               duration: candle.duration, 
+               repeat: Infinity, 
+               ease: "linear",
+               delay: candle.delay 
+             }}
+             className="flex flex-col items-center"
+             style={{ marginTop: `${candle.marginTop}px` }}
+          >
+             <div className={`w-[1px] h-10 ${color}`}></div>
+             <div className={`w-3 ${color}`} style={{ height: `${candle.height}px` }}></div>
+             <div className={`w-[1px] h-10 ${color}`}></div>
+          </motion.div>
+        )
+      })}
+    </div>
+  );
+};
 
 // Floating Ticker Component for Pairs
 const FloatingTicker = ({ delay, x, y, text, type }: { delay: number, x: string, y: string, text: string, type: 'forex' | 'crypto' }) => {

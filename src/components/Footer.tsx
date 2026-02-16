@@ -19,136 +19,35 @@ import {
   Facebook,
   Linkedin
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 // --- Types & Data ---
 
 type PanelType = "help" | "faq" | "legal" | "about" | "support" | "contact" | null;
 
-const FOOTER_LINKS = [
-  {
-    title: "Markets",
-    links: ["Forex", "CryptoX", "Shares", "Real Stocks", "Crypto", "Indices", "Commodities", "Futures", "ETFs"]
-  },
-  {
-    title: "Platforms",
-    links: ["MasterSync Web", "Sync iOS", "Sync Android", "MT5 Terminal", "Telegram Mini App"]
-  },
-  {
-    title: "Pricing & Terms",
-    links: ["Hours & Fees", "Trading Holidays", "Deposit Methods", "Execution Policy", "Spreads"]
-  },
-  {
-    title: "Company",
-    links: [
-        { name: "Why MasterSync", action: "about" },
-        "Sponsorship", 
-        { name: "Contact Us", action: "contact" }, 
-        "Investors Relations", 
-        "Reviews", 
-        "Careers"
-    ]
-  },
-  {
-    title: "Documentation",
-    links: [
-        { name: "Legal Documents", action: "legal" },
-        { name: "Privacy Policy", action: "legal" },
-        { name: "Cookie Policy", action: "legal" },
-        "Manage Cookies"
-    ]
-  }
-];
-
-const FOOTER_LINKS_2 = [
-  {
-    title: "Partnerships",
-    links: ["Institutional", "Affiliates", "IB Program"]
-  },
-  {
-    title: "Help & Support",
-    links: [
-        { name: "Help Center", action: "help" },
-        { name: "FAQ", action: "faq" },
-        { name: "Contact us", action: "contact" }, 
-        { name: "Customer Support", action: "support" }
-    ]
-  },
-  {
-    title: "Social Hub",
-    links: ["Social Trading", "Copy Trading", "Leaderboard", "Become a Top Trader"]
-  },
-  {
-    title: "Free Education",
-    links: ["Master Academy", "Encyclopedia", "Currency Converter", "Webinars"]
-  },
-  {
-    title: "News & Analysis",
-    links: ["Market Updates", "Earnings Calendar", "Economic Calendar", "Sync Insights"]
-  }
-];
-
 // --- Components ---
 
 const QuickViewPanel = ({ type, onClose }: { type: PanelType; onClose: () => void }) => {
+    const t = useTranslations("Footer");
     if (!type) return null;
 
-    const content = {
-        help: {
-            title: "Help Center",
-            description: "How can we assist you today?",
+    const getContent = (type: PanelType) => {
+        if (!type) return null;
+        return {
+            title: t(`panels.${type}.title`),
+            description: t(`panels.${type}.description`),
             items: [
-                { title: "Account Verification", desc: "Guide to completing your KYC process." },
-                { title: "Deposit & Withdrawal", desc: "Detailed steps for managing your funds." },
-                { title: "Trading Platforms", desc: "Tutorials on using MT5 and Web Trader." },
-                { title: "Security Settings", desc: "Enable 2FA and secure your account." }
+                { title: t(`panels.${type}.items.0.title`), desc: t(`panels.${type}.items.0.desc`) },
+                { title: t(`panels.${type}.items.1.title`), desc: t(`panels.${type}.items.1.desc`) },
+                { title: t(`panels.${type}.items.2.title`), desc: t(`panels.${type}.items.2.desc`) },
+                // Some panels have 4 items, let's check
+                ...(type === 'help' ? [{ title: t(`panels.${type}.items.3.title`), desc: t(`panels.${type}.items.3.desc`) }] : [])
             ]
-        },
-        faq: {
-            title: "Quick FAQ",
-            description: "Common questions answered.",
-            items: [
-                { title: "What are the fees?", desc: "Starts at 0% for major pairs with minimal spreads." },
-                { title: "Is my data secure?", desc: "We use AES-256 encryption and institutional custody." },
-                { title: "Max leverage?", desc: "Up to 1:500 for eligible professional accounts." }
-            ]
-        },
-        legal: {
-            title: "Policy & Legal",
-            description: "Transparency and protection.",
-            items: [
-                { title: "Privacy Policy", desc: "How we handle and protect your data." },
-                { title: "Terms of Service", desc: "The agreement between you and MasterSync." },
-                { title: "Risk Disclosure", desc: "Understanding the nature of CFD trading." }
-            ]
-        },
-        about: {
-            title: "About MasterSync",
-            description: "Redefining the standard of trading.",
-            items: [
-                { title: "Our Mission", desc: "Democratizing institutional financial tools." },
-                { title: "Global Reach", desc: "Serving clients in over 120 countries." },
-                { title: "Innovation", desc: "Building the world's most intuitive interface." }
-            ]
-        },
-        support: {
-            title: "Customer Support",
-            description: "24/7 technical and trading assistance.",
-            items: [
-                { title: "Live Chat", desc: "Speak directly with our technical team in seconds." },
-                { title: "Ticket System", desc: "Submit a detailed request for complex issues." },
-                { title: "VIP Support", desc: "Priority handling for Premium and Gold members." }
-            ]
-        },
-        contact: {
-            title: "Contact Us",
-            description: "We're here to hear from you.",
-            items: [
-                { title: "Office HQ", desc: "Sync Tower, Financial District, London, UK." },
-                { title: "Email Us", desc: "support@mastersync.global | partners@mastersync.global" },
-                { title: "Call Direct", desc: "+44 (20) 7946 0123 (UK) | +1 (800) 555-0199 (US)" }
-            ]
-        }
-    }[type];
+        };
+    };
+
+    const content = getContent(type);
+    if (!content) return null;
 
     return (
         <motion.div
@@ -195,9 +94,9 @@ const QuickViewPanel = ({ type, onClose }: { type: PanelType; onClose: () => voi
             </div>
 
             <div className="mt-12 p-6 rounded-2xl bg-gradient-to-br from-[#FF6347]/10 to-transparent border border-[#FF6347]/10 text-center">
-                <p className="text-sm text-neutral-400 mb-4">Still need more information?</p>
+                <p className="text-sm text-neutral-400 mb-4">{t('panelCommon.needMoreInfo')}</p>
                 <Button as={Link} href="/help-center" className="bg-[#FF6347] text-white font-bold w-full rounded-xl">
-                    Full Help Center
+                    {t('panelCommon.fullHelpCenter')}
                 </Button>
             </div>
         </motion.div>
@@ -205,7 +104,71 @@ const QuickViewPanel = ({ type, onClose }: { type: PanelType; onClose: () => voi
 };
 
 export default function Footer() {
+  const t = useTranslations("Footer");
   const [activePanel, setActivePanel] = useState<PanelType>(null);
+
+  const FOOTER_LINKS = [
+    {
+      title: t('linkGroups.markets'),
+      links: ["Forex", "CryptoX", "Shares", "Real Stocks", "Crypto", "Indices", "Commodities", "Futures", "ETFs"]
+    },
+    {
+      title: t('linkGroups.platforms'),
+      links: ["MasterSync Web", "Sync iOS", "Sync Android", "MT5 Terminal", "Telegram Mini App"]
+    },
+    {
+      title: t('linkGroups.pricing'),
+      links: ["Hours & Fees", "Trading Holidays", "Deposit Methods", "Execution Policy", "Spreads"]
+    },
+    {
+      title: t('linkGroups.company'),
+      links: [
+          { name: "Why MasterSync", action: "about" },
+          "Sponsorship", 
+          { name: "Contact Us", action: "contact" }, 
+          "Investors Relations", 
+          "Reviews", 
+          "Careers"
+      ]
+    },
+    {
+      title: t('linkGroups.documentation'),
+      links: [
+          { name: "Legal Documents", action: "legal" },
+          { name: "Privacy Policy", action: "legal" },
+          { name: "Cookie Policy", action: "legal" },
+          "Manage Cookies"
+      ]
+    }
+  ];
+
+  const FOOTER_LINKS_2 = [
+    {
+      title: t('linkGroups.partnerships'),
+      links: ["Institutional", "Affiliates", "IB Program"]
+    },
+    {
+      title: t('linkGroups.help'),
+      links: [
+          { name: "Help Center", action: "help" },
+          { name: "FAQ", action: "faq" },
+          { name: "Contact us", action: "contact" }, 
+          { name: "Customer Support", action: "support" }
+      ]
+    },
+    {
+      title: t('linkGroups.social'),
+      links: ["Social Trading", "Copy Trading", "Leaderboard", "Become a Top Trader"]
+    },
+    {
+      title: t('linkGroups.education'),
+      links: ["Master Academy", "Encyclopedia", "Currency Converter", "Webinars"]
+    },
+    {
+      title: t('linkGroups.news'),
+      links: ["Market Updates", "Earnings Calendar", "Economic Calendar", "Sync Insights"]
+    }
+  ];
 
   const renderLinkGroup = (group: any) => (
     <div key={group.title} className="flex flex-col gap-4">
@@ -213,20 +176,21 @@ export default function Footer() {
       <div className="flex flex-col gap-2.5">
         {group.links.map((link: any, i: number) => {
             const isObj = typeof link === 'object';
-            const label = isObj ? link.name : link;
+            const labelKey = isObj ? link.name : link;
+            const label = t(`linkLabels.${labelKey}`);
             const action = isObj ? link.action : null;
             
             // Map known labels to specific routes, default others to /register
             let href = "/register";
-            if (label === "Why MasterSync") href = "/why-mastersync";
-            if (label === "Reviews") href = "/reviews";
-            if (label === "Careers") href = "/careers";
-            if (label === "Investors Relations") href = "/investor-relations";
+            if (labelKey === "Why MasterSync") href = "/why-mastersync";
+            if (labelKey === "Reviews") href = "/reviews";
+            if (labelKey === "Careers") href = "/careers";
+            if (labelKey === "Investors Relations") href = "/investor-relations";
             
             // Markets
-            if (label === "Forex") href = "/markets/forex";
-            if (label === "Crypto") href = "/markets/crypto";
-            if (label === "Real Stocks" || label === "Shares") href = "/markets/stocks";
+            if (labelKey === "Forex") href = "/markets/forex";
+            if (labelKey === "Crypto") href = "/markets/crypto";
+            if (labelKey === "Real Stocks" || labelKey === "Shares") href = "/markets/stocks";
 
             if (action) {
                 return (
@@ -279,7 +243,7 @@ export default function Footer() {
                     </span>
                 </div>
                 <p className="text-neutral-500 text-sm leading-relaxed">
-                    Revolutionizing institutional-grade trading through accessible technology, absolute transparency, and unyielding security.
+                    {t('brandDescription')}
                 </p>
                 <div className="flex items-center gap-4">
                     {[Twitter, Instagram, Facebook, Linkedin].map((Icon, i) => (
@@ -296,8 +260,8 @@ export default function Footer() {
                         <ShieldCheck size={20} />
                     </div>
                     <div>
-                        <p className="text-black dark:text-white text-sm font-bold">Secured & Verified</p>
-                        <p className="text-neutral-600 dark:text-neutral-500 text-xs">Tier-1 Bank Liquidity</p>
+                        <p className="text-black dark:text-white text-sm font-bold">{t('badges.secured.title')}</p>
+                        <p className="text-neutral-600 dark:text-neutral-500 text-xs">{t('badges.secured.desc')}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -305,8 +269,8 @@ export default function Footer() {
                         <Globe size={20} />
                     </div>
                     <div>
-                        <p className="text-black dark:text-white text-sm font-bold">Global Presence</p>
-                        <p className="text-neutral-600 dark:text-neutral-500 text-xs">Licensed in 40+ Regions</p>
+                        <p className="text-black dark:text-white text-sm font-bold">{t('badges.global.title')}</p>
+                        <p className="text-neutral-600 dark:text-neutral-500 text-xs">{t('badges.global.desc')}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -314,8 +278,8 @@ export default function Footer() {
                         <CreditCard size={20} />
                     </div>
                     <div>
-                        <p className="text-black dark:text-white text-sm font-bold">Safe Funding</p>
-                        <p className="text-neutral-600 dark:text-neutral-500 text-xs">Instant Payouts 24/7</p>
+                        <p className="text-black dark:text-white text-sm font-bold">{t('badges.funding.title')}</p>
+                        <p className="text-neutral-600 dark:text-neutral-500 text-xs">{t('badges.funding.desc')}</p>
                     </div>
                 </div>
             </div>
@@ -336,23 +300,23 @@ export default function Footer() {
             <div className="flex flex-col lg:flex-row items-start justify-between gap-8">
                 <div className="max-w-4xl">
                     <p className="text-[10px] text-neutral-500 dark:text-neutral-600 font-medium leading-relaxed uppercase tracking-wider">
-                        Risk Warning: Trading financial instruments involves significant risk. The value of investments can go down as well as up and you may receive back less than you originally invested. MasterSync Limited is authorized and regulated by the Financial Services Authority (FSA). Please ensure you fully understand the risks involved by reading our full risk disclosure or consulting an independent financial advisor.
+                        {t('riskWarning')}
                     </p>
                 </div>
                 <div className="flex items-center gap-6 shrink-0">
-                    <Link href="#" className="text-[10px] text-neutral-600 dark:text-neutral-500 hover:text-black dark:hover:text-white transition-colors font-black uppercase tracking-widest">Compliance</Link>
-                    <Link href="#" className="text-[10px] text-neutral-600 dark:text-neutral-500 hover:text-black dark:hover:text-white transition-colors font-black uppercase tracking-widest">Ethics</Link>
-                    <Link href="#" className="text-[10px] text-neutral-600 dark:text-neutral-500 hover:text-black dark:hover:text-white transition-colors font-black uppercase tracking-widest">Security</Link>
+                    <Link href="#" className="text-[10px] text-neutral-600 dark:text-neutral-500 hover:text-black dark:hover:text-white transition-colors font-black uppercase tracking-widest">{t('links.compliance')}</Link>
+                    <Link href="#" className="text-[10px] text-neutral-600 dark:text-neutral-500 hover:text-black dark:hover:text-white transition-colors font-black uppercase tracking-widest">{t('links.ethics')}</Link>
+                    <Link href="#" className="text-[10px] text-neutral-600 dark:text-neutral-500 hover:text-black dark:hover:text-white transition-colors font-black uppercase tracking-widest">{t('links.security')}</Link>
                 </div>
             </div>
 
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                 <p className="text-xs text-neutral-600 dark:text-neutral-500">
-                    © 2026 MasterSync Global. All Rights Reserved.
+                    {t('copyright')}
                 </p>
                 <div className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-xs text-neutral-500 font-mono">System Online: LDN-01 Stable</span>
+                    <span className="text-xs text-neutral-500 font-mono">{t('systemStatus')}</span>
                 </div>
             </div>
         </div>

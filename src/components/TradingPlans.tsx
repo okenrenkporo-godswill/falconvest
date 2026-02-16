@@ -5,69 +5,72 @@ import { motion } from "framer-motion";
 import { Button } from "@heroui/react";
 import Link from "next/link";
 import { Check, Shield, Zap, Crown, Target } from "lucide-react";
-
-const PLANS = [
-  {
-    name: "Bronze",
-    price: "1,000",
-    icon: Shield,
-    color: "from-neutral-400 to-neutral-600",
-    features: [
-      "200+ Trading Pairs",
-      "Leverage up to 1:500",
-      "Spreads from 1.2 pips",
-      "Standard Execution",
-      "24/5 Customer Support"
-    ],
-    highlight: false
-  },
-  {
-    name: "Silver",
-    price: "30,000",
-    icon: Target,
-    color: "from-slate-400 to-slate-200",
-    features: [
-      "300+ Trading Pairs",
-      "Leverage up to 1:500",
-      "Spreads from 0.8 pips",
-      "Priority Execution",
-      "Dedicated Account Manager"
-    ],
-    highlight: false
-  },
-  {
-    name: "Gold",
-    price: "100,000",
-    icon: Crown,
-    color: "from-yellow-400 to-amber-600",
-    features: [
-      "400+ Trading Pairs",
-      "No Swap Fees",
-      "Leverage up to 1:500",
-      "Spreads from 0.8 pips",
-      "Direct ECN Trading",
-      "Exclusive Market Insights"
-    ],
-    highlight: true
-  },
-  {
-    name: "Premium",
-    price: "500,000",
-    icon: Zap,
-    color: "from-purple-500 to-indigo-600",
-    features: [
-      "Unlimited Trading Pairs",
-      "Institutional Spreads",
-      "Ultra-Low Commissions",
-      "VIP Events Access",
-      "Personal Trading Concierge",
-      "Advanced Risk Management"
-    ],
-    highlight: false
-  }
-];
+import { useTranslations } from "next-intl";
 
 export default function TradingPlans() {
+  const t = useTranslations("TradingPlans");
+
+  const PLANS = [
+    {
+      name: t('plans.bronze.name'),
+      price: "1,000",
+      icon: Shield,
+      color: "from-neutral-400 to-neutral-600",
+      features: [
+        t('plans.bronze.features.pairs'),
+        t('plans.bronze.features.leverage'),
+        t('plans.bronze.features.spreads'),
+        t('plans.bronze.features.execution'),
+        t('plans.bronze.features.support')
+      ],
+      highlight: false
+    },
+    {
+      name: t('plans.silver.name'),
+      price: "30,000",
+      icon: Target,
+      color: "from-slate-400 to-slate-200",
+      features: [
+        t('plans.silver.features.pairs'),
+        t('plans.silver.features.leverage'),
+        t('plans.silver.features.spreads'),
+        t('plans.silver.features.execution'),
+        t('plans.silver.features.manager')
+      ],
+      highlight: false
+    },
+    {
+      name: t('plans.gold.name'),
+      price: "100,000",
+      icon: Crown,
+      color: "from-yellow-400 to-amber-600",
+      features: [
+        t('plans.gold.features.pairs'),
+        t('plans.gold.features.swap'),
+        t('plans.gold.features.leverage'),
+        t('plans.gold.features.spreads'),
+        t('plans.gold.features.trading'),
+        t('plans.gold.features.insights')
+      ],
+      highlight: true
+    },
+    {
+      name: t('plans.premium.name'),
+      price: "500,000",
+      icon: Zap,
+      color: "from-purple-500 to-indigo-600",
+      features: [
+        t('plans.premium.features.pairs'),
+        t('plans.premium.features.spreads'),
+        t('plans.premium.features.commissions'),
+        t('plans.premium.features.events'),
+        t('plans.premium.features.concierge'),
+        t('plans.premium.features.risk')
+      ],
+      highlight: false
+    }
+  ];
+
   return (
     <section className="relative w-full py-32 px-4 bg-transparent overflow-hidden transition-colors duration-500">
       {/* Background Ornaments */}
@@ -83,7 +86,7 @@ export default function TradingPlans() {
             viewport={{ once: true }}
             className="text-4xl md:text-6xl font-black text-black dark:text-white uppercase tracking-tighter"
           >
-            A TRADING PLAN <span className="text-[#FF6347]">FOR EVERY ONE</span>
+            {t('headline.prefix')} <span className="text-[#FF6347]">{t('headline.suffix')}</span>
           </motion.h2>
           <motion.p 
              initial={{ opacity: 0, y: 20 }}
@@ -92,8 +95,7 @@ export default function TradingPlans() {
              transition={{ delay: 0.1 }}
              className="text-neutral-600 dark:text-neutral-400 text-lg max-w-2xl mx-auto leading-relaxed"
           >
-            We offer a variety of trading accounts to match every trading style across all levels of experience. 
-            Whether you’re a scalper or day trader, we have you covered.
+            {t('description')}
           </motion.p>
         </div>
 
@@ -115,7 +117,7 @@ export default function TradingPlans() {
             >
               {plan.highlight && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#FF6347] text-white text-[10px] font-black uppercase px-4 py-1.5 rounded-full shadow-[0_4px_20px_rgba(255,99,71,0.4)] tracking-widest">
-                  Most Popular
+                  {t('mostPopular')}
                 </div>
               )}
 
@@ -129,7 +131,7 @@ export default function TradingPlans() {
 
               {/* Price */}
               <div className="mb-10">
-                <p className="text-neutral-900 dark:text-neutral-500 text-xs font-bold uppercase tracking-widest mb-1">Minimum Funding</p>
+                <p className="text-neutral-900 dark:text-neutral-500 text-xs font-bold uppercase tracking-widest mb-1">{t('minimumFunding')}</p>
                 <div className="flex items-baseline">
                   <span className="text-4xl lg:text-5xl font-black text-black dark:text-white tracking-tighter">
                     ${plan.price}
@@ -164,7 +166,7 @@ export default function TradingPlans() {
                     : "bg-black/5 dark:bg-white/5 text-black dark:text-white hover:bg-[#FF6347] hover:text-white border border-black/5 dark:border-white/5 hover:border-transparent"
                 }`}
               >
-                Fund Plan
+                {t('fundPlan')}
               </Button>
             </motion.div>
           ))}
@@ -180,7 +182,7 @@ export default function TradingPlans() {
           <div className="inline-block p-1 rounded-2xl bg-gradient-to-r from-transparent via-[#FF6347]/20 to-transparent">
              <div className="px-8 py-3 rounded-xl bg-black/60 backdrop-blur-sm border border-white/5">
                 <p className="text-xs text-neutral-400 dark:text-neutral-500 font-mono italic tracking-wide">
-                   * All trading accounts are subject to real-time market risk. Institutional liquidity providers verify all Premium funding.
+                   {t('disclaimer')}
                 </p>
              </div>
           </div>

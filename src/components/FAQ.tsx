@@ -4,35 +4,9 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { Plus, Minus, HelpCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 
-const FAQ_DATA = [
-  {
-    question: "How to start trading with MasterSync?",
-    answer: "Starting your journey is simple: \n1. Create your secure MasterSync account.\n2. Complete our streamlined identity verification (KYC).\n3. Fund your account via your preferred digital wallet or bank transfer.\n4. Launch the dashboard and start executing trades instantly."
-  },
-  {
-    question: "How to create an account and confirm your email address?",
-    answer: "Visit the registration page, enter your details, and set a strong password. You'll receive a unique verification code in your inbox—simply enter this on the platform to activate your account and secure your profile."
-  },
-  {
-    question: "Confirm your identification and eligibility for trading?",
-    answer: "As a regulated platform, we require a valid government-issued ID and proof of address. Our AI-driven verification system usually clears accounts within minutes, ensuring you meet global financial eligibility standards."
-  },
-  {
-    question: "How do I deposit money and fund my account?",
-    answer: "MasterSync supports a wide range of funding methods. Navigate to the 'Funding' section in your dashboard to choose between instant crypto transfers, credit/debit cards, or traditional wire transfers. All funds are held in segregated, institutional-grade accounts."
-  },
-  {
-    question: "Is MasterSync a regulated broker?",
-    answer: "Yes, MasterSync operates under strict regulatory frameworks to provide a secure and transparent trading environment. We maintain high capital requirements and undergo regular independent audits to ensure client protection."
-  },
-  {
-    question: "How to withdraw money from MasterSync?",
-    answer: "Withdrawals are processed swiftly. Simply go to 'My Wallet', select 'Withdraw', and choose your destination. Most crypto withdrawals are instant, while traditional bank transfers typically complete within 1-2 business days."
-  }
-];
-
-const FAQItem = ({ item, isExpanded, onToggle }: { item: typeof FAQ_DATA[0]; isExpanded: boolean; onToggle: () => void }) => {
+const FAQItem = ({ item, isExpanded, onToggle }: { item: { question: string; answer: string }; isExpanded: boolean; onToggle: () => void }) => {
   return (
     <div 
       className={`group border-b border-white/5 transition-all duration-500 ${isExpanded ? "bg-white/[0.02]" : "hover:bg-white/[0.01]"}`}
@@ -76,7 +50,35 @@ const FAQItem = ({ item, isExpanded, onToggle }: { item: typeof FAQ_DATA[0]; isE
 };
 
 export default function FAQ() {
+  const t = useTranslations("FAQ");
   const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
+
+  const faqData = [
+    {
+      question: t('questions.0.question'),
+      answer: t('questions.0.answer')
+    },
+    {
+      question: t('questions.1.question'),
+      answer: t('questions.1.answer')
+    },
+    {
+      question: t('questions.2.question'),
+      answer: t('questions.2.answer')
+    },
+    {
+      question: t('questions.3.question'),
+      answer: t('questions.3.answer')
+    },
+    {
+      question: t('questions.4.question'),
+      answer: t('questions.4.answer')
+    },
+    {
+      question: t('questions.5.question'),
+      answer: t('questions.5.answer')
+    }
+  ];
 
   return (
     <section className="relative w-full py-32 px-4 bg-transparent overflow-hidden transition-colors duration-500">
@@ -91,7 +93,7 @@ export default function FAQ() {
             viewport={{ once: true }}
             className="text-4xl md:text-6xl font-black text-black dark:text-white tracking-tighter uppercase"
           >
-            GOT <span className="text-[#FF6347]">QUESTIONS?</span>
+            {t('headline.prefix')} <span className="text-[#FF6347]">{t('headline.suffix')}</span>
           </motion.h2>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -100,12 +102,12 @@ export default function FAQ() {
             transition={{ delay: 0.1 }}
             className="text-neutral-600 dark:text-neutral-400 text-lg"
           >
-            Everything you need to know about the MasterSync ecosystem.
+            {t('description')}
           </motion.p>
         </div>
 
         <div className="border-t border-white/5 rounded-3xl overflow-hidden bg-white/[0.01] backdrop-blur-sm border-x border-b border-white/5">
-          {FAQ_DATA.map((item, index) => (
+          {faqData.map((item, index) => (
             <FAQItem 
               key={index} 
               item={item} 
@@ -122,7 +124,7 @@ export default function FAQ() {
           className="mt-16 text-center"
         >
           <p className="text-neutral-900 dark:text-neutral-500 font-medium">
-            Still have questions? <Link href="/contact" className="text-[#FF6347] cursor-pointer hover:underline">Contact our 24/7 support team.</Link>
+            {t('contact.text')} <Link href="/contact" className="text-[#FF6347] cursor-pointer hover:underline">{t('contact.link')}</Link>
           </p>
         </motion.div>
       </div>

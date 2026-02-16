@@ -6,6 +6,7 @@ import { Search, TrendingUp, TrendingDown, ArrowRight } from "lucide-react";
 import { Button, Spinner } from "@heroui/react";
 import Link from "next/link";
 import { useLiveMarkets, MarketCategory, MarketAsset } from "@/hooks/useLiveMarkets";
+import { useTranslations } from "next-intl";
 
 const CATEGORIES: MarketCategory[] = ["Forex", "Shares", "Indices", "ETFs", "Cryptocurrencies", "Commodities"];
 
@@ -41,6 +42,7 @@ const Sparkline = ({ trend, color }: { trend: number[], color: string }) => {
 };
 
 export default function AssetExplorer() {
+  const t = useTranslations("AssetExplorer");
   const { marketData, loading, lastUpdates } = useLiveMarkets();
   const [activeCategory, setActiveCategory] = useState<MarketCategory>("Cryptocurrencies");
   const [search, setSearch] = useState("");
@@ -62,10 +64,10 @@ export default function AssetExplorer() {
             viewport={{ once: true }}
             className="text-4xl md:text-6xl font-black tracking-tight text-black dark:text-white"
           >
-            Global access, <span className="text-[#FF6347] italic">unlimited potential.</span>
+            {t('headline.prefix')} <span className="text-[#FF6347] italic">{t('headline.suffix')}</span>
           </motion.h2>
           <p className="text-neutral-800 dark:text-neutral-400 text-lg max-w-2xl mx-auto leading-relaxed font-medium">
-            Connect to the world's most liquid markets with institutional-grade execution. Seamlessly navigate top assets across Forex, Stocks, Indices, and Crypto on a platform designed for the sophisticated trader.
+            {t('description')}
           </p>
         </div>
 
@@ -73,12 +75,12 @@ export default function AssetExplorer() {
           {/* Sidebar */}
           <div className="w-full lg:w-72 bg-white dark:bg-[#0A0A0A] rounded-[2.5rem] border border-black/5 dark:border-white/5 p-4 shrink-0 shadow-2xl">
             <div className="mb-6">
-                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-900 dark:text-neutral-400 mb-4 px-2">Market Segments</h3>
+                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-900 dark:text-neutral-400 mb-4 px-2">{t('marketSegments')}</h3>
                 <div className="relative">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
                     <input 
                       type="text" 
-                      placeholder="Search symbols..." 
+                      placeholder={t('searchPlaceholder')} 
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
                       className="w-full bg-neutral-100 dark:bg-black border border-black/5 dark:border-white/5 rounded-2xl py-3 pl-12 pr-4 text-sm text-black dark:text-white focus:outline-none focus:border-[#FF6347] transition-all"
@@ -96,7 +98,7 @@ export default function AssetExplorer() {
                       : "text-neutral-500 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5"
                   }`}
                 >
-                  {cat}
+                  {t(`categories.${cat}`)}
                 </button>
               ))}
             </div>
@@ -107,7 +109,7 @@ export default function AssetExplorer() {
             {loading ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
                     <Spinner color="danger" size="lg" />
-                    <p className="text-xs font-black uppercase tracking-widest text-neutral-900 dark:text-neutral-500">Connecting to feed...</p>
+                    <p className="text-xs font-black uppercase tracking-widest text-neutral-900 dark:text-neutral-500">{t('connecting')}</p>
                 </div>
             ) : (
                 <div className="bg-neutral-50 dark:bg-[#0A0A0A]/50 border border-black/5 dark:border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl">
@@ -115,12 +117,12 @@ export default function AssetExplorer() {
                         <table className="w-full text-left border-collapse">
                             <thead>
                                 <tr className="text-neutral-900 dark:text-neutral-400 text-[10px] font-black uppercase tracking-[0.2em] border-b border-black/5 dark:border-white/5">
-                                    <th className="px-8 py-6">Instrument</th>
-                                    <th className="px-8 py-6 text-right">Price</th>
-                                    <th className="px-8 py-6 text-right">Spread</th>
-                                    <th className="px-8 py-6 text-right">24H Change</th>
-                                    <th className="px-8 py-6">Trend</th>
-                                    <th className="px-8 py-6 text-right">Execution</th>
+                                    <th className="px-8 py-6">{t('table.instrument')}</th>
+                                    <th className="px-8 py-6 text-right">{t('table.price')}</th>
+                                    <th className="px-8 py-6 text-right">{t('table.spread')}</th>
+                                    <th className="px-8 py-6 text-right">{t('table.change24h')}</th>
+                                    <th className="px-8 py-6">{t('table.trend')}</th>
+                                    <th className="px-8 py-6 text-right">{t('table.execution')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -174,7 +176,7 @@ export default function AssetExplorer() {
                                             size="sm"
                                             className="bg-black dark:bg-white text-white dark:text-black font-black uppercase text-[10px] tracking-widest rounded-full px-6 hover:bg-[#FF6347] dark:hover:bg-[#FF6347] hover:text-white transition-all"
                                         >
-                                            Trade
+                                            {t('table.trade')}
                                         </Button>
                                     </td>
                                     </motion.tr>
@@ -189,9 +191,9 @@ export default function AssetExplorer() {
             <div className="mt-8 flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-neutral-900 dark:text-neutral-400">
                <div className="flex items-center gap-3">
                   <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                  Live Feeds Active
+                  {t('liveFeeds')}
                </div>
-               <div className="italic opacity-50">Liquidity by MasterSync Institutional</div>
+               <div className="italic opacity-50">{t('liquidity')}</div>
             </div>
           </div>
         </div>
