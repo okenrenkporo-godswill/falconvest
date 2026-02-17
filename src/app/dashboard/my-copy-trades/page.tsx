@@ -97,8 +97,81 @@ export default function MyCopyTradesPage() {
         <div className="grid gap-4">
           {copyTrades.map((ct) => (
             <Card key={ct.id} className="border-none shadow-sm dark:bg-content1/50">
-              <CardBody className="p-6">
-                <div className="flex items-start justify-between gap-4">
+              <CardBody className="p-3 sm:p-6">
+                {/* Mobile Layout */}
+                <div className="sm:hidden">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Avatar
+                      src={ct.trader?.avatar_url || undefined}
+                      name={ct.trader?.display_name}
+                      size="sm"
+                      className="flex-shrink-0"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="font-bold text-sm truncate">{ct.trader?.display_name}</h3>
+                        <Chip
+                          color={ct.status === "active" ? "success" : "default"}
+                          variant="flat"
+                          size="sm"
+                        >
+                          {ct.status}
+                        </Chip>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-default-500">
+                        <span className="flex items-center gap-1">
+                          <Users size={12} />
+                          {ct.trader?.total_followers}
+                        </span>
+                        <span>{ct.trader?.win_rate}%</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-3 gap-2 mb-3 text-center">
+                    <div>
+                      <p className="text-xs text-default-500">Amount</p>
+                      <p className="text-sm font-bold">${ct.copy_amount.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-default-500">Profit</p>
+                      <p className={`text-sm font-bold ${ct.total_profit >= 0 ? "text-success" : "text-danger"}`}>
+                        {ct.total_profit >= 0 ? "+" : ""}${ct.total_profit.toLocaleString()}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-default-500">Trades</p>
+                      <p className="text-sm font-bold">{ct.total_trades}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      color="primary"
+                      variant="flat"
+                      className="flex-1"
+                      onPress={() => setSelectedCopyTrade({ id: ct.id, name: ct.trader?.display_name || "Trader" })}
+                      startContent={<TrendingUp size={14} />}
+                    >
+                      View Results
+                    </Button>
+                    {ct.status === "active" && (
+                      <Button
+                        size="sm"
+                        color="danger"
+                        variant="flat"
+                        onPress={() => handleStop(ct.id, ct.trader?.display_name || "trader")}
+                        startContent={<X size={14} />}
+                      >
+                        Stop
+                      </Button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Desktop Layout */}
+                <div className="hidden sm:flex items-start justify-between gap-4">
                   {/* Left: Trader Info */}
                   <div className="flex items-center gap-4 flex-1">
                     <Avatar
