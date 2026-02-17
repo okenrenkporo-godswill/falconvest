@@ -162,11 +162,61 @@ export async function getUserCopyTrades() {
     .select("*")
     .in("id", traderIds);
 
-  // Map traders to copy trades
+  // Fetch actual trade counts from copy_trade_positions
+  const copyTradeIds = copyTrades.map(ct => ct.id);
+  const { data: positions } = await adminClient
+    .from("copy_trade_positions")
+    .select("copy_trade_id")
+    .in("copy_trade_id", copyTradeIds);
+
+  // Count positions per copy trade
+  const tradeCounts: Record<string, number> = {};
+  positions?.forEach(pos => {
+    tradeCounts[pos.copy_trade_id] = (tradeCounts[pos.copy_trade_id] || 0) + 1;
+  });
+
+  // Map traders to copy trades with actual trade count
   const result = copyTrades.map((ct) => ({
     ...ct,
+    total_trades: tradeCounts[ct.id] || 0,
     trader: traders?.find((t) => t.id === ct.trader_id),
   }));
 
   return result;
+}
+
+// Get copy trade results for a specific copy trade
+export async function getCopyTradeResults(copyTradeId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  console.log("[getCopyTradeResults] User:", user?.id);
+  console.log("[getCopyTradeResults] Copy Trade ID:", copyTradeId);
+  
+  if (!user) return { data: [] };
+
+  // Verify the copy trade belongs to the user
+  const { data: copyTrade, error: copyTradeError } = await supabase
+    .from("copy_trades")
+    .select("id")
+    .eq("id", copyTradeId)
+    .eq("user_id", user.id)
+    .single();
+
+  console.log("[getCopyTradeResults] Copy Trade:", copyTrade);
+  console.log("[getCopyTradeResults] Copy Trade Error:", copyTradeError);
+
+  if (!copyTrade) return { data: [] };
+
+  // Fetch copy trade results
+  const { data: results, error: resultsError } = await supabase
+    .from("copy_trade_positions")
+    .select("*")
+    .eq("copy_trade_id", copyTradeId)
+    .order("created_at", { ascending: false });
+
+  console.log("[getCopyTradeResults] Results count:", results?.length);
+  console.log("[getCopyTradeResults] Results error:", resultsError);
+
+  return { data: results || [] };
 }

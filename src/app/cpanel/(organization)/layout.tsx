@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Avatar, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { createClient } from "@/lib/supabase/client";
 import {
   LayoutDashboard, Users, FileCheck, Wallet, ArrowDownToLine,
   ArrowUpFromLine, TrendingUp, UserCog, Menu, X, LogOut, Settings, Copy, Lock, Briefcase
@@ -28,6 +29,30 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [adminName, setAdminName] = useState("Admin User");
+  const [avatarUrl, setAvatarUrl] = useState("");
+
+  useEffect(() => {
+    loadAdminProfile();
+  }, []);
+
+  const loadAdminProfile = async () => {
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (user) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("full_name, first_name, avatar_url")
+        .eq("id", user.id)
+        .single();
+      
+      if (profile) {
+        setAdminName(profile.full_name || profile.first_name || "Admin User");
+        setAvatarUrl(profile.avatar_url || "");
+      }
+    }
+  };
 
   const handleLogout = async () => {
     await fetch("/auth/signout", { method: "POST" });
@@ -92,9 +117,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <DropdownTrigger>
                   <Button variant="light" className="w-full justify-start px-2">
                     <div className="flex items-center gap-2 overflow-hidden">
-                      <Avatar size="sm" name="Admin" className="flex-shrink-0" />
+                      {avatarUrl ? (
+                        <img 
+                          src={avatarUrl} 
+                          alt={adminName}
+                          className="h-8 w-8 rounded-full object-cover flex-shrink-0"
+                        />
+                      ) : (
+                        <Avatar size="sm" name={adminName} className="flex-shrink-0" />
+                      )}
                       <div className="text-left overflow-hidden">
-                        <p className="text-sm font-semibold truncate">Admin User</p>
+                        <p className="text-sm font-semibold truncate">{adminName}</p>
                       </div>
                     </div>
                   </Button>

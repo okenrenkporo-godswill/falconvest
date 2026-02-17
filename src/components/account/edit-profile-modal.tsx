@@ -1,9 +1,9 @@
 "use client";
 
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input } from "@heroui/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input, Avatar } from "@heroui/react";
 import { useState, useEffect } from "react";
-import { Phone, User, Globe } from "lucide-react";
-import { updateProfileAction } from "@/actions/account";
+import { Phone, User, Globe, Upload } from "lucide-react";
+import { updateProfileAction, uploadProfileAvatar } from "@/actions/account";
 import { addToast } from "@heroui/react";
 
 interface EditProfileModalProps {
@@ -14,6 +14,7 @@ interface EditProfileModalProps {
         email: string;
         phone: string;
         country: string;
+        avatar?: string;
     };
     onSave: (data: any) => void;
 }
@@ -22,6 +23,8 @@ export function EditProfileModal({ isOpen, onOpenChange, initialData, onSave }: 
     const [fullName, setFullName] = useState("");
     const [phone, setPhone] = useState("");
     const [country, setCountry] = useState("");
+    const [avatarUrl, setAvatarUrl] = useState("");
+    const [uploading, setUploading] = useState(false);
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -30,9 +33,53 @@ export function EditProfileModal({ isOpen, onOpenChange, initialData, onSave }: 
             setFullName(initialData.name);
             setPhone(initialData.phone);
             setCountry(initialData.country);
+            setAvatarUrl(initialData.avatar || "");
             setErrors({});
         }
     }, [isOpen, initialData]);
+
+    const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        if (file.size > 2 * 1024 * 1024) {
+            addToast({
+                title: "File too large",
+                description: "File size must be less than 2MB",
+                color: "danger",
+            });
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+            const base64String = reader.result as string;
+            const base64Data = base64String.split(",")[1];
+            
+            setUploading(true);
+            const result = await uploadProfileAvatar({
+                base64: base64Data,
+                size: file.size,
+            });
+            
+            if (result.success && result.avatar_url) {
+                setAvatarUrl(result.avatar_url);
+                addToast({
+                    title: "Success",
+                    description: "Avatar uploaded successfully",
+                    color: "success",
+                });
+            } else {
+                addToast({
+                    title: "Upload failed",
+                    description: result.error || "Failed to upload avatar",
+                    color: "danger",
+                });
+            }
+            setUploading(false);
+        };
+        reader.readAsDataURL(file);
+    };
 
     const validate = () => {
         const newErrors: Record<string, string> = {};
@@ -68,7 +115,7 @@ export function EditProfileModal({ isOpen, onOpenChange, initialData, onSave }: 
                 description: "Profile updated successfully",
                 color: "success"
             });
-            onSave({ name: fullName, phone, country, email: initialData.email });
+            onSave({ name: fullName, phone, country, email: initialData.email, avatar: avatarUrl });
             onOpenChange();
         }
     };
@@ -81,6 +128,29 @@ export function EditProfileModal({ isOpen, onOpenChange, initialData, onSave }: 
                         <ModalHeader className="flex flex-col gap-1">Edit Personal Information</ModalHeader>
                         <ModalBody>
                             <div className="flex flex-col gap-4">
+                                <div className="flex flex-col items-center gap-3">
+                                    <Avatar
+                                        src={avatarUrl || `https://api.dicebear.com/7.x/initials/svg?seed=${fullName}`}
+                                        className="w-24 h-24"
+                                        isBordered
+                                    />
+                                    <Button
+                                        size="sm"
+                                        variant="flat"
+                                        startContent={<Upload size={16} />}
+                                        onPress={() => document.getElementById("avatar-upload")?.click()}
+                                        isLoading={uploading}
+                                    >
+                                        {uploading ? "Uploading..." : "Upload Avatar"}
+                                    </Button>
+                                    <input
+                                        id="avatar-upload"
+                                        type="file"
+                                        accept="image/*"
+                                        className="hidden"
+                                        onChange={handleAvatarUpload}
+                                    />
+                                </div>
                                 <Input
                                     label="Full Name"
                                     value={fullName}
