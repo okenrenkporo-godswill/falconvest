@@ -10,6 +10,7 @@ import {
   Divider,
 } from "@heroui/react";
 import { Alert, addToast, InputOtp } from "@heroui/react";
+import { Eye, EyeOff } from "lucide-react";
 
 import Link from "next/link";
 import { loginAction, loginVerifyOtpAction } from "@/actions/auth";
@@ -22,6 +23,7 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   async function handleResendOtp() {
     setResending(true);
@@ -211,10 +213,23 @@ export default function LoginPage() {
             />
             <Input
               name="password"
-              type="password"
+              type={isPasswordVisible ? "text" : "password"}
               label="Password"
               placeholder="Enter your password"
               isRequired
+              endContent={
+                <button
+                  type="button"
+                  onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                  className="focus:outline-none"
+                >
+                  {isPasswordVisible ? (
+                    <EyeOff className="text-default-400" size={20} />
+                  ) : (
+                    <Eye className="text-default-400" size={20} />
+                  )}
+                </button>
+              }
               errorMessage={({ validationDetails }) => {
                 if (validationDetails.valueMissing)
                   return "Please enter your password";

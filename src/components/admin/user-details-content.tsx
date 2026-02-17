@@ -3,7 +3,7 @@
 import { Card, CardBody, Skeleton, Chip, Tabs, Tab, Button, addToast } from "@heroui/react"; // Added addToast
 import { useEffect, useState } from "react";
 import { getUserDetails } from "@/actions/admin-user-details";
-import { adminStopCopyTrade } from "@/actions/admin-copy-trades"; // Use quiet action to prevent reload
+import { CopyTradesContent } from "./copy-trades-content";
 import { ArrowLeft, User, Wallet, TrendingUp, ArrowDownCircle, ArrowUpCircle, Lock, ShieldCheck, Plus } from "lucide-react"; // Added Plus
 import Link from "next/link";
 import Image from "next/image";
@@ -406,108 +406,8 @@ export function UserDetailsContent({ userId }: { userId: string }) {
             </Tab>
 
             <Tab key="copy-trading" title="Copy Trading">
-              <div className="space-y-6 pt-4">
-                {/* Active Subscriptions */}
-                <div>
-                  <h3 className="text-sm font-semibold text-default-500 mb-3">Active Subscriptions</h3>
-                  {data.copyTrades?.length === 0 ? (
-                    <p className="text-sm text-default-500 text-center py-4 bg-default-50 rounded-lg">No active copy trades</p>
-                  ) : (
-                    <div className="space-y-3">
-                      {data.copyTrades?.map((ct: any) => (
-                        <div key={ct.id} className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-default-50 dark:bg-default-50/5 rounded-lg gap-4">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-default-200 overflow-hidden">
-                              {(ct.traders?.avatar || ct.traders?.avatar_url) && (
-                                <img
-                                  src={ct.traders.avatar || ct.traders.avatar_url}
-                                  alt={ct.traders?.name || "Trader"}
-                                  className="w-full h-full object-cover"
-                                />
-                              )}
-                            </div>
-                            <div>
-                              <p className="font-bold">{ct.traders?.name || "Unknown Trader"}</p>
-                              <div className="flex gap-2 text-xs text-default-500">
-                                <span>Total Profit: ${ct.total_profit?.toFixed(2)}</span>
-                                <span>•</span>
-                                <span>Trades: {ct.total_trades}</span>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="flex items-center gap-3 w-full sm:w-auto">
-                            <Chip size="sm" color={ct.status === 'active' ? 'success' : 'default'} variant="flat">
-                              {ct.status}
-                            </Chip>
-                            {ct.status === 'active' && (
-                              <Button
-                                size="sm"
-                                color="danger"
-                                variant="flat"
-                                onPress={async () => {
-                                  const result = await adminStopCopyTrade(ct.id);
-                                  if (result.success) {
-                                    addToast({ title: "Copy trade stopped", color: "success" });
-                                    getUserDetails(userId).then(setData);
-                                  } else {
-                                    addToast({ title: result.error || "Failed to stop", color: "danger" });
-                                  }
-                                }}
-                              >
-                                Stop
-                              </Button>
-                            )}
-                            <Button
-                              size="sm"
-                              color="primary"
-                              variant="flat"
-                              onPress={() => {
-                                setSelectedCopyTrade(ct.id);
-                                setSelectedTraderName(ct.traders?.name);
-                                setIsCopyTradeModalOpen(true);
-                              }}
-                            >
-                              Add Outcome
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* Trade History */}
-                <div>
-                  <h3 className="text-sm font-semibold text-default-500 mb-3">Copy Trade History</h3>
-                  {data.copyTradePositions?.length === 0 ? (
-                    <p className="text-sm text-default-500 text-center py-8">No copy trade history</p>
-                  ) : (
-                    <div className="space-y-2">
-                      {data.copyTradePositions?.map((pos: any) => (
-                        <div key={pos.id} className="flex justify-between items-center p-3 border border-default-100 dark:border-default-50/10 rounded-lg">
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <span className="font-bold text-sm">{pos.pair}</span>
-                              <span className={`text-xs px-1.5 py-0.5 rounded ${pos.side === 'buy' ? 'bg-success-100 text-success-700' : 'bg-danger-100 text-danger-700'}`}>
-                                {pos.side.toUpperCase()}
-                              </span>
-                            </div>
-                            <p className="text-xs text-default-500 mt-0.5">
-                              Trader: {pos.traders?.name} • {new Date(pos.created_at).toLocaleDateString()}
-                            </p>
-                          </div>
-                          <div className="text-right">
-                            <p className={`font-bold text-sm ${pos.profit_loss >= 0 ? 'text-success' : 'text-danger'}`}>
-                              {pos.profit_loss >= 0 ? '+' : ''}{pos.profit_loss} USDT
-                            </p>
-                            <p className="text-xs text-default-500">Entry: {pos.entry_price}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
+              <div className="pt-4">
+                <CopyTradesContent userId={userId} />
               </div>
             </Tab>
           </Tabs>

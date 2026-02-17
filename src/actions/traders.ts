@@ -13,16 +13,22 @@ export async function getAllTraders() {
   return data || [];
 }
 
-export async function getActiveTraders(page: number = 1, limit: number = 12) {
+export async function getActiveTraders(page: number = 1, limit: number = 12, search?: string) {
   const supabase = await createClient();
   
   const from = (page - 1) * limit;
   const to = from + limit - 1;
   
-  const { data, count } = await supabase
+  let query = supabase
     .from("traders")
     .select("*", { count: "exact" })
-    .eq("status", "active")
+    .eq("status", "active");
+  
+  if (search) {
+    query = query.ilike("display_name", `%${search}%`);
+  }
+  
+  const { data, count } = await query
     .order("total_profit", { ascending: false })
     .range(from, to);
     
@@ -30,6 +36,19 @@ export async function getActiveTraders(page: number = 1, limit: number = 12) {
     data: data || [], 
     totalPages: Math.ceil((count || 0) / limit) 
   };
+}
+
+export async function getTraderById(traderId: string) {
+  const supabase = await createClient();
+  
+  const { data } = await supabase
+    .from("traders")
+    .select("*")
+    .eq("id", traderId)
+    .eq("status", "active")
+    .single();
+    
+  return data;
 }
 
 export async function createTrader(data: {

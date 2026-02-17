@@ -13,6 +13,17 @@ export async function submitDepositProof(data: {
   accountType: string;
   proofImage: string;
 }) {
+  console.log("=== DEPOSIT SUBMISSION START ===");
+  console.log("Input data:", {
+    coin: data.coin,
+    amount: data.amount,
+    usdAmount: data.usdAmount,
+    walletAddress: data.walletAddress,
+    walletId: data.walletId,
+    accountType: data.accountType,
+    hasProofImage: !!data.proofImage
+  });
+
   const supabase = await createClient();
 
   const {
@@ -20,37 +31,53 @@ export async function submitDepositProof(data: {
   } = await supabase.auth.getUser();
 
   if (!user) {
+    console.log("ERROR: No user found");
     return { error: "Unauthorized" };
   }
 
+  console.log("User ID:", user.id);
+
   try {
-    // Convert base64 to Uint8Array
-    const base64Data = data.proofImage.split(",")[1];
-    const binaryString = atob(base64Data);
-    const bytes = new Uint8Array(binaryString.length);
-    for (let i = 0; i < binaryString.length; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
-    }
+    let fileName = null;
 
-    // Upload proof to storage
-    const fileName = `${user.id}/${Date.now()}-deposit-proof.jpg`;
-    const { error: uploadError } = await supabase.storage
-      .from("deposit-proofs")
-      .upload(fileName, bytes, {
-        contentType: "image/jpeg",
-        upsert: false,
-      });
+    // Only process image if provided
+    if (data.proofImage) {
+      console.log("Processing proof image...");
+      // Convert base64 to Uint8Array
+      const base64Data = data.proofImage.split(",")[1];
+      if (base64Data) {
+        const binaryString = atob(base64Data);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
 
-    if (uploadError) {
-      console.error("Upload error:", uploadError);
-      return { error: uploadError.message };
+        // Upload proof to storage
+        fileName = `${user.id}/${Date.now()}-deposit-proof.jpg`;
+        console.log("Uploading to:", fileName);
+        const { error: uploadError } = await supabase.storage
+          .from("deposit-proofs")
+          .upload(fileName, bytes, {
+            contentType: "image/jpeg",
+            upsert: false,
+          });
+
+        if (uploadError) {
+          console.error("Upload error:", uploadError);
+          return { error: uploadError.message };
+        }
+        console.log("Upload successful");
+      }
+    } else {
+      console.log("No proof image provided");
     }
 
     // Get wallet_id - use provided walletId or lookup by coin
     let walletId = data.walletId;
 
     if (!walletId) {
-      const { data: wallet } = await supabase
+      console.log("Looking up wallet for coin:", data.coin);
+      const { data: wallet, error: walletError } = await supabase
         .from("platform_wallets")
         .select("id")
         .eq("symbol", data.coin)
@@ -58,11 +85,16 @@ export async function submitDepositProof(data: {
         .limit(1)
         .single();
 
+      if (walletError) {
+        console.log("Wallet lookup error:", walletError);
+      }
+
       walletId = wallet?.id;
+      console.log("Found wallet ID:", walletId);
     }
 
     // Create deposit record
-    const { error: insertError } = await supabase.from("deposits").insert({
+    const depositData = {
       user_id: user.id,
       wallet_id: walletId || null,
       coin: data.coin,
@@ -72,11 +104,21 @@ export async function submitDepositProof(data: {
       account_type: data.accountType.toLowerCase(),
       proof_path: fileName,
       status: "pending",
-    });
+    };
+
+    console.log("Inserting deposit record:", depositData);
+
+    const { data: insertedData, error: insertError } = await supabase
+      .from("deposits")
+      .insert(depositData)
+      .select();
 
     if (insertError) {
+      console.error("Insert error:", insertError);
       return { error: insertError.message };
     }
+
+    console.log("Deposit inserted successfully:", insertedData);
 
     // Get user email for notification
     const { data: profile } = await supabase
@@ -88,8 +130,10 @@ export async function submitDepositProof(data: {
     // Notify admin
     if (profile?.email) {
       try {
+        console.log("Sending admin notification...");
         const { notifyAdminDeposit } = await import("@/lib/email");
         await notifyAdminDeposit(profile.email, data.amount, data.coin);
+        console.log("Admin notification sent");
       } catch (error) {
         // Log but don't fail the deposit
         console.error("Failed to notify admin of deposit:", error);
@@ -99,6 +143,7 @@ export async function submitDepositProof(data: {
     }
 
     revalidatePath("/dashboard/deposit");
+    console.log("=== DEPOSIT SUBMISSION SUCCESS ===");
     return { success: true };
   } catch (error: any) {
     console.error("Deposit proof error:", error);

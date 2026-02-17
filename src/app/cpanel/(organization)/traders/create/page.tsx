@@ -1,10 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { CopyTradesContent } from "@/components/admin/copy-trades-content";
+import { CreateTraderContent } from "@/components/admin/create-trader-content";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminCopyTradesPage() {
+export default async function CreateTraderPage() {
   const supabase = await createClient();
 
   const {
@@ -25,5 +25,5 @@ export default async function AdminCopyTradesPage() {
     redirect("/dashboard");
   }
 
-  return <CopyTradesContent />;
+  return <CreateTraderContent />;
 }
