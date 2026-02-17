@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { Card, CardBody, Avatar, Button, Chip, Skeleton, addToast } from "@heroui/react";
 import { getUserCopyTrades, stopCopyTrading } from "@/actions/copy-trading";
-import { Users, X } from "lucide-react";
+import { Users, X, TrendingUp } from "lucide-react";
+import { CopyTradeResultsModal } from "@/components/copy-trading/copy-trade-results-modal";
 
 type CopyTrade = {
   id: string;
@@ -24,6 +25,7 @@ type CopyTrade = {
 export default function MyCopyTradesPage() {
   const [copyTrades, setCopyTrades] = useState<CopyTrade[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCopyTrade, setSelectedCopyTrade] = useState<{ id: string; name: string } | null>(null);
 
   useEffect(() => {
     loadCopyTrades();
@@ -144,6 +146,15 @@ export default function MyCopyTradesPage() {
                       <p className="text-xs text-default-500 mb-1">Trades</p>
                       <p className="text-lg font-bold">{ct.total_trades}</p>
                     </div>
+                    <Button
+                      size="sm"
+                      color="primary"
+                      variant="flat"
+                      onPress={() => setSelectedCopyTrade({ id: ct.id, name: ct.trader?.display_name || "Trader" })}
+                      startContent={<TrendingUp size={16} />}
+                    >
+                      View Results
+                    </Button>
                     {ct.status === "active" && (
                       <Button
                         size="sm"
@@ -161,6 +172,15 @@ export default function MyCopyTradesPage() {
             </Card>
           ))}
         </div>
+      )}
+
+      {selectedCopyTrade && (
+        <CopyTradeResultsModal
+          isOpen={!!selectedCopyTrade}
+          onClose={() => setSelectedCopyTrade(null)}
+          copyTradeId={selectedCopyTrade.id}
+          traderName={selectedCopyTrade.name}
+        />
       )}
     </div>
   );

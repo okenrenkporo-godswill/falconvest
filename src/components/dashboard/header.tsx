@@ -16,6 +16,7 @@ interface HeaderProps {
 export function Header({ onMenu }: HeaderProps) {
     const [userEmail, setUserEmail] = useState("");
     const [userName, setUserName] = useState("");
+    const [avatarUrl, setAvatarUrl] = useState("");
     const [loggingOut, setLoggingOut] = useState(false);
 
     useEffect(() => {
@@ -30,11 +31,12 @@ export function Header({ onMenu }: HeaderProps) {
             setUserEmail(user.email || "");
             const { data: profile } = await supabase
                 .from("profiles")
-                .select("full_name, first_name")
+                .select("full_name, first_name, avatar_url")
                 .eq("id", user.id)
                 .single();
             
             setUserName(profile?.full_name || profile?.first_name || "User");
+            setAvatarUrl(profile?.avatar_url || "");
         }
     };
 
@@ -73,9 +75,17 @@ export function Header({ onMenu }: HeaderProps) {
                     <Dropdown placement="bottom-end">
                         <DropdownTrigger>
                             <Button variant="light" className="gap-2 px-1 sm:px-2 min-w-0" size="sm">
-                                <div className="flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-red-600 text-xs font-semibold text-white">
-                                    {initials}
-                                </div>
+                                {avatarUrl ? (
+                                    <img 
+                                        src={avatarUrl} 
+                                        alt={userName}
+                                        className="h-6 w-6 sm:h-7 sm:w-7 rounded-full object-cover"
+                                    />
+                                ) : (
+                                    <div className="flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-red-600 text-xs font-semibold text-white">
+                                        {initials}
+                                    </div>
+                                )}
                             </Button>
                         </DropdownTrigger>
                         <DropdownMenu aria-label="Profile Actions">

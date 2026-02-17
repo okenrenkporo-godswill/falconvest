@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardBody, Skeleton, Chip, Tabs, Tab, Button, addToast } from "@heroui/react"; // Added addToast
+import { Card, CardBody, Skeleton, Chip, Tabs, Tab, Button, addToast, Avatar } from "@heroui/react"; // Added Avatar
 import { useEffect, useState } from "react";
 import { getUserDetails } from "@/actions/admin-user-details";
 import { CopyTradesContent } from "./copy-trades-content";
@@ -78,6 +78,11 @@ export function UserDetailsContent({ userId }: { userId: string }) {
             <ArrowLeft size={20} />
           </button>
         </Link>
+        <Avatar
+          src={data.profile.avatar_url || `https://api.dicebear.com/7.x/initials/svg?seed=${data.profile.full_name || data.profile.email}`}
+          className="w-16 h-16"
+          isBordered
+        />
         <div>
           <h1 className="text-3xl font-bold">{data.profile.full_name || "No Name"}</h1>
           <p className="text-sm text-default-500">{data.profile.email}</p>

@@ -23,7 +23,8 @@ export function ProfileOverview({ openKycModal }: ProfileOverviewProps) {
         name: "",
         email: "",
         phone: "",
-        country: ""
+        country: "",
+        avatar: ""
     });
     const [loading, setLoading] = useState(true);
 
@@ -49,16 +50,18 @@ export function ProfileOverview({ openKycModal }: ProfileOverviewProps) {
         if (user) {
             const { data: profile } = await supabase
                 .from("profiles")
-                .select("full_name, phone, country, kyc_status")
+                .select("full_name, first_name, last_name, phone, country, kyc_status, avatar_url")
                 .eq("id", user.id)
                 .single();
 
             if (profile) {
+                const fullName = profile.full_name || `${profile.first_name || ''} ${profile.last_name || ''}`.trim();
                 setUserData({
-                    name: profile.full_name || "",
+                    name: fullName || "",
                     email: user.email || "",
                     phone: profile.phone || "",
-                    country: profile.country || ""
+                    country: profile.country || "",
+                    avatar: profile.avatar_url || ""
                 });
                 setKycStatus(profile.kyc_status || "pending");
             }
@@ -95,7 +98,7 @@ export function ProfileOverview({ openKycModal }: ProfileOverviewProps) {
                     <div className="flex items-center gap-4">
                         <div className="relative">
                             <Avatar
-                                src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+                                src={userData.avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${userData.name}`}
                                 className="w-20 h-20 text-large"
                             />
                             <Button isIconOnly size="sm" className="absolute -bottom-1 -right-1 rounded-full bg-default-100 shadow-sm border border-background" onPress={onEditOpen}>
