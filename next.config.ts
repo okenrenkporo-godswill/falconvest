@@ -1,11 +1,11 @@
 import type { NextConfig } from "next";
-import createNextIntlPlugin from 'next-intl/plugin';
+import createNextIntlPlugin from "next-intl/plugin";
 
-const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ["res.cloudinary.com"],
+    domains: ["res.cloudinary.com", "npxptwvoifmbqytivgqp.supabase.co"],
     remotePatterns: [
       {
         protocol: "https",
@@ -15,7 +15,9 @@ const nextConfig: NextConfig = {
     ],
   },
   experimental: {
-    // serverActions: true, // Enabled by default in Next.js 15
+    serverActions: {
+      bodySizeLimit: "3mb",
+    },
   },
   // Ensure we don't have hydration mismatches from extensions/providers
   reactStrictMode: false,
@@ -27,6 +29,7 @@ const nextConfig: NextConfig = {
         path: false,
         os: false,
         crypto: false,
+        encoding: false,
       };
     }
     return config;

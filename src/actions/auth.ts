@@ -20,7 +20,6 @@ export async function loginAction(formData: FormData) {
 
   const supabase = await createClient();
 
-  // Verify password
   const { error: passwordError } = await supabase.auth.signInWithPassword({
     email: data.email,
     password: data.password,
@@ -47,7 +46,7 @@ export async function loginAction(formData: FormData) {
     code,
     expires_at: expiresAt.toISOString(),
     verified: false,
-    metadata: { password: data.password }, // Store temporarily for OTP verification
+    metadata: { password: data.password },
   });
 
   if (otpError) {
@@ -62,6 +61,38 @@ export async function loginAction(formData: FormData) {
   }
 
   return { success: true };
+}
+
+export async function adminLoginAction(formData: FormData) {
+  const data = loginSchema.parse({
+    email: formData.get("email"),
+    password: formData.get("password"),
+  });
+
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email: data.email,
+    password: data.password,
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("email", data.email)
+    .single();
+
+  if (profile?.role !== "admin") {
+    await supabase.auth.signOut();
+    return { error: "Access denied. Admin privileges required." };
+  }
+
+  revalidatePath("/", "layout");
+  redirect("/cpanel/admin");
 }
 
 const loginVerifyOtpSchema = z.object({
