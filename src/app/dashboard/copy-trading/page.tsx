@@ -25,6 +25,7 @@ export default function CopyTradingPage() {
   const [traders, setTraders] = useState<Trader[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [sortBy, setSortBy] = useState("followers");
   const [selectedTrader, setSelectedTrader] = useState<Trader | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,12 +33,20 @@ export default function CopyTradingPage() {
   const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
-    loadTraders(currentPage);
-  }, [currentPage]);
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+      setCurrentPage(1);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
-  const loadTraders = async (page: number) => {
+  useEffect(() => {
+    loadTraders(currentPage, debouncedSearch);
+  }, [currentPage, debouncedSearch]);
+
+  const loadTraders = async (page: number, search: string) => {
     setLoading(true);
-    const result = await getActiveTraders(page, 12);
+    const result = await getActiveTraders(page, 12, search);
     setTraders(result.data);
     setTotalPages(result.totalPages);
     setLoading(false);
@@ -48,24 +57,16 @@ export default function CopyTradingPage() {
     setIsModalOpen(true);
   };
 
-  const filteredTraders = useMemo(() => {
-    let result = [...traders];
-
-    if (searchQuery) {
-      result = result.filter(t =>
-        t.display_name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
+  const sortedTraders = useMemo(() => {
+    const result = [...traders];
     result.sort((a, b) => {
       if (sortBy === "followers") return b.total_followers - a.total_followers;
       if (sortBy === "profit") return b.total_profit - a.total_profit;
       if (sortBy === "winRate") return b.win_rate - a.win_rate;
       return 0;
     });
-
     return result;
-  }, [searchQuery, sortBy, traders]);
+  }, [sortBy, traders]);
 
   if (loading) {
     return (
@@ -124,14 +125,14 @@ export default function CopyTradingPage() {
       </div>
 
       {/* Trader Grid */}
-      {filteredTraders.length === 0 ? (
+      {sortedTraders.length === 0 ? (
         <div className="text-center py-12 text-default-500">
           No traders found
         </div>
       ) : (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {filteredTraders.map((trader) => (
+            {sortedTraders.map((trader) => (
               <TraderCard key={trader.id} trader={trader} onCopy={handleCopyClick} />
             ))}
           </div>

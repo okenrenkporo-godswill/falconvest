@@ -22,9 +22,10 @@ import {
   updateTraderStatus,
 } from "@/actions/admin-copy-trading";
 import { generateTestTraders } from "@/actions/generate-traders";
-import { Check, X, Ban, Plus } from "lucide-react";
+import { Check, X, Ban, Plus, Edit } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Pagination } from "@/components/shared/pagination";
+import Link from "next/link";
 
 type Trader = {
   id: string;
@@ -139,6 +140,24 @@ export default function AdminTradersPage() {
     }
   };
 
+  const handleUnsuspend = async (traderId: string) => {
+    const result = await updateTraderStatus(traderId, "active");
+    if (result.error) {
+      addToast({
+        title: "Error",
+        description: result.error,
+        color: "danger",
+      });
+    } else {
+      addToast({
+        title: "Success",
+        description: "Trader unsuspended",
+        color: "success",
+      });
+      loadTraders(currentPage);
+    }
+  };
+
   const filteredTraders = traders.filter((t) => {
     if (filter === "all") return true;
     return t.status === filter;
@@ -161,12 +180,21 @@ export default function AdminTradersPage() {
         <h1 className="text-2xl font-bold">Trader Management</h1>
         <div className="flex gap-2 w-fulllg:w-auto justify-start whitespace-nowrap overflow-hidden overflow-x-auto">
           <Button
+            as={Link}
+            href="/cpanel/traders/create"
             size="sm"
             color="primary"
             startContent={<Plus size={16} />}
+          >
+            Create Trader
+          </Button>
+          <Button
+            size="sm"
+            variant="flat"
+            startContent={<Plus size={16} />}
             onPress={() => setIsGenerateModalOpen(true)}
           >
-            Generate Test Traders
+            Generate Traders
           </Button>
           <Button
             size="sm"
@@ -194,29 +222,38 @@ export default function AdminTradersPage() {
 
       <div className="space-y-3">
         {filteredTraders.map((trader) => (
-          <Card key={trader.id} className="dark:bg-content1/50">
+          <Card
+            shadow="none"
+            key={trader.id}
+            className="dark:bg-content1/100 border-none bg-default-100"
+          >
             <CardBody className="p-4">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
+                <Link
+                  href={`/cpanel/traders/${trader.id}`}
+                  className="flex items-center gap-4 flex-1 min-w-0 hover:opacity-80 transition-opacity"
+                >
                   <Avatar
                     src={trader.avatar_url || undefined}
                     name={trader.display_name}
                     className="w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 text-white"
                   />
-                  <div>
-                    <h3 className="font-bold">{trader.display_name}</h3>
-                    <p className="text-sm text-default-500">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold truncate">
+                      {trader.display_name}
+                    </h3>
+                    <p className="text-sm text-default-500 truncate">
                       {trader.bio || "No bio"}
                     </p>
                   </div>
-                </div>
+                </Link>
 
                 <div className="flex items-center gap-6">
-                  <div className="text-center">
+                  <div className="text-center hidden sm:block">
                     <p className="text-sm text-default-500">Followers</p>
                     <p className="font-bold">{trader.total_followers}</p>
                   </div>
-                  <div className="text-center">
+                  <div className="text-center hidden sm:block">
                     <p className="text-sm text-default-500">Profit</p>
                     <p
                       className={`font-bold ${trader.total_profit >= 0 ? "text-green-500" : "text-red-500"}`}
@@ -224,7 +261,7 @@ export default function AdminTradersPage() {
                       ${trader.total_profit.toLocaleString()}
                     </p>
                   </div>
-                  <div className="text-center">
+                  <div className="text-center hidden md:block">
                     <p className="text-sm text-default-500">Win Rate</p>
                     <p className="font-bold">{trader.win_rate}%</p>
                   </div>
@@ -245,6 +282,16 @@ export default function AdminTradersPage() {
                   </div>
 
                   <div className="flex gap-2">
+                    <Button
+                      as={Link}
+                      href={`/cpanel/traders/${trader.id}`}
+                      size="sm"
+                      variant="flat"
+                      isIconOnly
+                      className="hidden sm:flex"
+                    >
+                      <Edit size={16} />
+                    </Button>
                     {trader.status === "pending" && (
                       <Button
                         size="sm"
@@ -265,6 +312,17 @@ export default function AdminTradersPage() {
                         startContent={<Ban size={16} />}
                       >
                         Suspend
+                      </Button>
+                    )}
+                    {trader.status === "suspended" && (
+                      <Button
+                        size="sm"
+                        color="success"
+                        variant="flat"
+                        onPress={() => handleUnsuspend(trader.id)}
+                        startContent={<Check size={16} />}
+                      >
+                        Unsuspend
                       </Button>
                     )}
                   </div>

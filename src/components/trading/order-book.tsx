@@ -14,47 +14,45 @@ interface OrderBookProps {
     compact?: boolean;
 }
 
-export function OrderBook({ symbol, compact = false }: OrderBookProps) {
+export function OrderBook({ symbol = "BTCUSDT", compact = false }: OrderBookProps) {
     const [bids, setBids] = useState<Order[]>([]);
     const [asks, setAsks] = useState<Order[]>([]);
+    const [currentPrice, setCurrentPrice] = useState<number>(0);
 
     useEffect(() => {
-        // Helper to generate initial data
-        const generateOrders = (basePrice: number, type: 'bid' | 'ask') => {
-            const orders: Order[] = [];
-            for (let i = 0; i < 15; i++) {
-                const price = type === 'bid'
-                    ? basePrice - (i * 5) - Math.random() * 5
-                    : basePrice + (i * 5) + Math.random() * 5;
-                const amount = Math.random() * 2;
-                orders.push({
-                    price,
-                    amount,
-                    total: amount * price
-                });
+        // Fetch real-time order book from Binance
+        const fetchOrderBook = async () => {
+            try {
+                const response = await fetch(`/api/binance/depth?symbol=${symbol}&limit=20`);
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    const formattedBids = data.bids.map((bid: string[]) => ({
+                        price: parseFloat(bid[0]),
+                        amount: parseFloat(bid[1]),
+                        total: parseFloat(bid[0]) * parseFloat(bid[1])
+                    }));
+                    
+                    const formattedAsks = data.asks.map((ask: string[]) => ({
+                        price: parseFloat(ask[0]),
+                        amount: parseFloat(ask[1]),
+                        total: parseFloat(ask[0]) * parseFloat(ask[1])
+                    }));
+                    
+                    setBids(formattedBids);
+                    setAsks(formattedAsks);
+                    
+                    if (formattedBids.length && formattedAsks.length) {
+                        setCurrentPrice((formattedBids[0].price + formattedAsks[0].price) / 2);
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to fetch order book:', error);
             }
-            return orders;
         };
 
-        const initialPrice = 45000;
-        setBids(generateOrders(initialPrice, 'bid'));
-        setAsks(generateOrders(initialPrice, 'ask').reverse());
-
-        // Simulate live updates
-        const interval = setInterval(() => {
-            setBids(prev => prev.map(o => ({
-                ...o,
-                price: o.price + (Math.random() - 0.5) * 10, // Slight price drift
-                amount: Math.max(0.1, o.amount + (Math.random() - 0.5)) // Volume change
-            })).sort((a, b) => b.price - a.price));
-
-            setAsks(prev => prev.map(o => ({
-                ...o,
-                price: o.price + (Math.random() - 0.5) * 10,
-                amount: Math.max(0.1, o.amount + (Math.random() - 0.5))
-            })).sort((a, b) => a.price - b.price));
-        }, 1000);
-
+        fetchOrderBook();
+        const interval = setInterval(fetchOrderBook, 10000); // Update every 10 seconds
         return () => clearInterval(interval);
     }, [symbol]);
 
@@ -80,11 +78,13 @@ export function OrderBook({ symbol, compact = false }: OrderBookProps) {
                 </div>
 
                 {/* Spread / Current Price Indicator */}
-                <div className={`py-2 px-4 my-1 text-center font-bold ${compact ? 'text-sm' : 'text-lg'} text-default-900 dark:text-white border-y border-default-100 dark:border-default-50/10 bg-default-50 dark:bg-black/20`}>
-                    {bids[0]?.price && asks[0]?.price
-                        ? ((bids[0].price + asks[0].price) / 2).toFixed(2)
-                        : "45000.00"}
-                    {!compact && <span className="text-xs text-default-400 font-normal ml-2">≈ $45,000</span>}
+                <div className={`py-2 px-2 sm:px-4 my-1 text-center font-bold ${compact ? 'text-xs sm:text-sm' : 'text-base sm:text-lg'} text-default-900 dark:text-white border-y border-default-100 dark:border-default-50/10 bg-default-50 dark:bg-black/20`}>
+                    {currentPrice > 0 ? currentPrice.toFixed(2) : "Loading..."}
+                    {!compact && currentPrice > 0 && (
+                        <span className="text-xs text-default-400 font-normal ml-2">
+                            ≈ ${currentPrice.toLocaleString()}
+                        </span>
+                    )}
                 </div>
 
                 {/* Bids (Buys) - Green - High to Low */}

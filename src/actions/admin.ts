@@ -239,7 +239,7 @@ export async function getAllUsers(page: number = 1, limit: number = 20) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) return { data: [], totalPages: 0 };
+  if (!user) return { data: [], totalPages: 0, totalCount: 0, stats: { verified: 0, pending: 0, unverified: 0 } };
 
   // Check admin role
   const { data: profile } = await supabase
@@ -248,7 +248,7 @@ export async function getAllUsers(page: number = 1, limit: number = 20) {
     .eq("id", user.id)
     .single();
 
-  if (profile?.role !== "admin") return { data: [], totalPages: 0 };
+  if (profile?.role !== "admin") return { data: [], totalPages: 0, totalCount: 0, stats: { verified: 0, pending: 0, unverified: 0 } };
 
   // Use admin client to fetch all users (including admins)
   const adminClient = createAdminClient();
@@ -262,9 +262,22 @@ export async function getAllUsers(page: number = 1, limit: number = 20) {
     .order("created_at", { ascending: false })
     .range(from, to);
 
+  // Get stats from all users
+  const { data: allUsers } = await adminClient
+    .from("profiles")
+    .select("kyc_status");
+
+  const stats = {
+    verified: allUsers?.filter((u) => u.kyc_status === "manually_verified" || u.kyc_status === "auto_verified").length || 0,
+    pending: allUsers?.filter((u) => u.kyc_status === "pending").length || 0,
+    unverified: allUsers?.filter((u) => !u.kyc_status || u.kyc_status === "rejected").length || 0,
+  };
+
   return {
     data: data || [],
     totalPages: Math.ceil((count || 0) / limit),
+    totalCount: count || 0,
+    stats,
   };
 }
 

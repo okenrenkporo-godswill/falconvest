@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useTransition } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@heroui/react";
 import Link from "next/link";
 import Image from "next/image";
@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
 import { Sun, Moon, Globe, ChevronDown, Menu, X, TrendingUp, BarChart3, Wallet, CreditCard, ChevronRight, CandlestickChart } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { setUserLocale } from '@/services/locale'; 
 
 const languages = [
@@ -36,23 +36,19 @@ export default function Header() {
   const [selectedLang, setSelectedLang] = useState(languages.find(l => l.code === currentLocale) || languages[0]);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [isPending, startTransition] = useTransition();
 
-  // Update selected language when locale changes
   useEffect(() => {
     setSelectedLang(languages.find(l => l.code === currentLocale) || languages[0]);
   }, [currentLocale]);
 
-  // Avoid hydration mismatch
   useEffect(() => {
     setMounted(true);
   }, []);
 
   const switchLocale = async (locale: string) => {
     await setUserLocale(locale as any);
-    startTransition(() => {
-      router.refresh();
-    });
+    router.refresh();
+    setIsLangOpen(false);
   };
 
   if (!mounted) return null;
@@ -213,10 +209,10 @@ export default function Header() {
                                 <button
                                     key={lang.code}
                                     onClick={() => {
-                                        setIsLangOpen(false);
                                         if (lang.code !== currentLocale) {
                                             switchLocale(lang.code);
                                         }
+                                        setIsLangOpen(false);
                                     }}
                                     className={`w-full text-left px-5 py-3 text-sm flex items-center gap-3 group hover:bg-black/5 dark:hover:bg-white/5 transition-colors ${selectedLang.code === lang.code ? 'text-[#FF6347] bg-black/5 dark:bg-white/5 font-black' : 'text-neutral-500 dark:text-neutral-400 font-medium'}`}
                                 >

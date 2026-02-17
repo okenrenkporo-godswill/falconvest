@@ -135,8 +135,6 @@ export function UpdateBalanceModal({
                                         selectedKeys={[accountType]}
                                         onChange={(e) => setAccountType(e.target.value)}
                                     >
-                                        <SelectItem key="spot">Spot</SelectItem>
-                                        <SelectItem key="funding">Funding</SelectItem>
                                         <SelectItem key="trading">Trading</SelectItem>
                                     </Select>
                                 </div>

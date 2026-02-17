@@ -14,6 +14,8 @@ export function UsersContent() {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+  const [stats, setStats] = useState({ verified: 0, pending: 0, unverified: 0 });
 
   useEffect(() => {
     loadUsers(currentPage);
@@ -25,6 +27,8 @@ export function UsersContent() {
     setUsers(result.data);
     setFilteredUsers(result.data);
     setTotalPages(result.totalPages);
+    setTotalCount(result.totalCount);
+    setStats(result.stats);
     setIsLoading(false);
   };
 
@@ -40,13 +44,6 @@ export function UsersContent() {
       setFilteredUsers(users);
     }
   }, [searchQuery, users]);
-
-  const stats = {
-    total: users.length,
-    verified: users.filter((u) => u.kyc_status === "manually_verified" || u.kyc_status === "auto_verified").length,
-    pending: users.filter((u) => u.kyc_status === "pending").length,
-    unverified: users.filter((u) => !u.kyc_status || u.kyc_status === "rejected").length,
-  };
 
   if (isLoading) {
     return (
@@ -94,34 +91,34 @@ export function UsersContent() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="border-none shadow-sm dark:bg-zinc-900">
+        <Card className="border-none shadow-md dark:bg-zinc-900 bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/20">
           <CardBody className="p-4">
-            <p className="text-sm text-default-500">Total Users</p>
-            <p className="text-3xl font-bold mt-1">{stats.total}</p>
+            <p className="text-sm text-primary-700 dark:text-primary-300 font-medium">Total Users</p>
+            <p className="text-3xl font-bold text-primary-900 dark:text-primary-100 mt-1">{totalCount}</p>
           </CardBody>
         </Card>
 
-        <Card className="border-none shadow-sm bg-success-50 dark:bg-success-900/20">
+        <Card className="border-none shadow-md bg-gradient-to-br from-success-50 to-success-100 dark:from-success-900/20 dark:to-success-800/20">
           <CardBody className="p-4">
-            <p className="text-sm text-success-700 dark:text-success-300">Verified</p>
+            <p className="text-sm text-success-700 dark:text-success-300 font-medium">Verified</p>
             <p className="text-3xl font-bold text-success-900 dark:text-success-100 mt-1">
               {stats.verified}
             </p>
           </CardBody>
         </Card>
 
-        <Card className="border-none shadow-sm bg-warning-50 dark:bg-warning-900/20">
+        <Card className="border-none shadow-md bg-gradient-to-br from-warning-50 to-warning-100 dark:from-warning-900/20 dark:to-warning-800/20">
           <CardBody className="p-4">
-            <p className="text-sm text-warning-700 dark:text-warning-300">Pending KYC</p>
+            <p className="text-sm text-warning-700 dark:text-warning-300 font-medium">Pending KYC</p>
             <p className="text-3xl font-bold text-warning-900 dark:text-warning-100 mt-1">
               {stats.pending}
             </p>
           </CardBody>
         </Card>
 
-        <Card className="border-none shadow-sm bg-danger-50 dark:bg-danger-900/20">
+        <Card className="border-none shadow-md bg-gradient-to-br from-danger-50 to-danger-100 dark:from-danger-900/20 dark:to-danger-800/20">
           <CardBody className="p-4">
-            <p className="text-sm text-danger-700 dark:text-danger-300">Unverified</p>
+            <p className="text-sm text-danger-700 dark:text-danger-300 font-medium">Unverified</p>
             <p className="text-3xl font-bold text-danger-900 dark:text-danger-100 mt-1">
               {stats.unverified}
             </p>

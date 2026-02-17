@@ -8,7 +8,7 @@ import {
   Button,
   Divider,
 } from "@heroui/react";
-import { Lock, Shield } from "lucide-react";
+import { Lock, Shield, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { updatePasswordAction } from "@/actions/account";
 import { addToast } from "@heroui/react";
@@ -19,6 +19,9 @@ export function SecuritySettings() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [showCurrent, setShowCurrent] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -86,32 +89,71 @@ export function SecuritySettings() {
 
           <Input
             label="Current Password"
-            type="password"
+            type={showCurrent ? "text" : "password"}
             variant="bordered"
             value={currentPassword}
             onValueChange={setCurrentPassword}
             isInvalid={!!errors.currentPassword}
             errorMessage={errors.currentPassword}
+            endContent={
+              <button
+                type="button"
+                onClick={() => setShowCurrent(!showCurrent)}
+                className="focus:outline-none"
+              >
+                {showCurrent ? (
+                  <EyeOff className="text-default-400" size={20} />
+                ) : (
+                  <Eye className="text-default-400" size={20} />
+                )}
+              </button>
+            }
           />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
               label="New Password"
-              type="password"
+              type={showNew ? "text" : "password"}
               variant="bordered"
               value={newPassword}
               onValueChange={setNewPassword}
               isInvalid={!!errors.newPassword}
               errorMessage={errors.newPassword}
+              endContent={
+                <button
+                  type="button"
+                  onClick={() => setShowNew(!showNew)}
+                  className="focus:outline-none"
+                >
+                  {showNew ? (
+                    <EyeOff className="text-default-400" size={20} />
+                  ) : (
+                    <Eye className="text-default-400" size={20} />
+                  )}
+                </button>
+              }
             />
             <Input
               label="Confirm New Password"
-              type="password"
+              type={showConfirm ? "text" : "password"}
               variant="bordered"
               value={confirmPassword}
               onValueChange={setConfirmPassword}
               isInvalid={!!errors.confirmPassword}
               errorMessage={errors.confirmPassword}
+              endContent={
+                <button
+                  type="button"
+                  onClick={() => setShowConfirm(!showConfirm)}
+                  className="focus:outline-none"
+                >
+                  {showConfirm ? (
+                    <EyeOff className="text-default-400" size={20} />
+                  ) : (
+                    <Eye className="text-default-400" size={20} />
+                  )}
+                </button>
+              }
             />
           </div>
 

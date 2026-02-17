@@ -49,10 +49,9 @@ export function ProofUploadModal({
   };
 
   const handleSubmit = async () => {
-    if (!proofImage) return;
     setIsSubmitting(true);
     try {
-      await onSubmit(proofImage);
+      await onSubmit(proofImage || "");
       onOpenChange();
     } catch (error) {
       console.error("Upload failed:", error);
@@ -68,7 +67,7 @@ export function ProofUploadModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={handleClose} size="2xl">
+    <Modal isOpen={isOpen} onOpenChange={handleClose} size="2xl" scrollBehavior="inside">
       <ModalContent>
         {(onClose) => (
           <>
@@ -102,7 +101,7 @@ export function ProofUploadModal({
 
                 {/* Upload Area */}
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Payment Proof</label>
+                  <label className="text-sm font-medium">Payment Proof <span className="text-default-400">(Optional)</span></label>
                   {!proofImage ? (
                     <div
                       onClick={() => fileInputRef.current?.click()}
@@ -113,7 +112,7 @@ export function ProofUploadModal({
                         Click to upload payment proof
                       </p>
                       <p className="text-xs text-default-400 mt-1">
-                        PNG, JPG up to 5MB
+                        PNG, JPG up to 5MB (Optional)
                       </p>
                     </div>
                   ) : (
@@ -164,7 +163,6 @@ export function ProofUploadModal({
               <Button
                 color="primary"
                 onPress={handleSubmit}
-                isDisabled={!proofImage}
                 isLoading={isSubmitting}
               >
                 Submit for Verification

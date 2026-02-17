@@ -60,7 +60,7 @@ export function DepositDetailModal({
   const Icon = config?.icon || Clock;
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="4xl">
+    <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="4xl" scrollBehavior="inside">
       <ModalContent>
         {(onClose) => (
           <>
@@ -152,7 +152,11 @@ export function DepositDetailModal({
                 {/* Right: Payment Proof */}
                 <div className="space-y-2">
                   <p className="text-sm font-medium">Payment Proof</p>
-                  {proofUrl ? (
+                  {!deposit.proof_path ? (
+                    <div className="border border-default-200 rounded-xl p-8 flex items-center justify-center bg-default-50 h-64">
+                      <p className="text-sm text-default-400">No proof uploaded</p>
+                    </div>
+                  ) : proofUrl ? (
                     <div className="border border-default-200 rounded-xl overflow-hidden bg-default-100 sticky top-0">
                       <img
                         src={proofUrl}

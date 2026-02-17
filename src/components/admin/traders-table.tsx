@@ -13,6 +13,7 @@ import {
 } from "@heroui/react";
 import { Plus, Edit, Power } from "lucide-react";
 import { toggleTraderStatus } from "@/actions/traders";
+import Link from "next/link";
 
 interface Trader {
   id: string;
@@ -91,7 +92,13 @@ export function TradersTable({ traders }: { traders: Trader[] | null }) {
               </TableCell>
               <TableCell>
                 <div className="flex gap-2">
-                  <Button size="sm" variant="flat" startContent={<Edit size={16} />}>
+                  <Button
+                    as={Link}
+                    href={`/cpanel/traders/${trader.id}`}
+                    size="sm"
+                    variant="flat"
+                    startContent={<Edit size={16} />}
+                  >
                     Edit
                   </Button>
                   <Button

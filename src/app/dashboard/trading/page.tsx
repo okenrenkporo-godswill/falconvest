@@ -137,84 +137,83 @@ export default function TradingPage() {
   }
 
   return (
-    <div className="h-[calc(100vh-54px)] lg:absolute lg:left-0 lg:top-0 w-full flex flex-col gap-2 overflow-hidden">
-      <div className="lg:grid flex flex-col lg:grid-cols-7 h-full lg:grid-rows-7 gap-4 overflow-hidden">
+    <div className="min-h-screen lg:h-[calc(100vh-54px)] w-full flex flex-col gap-2 p-2 lg:p-0 overflow-hidden">
+      {/* Mobile: Header at top */}
+      <div className="lg:hidden">
+        <TradingHeader
+          symbol={symbol.replace("/", "")}
+          onSymbolChange={(sym) => setSymbol(sym.replace("USDT", "/USDT"))}
+          onToggleChart={() => setIsChartOpen(!isChartOpen)}
+        />
+      </div>
+
+      <div className="flex-1 flex flex-col lg:grid lg:grid-cols-7 lg:grid-rows-7 gap-2 lg:gap-4 overflow-hidden">
         {/* Left: Chart & History */}
-        <div className="col-span-5 row-span-6">
-          <div className={`grid grid-rows-[auto_1fr_auto] h-full gap-5 min-w-0 transition-all duration-300 ${isChartOpen ? "grid" : "hidden lg:grid"}`}>
-            {/* Wallet Card */}
-            <Card className="border-none bg-background shadow-sm dark:bg-zinc-900 flex-shrink-0">
-              <CardBody className="p-3 flex flex-row items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Wallet size={18} className="text-default-500" />
-                  <span className="text-sm text-default-500">Trading Balance</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <p className="text-lg font-bold">{balance.toFixed(2)} USDT</p>
-                  <Link href="/dashboard/deposit?account=trading">
-                    <Button size="sm" color="primary" variant="flat">
-                      Deposit
-                    </Button>
-                  </Link>
-                </div>
-              </CardBody>
-            </Card>
+        <div className="lg:col-span-5 lg:row-span-6 flex flex-col gap-2 min-h-0">
+          {/* Wallet Card */}
+          <Card className="border-none bg-background shadow-sm dark:bg-zinc-900 flex-shrink-0">
+            <CardBody className="p-3 flex flex-row items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Wallet size={18} className="text-default-500" />
+                <span className="text-xs sm:text-sm text-default-500">Trading Balance</span>
+              </div>
+              <div className="flex items-center gap-2 sm:gap-3">
+                <p className="text-base sm:text-lg font-bold">{balance.toFixed(2)} USDT</p>
+                <Link href="/dashboard/deposit?account=trading">
+                  <Button size="sm" color="primary" variant="flat">
+                    Deposit
+                  </Button>
+                </Link>
+              </div>
+            </CardBody>
+          </Card>
 
-            {/* Chart */}
+          {/* Chart - Toggle on mobile */}
+          <div className={`flex-1 min-h-[300px] lg:min-h-0 ${isChartOpen ? 'block' : 'hidden lg:block'}`}>
             <TradingChart symbol={symbol.replace("/", "")} />
-
-            {/* History Tabs (Desktop) */}
-            <Card className="h-[250px] border-none shadow-sm dark:bg-zinc-900 flex-shrink-0 hidden lg:flex">
-              <CardBody className="p-0">
-                <HistoryTabs 
-                  positions={positions} 
-                  trades={trades}
-                  onClosePosition={handleClosePosition}
-                  closingPosition={closingPosition}
-                />
-              </CardBody>
-            </Card>
           </div>
+
+          {/* History Tabs - Desktop only */}
+          <Card className="h-[250px] border-none shadow-sm dark:bg-zinc-900 flex-shrink-0 hidden lg:flex">
+            <CardBody className="p-0">
+              <HistoryTabs 
+                positions={positions} 
+                trades={trades}
+                onClosePosition={handleClosePosition}
+                closingPosition={closingPosition}
+              />
+            </CardBody>
+          </Card>
         </div>
 
-        {/* Header */}
-        <div className="col-span-5 col-start-1 row-start-7 flex align-bottom">
+        {/* Desktop: Header at bottom left */}
+        <div className="hidden lg:flex lg:col-span-5 lg:col-start-1 lg:row-start-7">
           <TradingHeader
             symbol={symbol.replace("/", "")}
             onSymbolChange={(sym) => setSymbol(sym.replace("USDT", "/USDT"))}
-            onToggleChart={() => setIsChartOpen(!isChartOpen)}
           />
         </div>
 
         {/* Right: Order Book & Form */}
-        <div className="col-span-2 row-span-7 col-start-6 h-full row-start-1">
-          <div className="flex-shrink-0 flex h-full flex-col gap-2 overflow-y-auto">
-            <div className="flex flex-row lg:flex-col gap-2 h-full min-h-[400px]">
-              {/* Order Form */}
-              <div className="flex-[1.5] lg:flex-shrink-0 order-1 lg:order-2">
-                <OrderForm 
-                  symbol={symbol.replace("/", "")} 
-                  onOrder={handleOrderSubmit}
-                  balance={balance}
-                />
-              </div>
+        <div className="lg:col-span-2 lg:row-span-7 lg:col-start-6 lg:row-start-1 flex flex-col gap-2 min-h-0">
+          {/* Order Form */}
+          <div className="flex-shrink-0 order-2 lg:order-1">
+            <OrderForm 
+              symbol={symbol.replace("/", "")} 
+              onOrder={handleOrderSubmit}
+              balance={balance}
+            />
+          </div>
 
-              {/* Order Book */}
-              <div className="flex-1 lg:flex-grow lg:min-h-[400px] order-2 lg:order-1">
-                <div className="h-full block lg:hidden">
-                  <OrderBook symbol={symbol.replace("/", "")} compact={true} />
-                </div>
-                <div className="h-full hidden lg:block">
-                  <OrderBook symbol={symbol.replace("/", "")} compact={false} />
-                </div>
-              </div>
-            </div>
+          {/* Order Book */}
+          <div className="flex-1 min-h-[400px] lg:min-h-0 order-1 lg:order-2">
+            <OrderBook symbol={symbol.replace("/", "")} compact={false} />
           </div>
         </div>
       </div>
 
-      {/* Mobile History Tabs */}
-      <div className="flex-shrink-0 lg:hidden h-[250px] min-h-[250px]">
+      {/* Mobile: History Tabs at bottom */}
+      <div className="lg:hidden flex-shrink-0 h-[250px]">
         <Card className="h-full border-none shadow-sm dark:bg-zinc-900">
           <CardBody className="p-0">
             <HistoryTabs 
@@ -268,52 +267,54 @@ function HistoryTabs({
               No open positions
             </div>
           ) : (
-            <table className="w-full text-left text-xs">
-              <thead className="text-default-400 border-b border-default-100 dark:border-default-50/10 sticky top-0 bg-background z-10">
-                <tr>
-                  <th className="p-3 font-medium">Time</th>
-                  <th className="p-3 font-medium">Pair</th>
-                  <th className="p-3 font-medium">Side</th>
-                  <th className="p-3 font-medium text-right">Entry</th>
-                  <th className="p-3 font-medium text-right">Amount</th>
-                  <th className="p-3 font-medium text-right">Leverage</th>
-                  <th className="p-3 font-medium text-right">PnL</th>
-                  <th className="p-3 font-medium"></th>
-                </tr>
-              </thead>
-              <tbody className="text-default-600">
-                {positions.map((pos) => (
-                  <tr
-                    key={pos.id}
-                    className="border-b border-default-50 dark:border-default-50/5 hover:bg-default-50 dark:hover:bg-default-50/5"
-                  >
-                    <td className="p-3">{new Date(pos.opened_at).toLocaleTimeString()}</td>
-                    <td className="p-3 font-bold">{pos.pair}</td>
-                    <td className={`p-3 font-bold ${pos.side === "long" ? "text-green-500" : "text-red-500"}`}>
-                      {pos.side.toUpperCase()}
-                    </td>
-                    <td className="p-3 text-right">{pos.entry_price.toLocaleString()}</td>
-                    <td className="p-3 text-right">{pos.amount}</td>
-                    <td className="p-3 text-right">{pos.leverage}x</td>
-                    <td className={`p-3 text-right ${pos.unrealized_pnl >= 0 ? "text-green-500" : "text-red-500"}`}>
-                      {pos.unrealized_pnl?.toFixed(2)} USDT
-                    </td>
-                    <td className="p-3">
-                      <Button
-                        size="sm"
-                        variant="flat"
-                        color="danger"
-                        isIconOnly
-                        onPress={() => onClosePosition(pos.id, pos.entry_price)}
-                        isLoading={closingPosition === pos.id}
-                      >
-                        <X size={14} />
-                      </Button>
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="text-default-400 border-b border-default-100 dark:border-default-50/10 sticky top-0 bg-background z-10">
+                  <tr>
+                    <th className="p-2 sm:p-3 font-medium">Time</th>
+                    <th className="p-2 sm:p-3 font-medium">Pair</th>
+                    <th className="p-2 sm:p-3 font-medium">Side</th>
+                    <th className="p-2 sm:p-3 font-medium text-right">Entry</th>
+                    <th className="p-2 sm:p-3 font-medium text-right hidden sm:table-cell">Amount</th>
+                    <th className="p-2 sm:p-3 font-medium text-right hidden md:table-cell">Leverage</th>
+                    <th className="p-2 sm:p-3 font-medium text-right">PnL</th>
+                    <th className="p-2 sm:p-3 font-medium"></th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="text-default-600">
+                  {positions.map((pos) => (
+                    <tr
+                      key={pos.id}
+                      className="border-b border-default-50 dark:border-default-50/5 hover:bg-default-50 dark:hover:bg-default-50/5"
+                    >
+                      <td className="p-2 sm:p-3 whitespace-nowrap">{new Date(pos.opened_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
+                      <td className="p-2 sm:p-3 font-bold">{pos.pair}</td>
+                      <td className={`p-2 sm:p-3 font-bold ${pos.side === "long" ? "text-green-500" : "text-red-500"}`}>
+                        {pos.side.toUpperCase()}
+                      </td>
+                      <td className="p-2 sm:p-3 text-right">{pos.entry_price.toLocaleString()}</td>
+                      <td className="p-2 sm:p-3 text-right hidden sm:table-cell">{pos.amount}</td>
+                      <td className="p-2 sm:p-3 text-right hidden md:table-cell">{pos.leverage}x</td>
+                      <td className={`p-2 sm:p-3 text-right ${pos.unrealized_pnl >= 0 ? "text-green-500" : "text-red-500"}`}>
+                        {pos.unrealized_pnl?.toFixed(2)}
+                      </td>
+                      <td className="p-2 sm:p-3">
+                        <Button
+                          size="sm"
+                          variant="flat"
+                          color="danger"
+                          isIconOnly
+                          onPress={() => onClosePosition(pos.id, pos.entry_price)}
+                          isLoading={closingPosition === pos.id}
+                        >
+                          <X size={14} />
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </Tab>
@@ -335,43 +336,45 @@ function HistoryTabs({
               No trade history
             </div>
           ) : (
-            <table className="w-full text-left text-xs">
-              <thead className="text-default-400 border-b border-default-100 dark:border-default-50/10 sticky top-0 bg-background z-10">
-                <tr>
-                  <th className="p-3 font-medium">Time</th>
-                  <th className="p-3 font-medium">Pair</th>
-                  <th className="p-3 font-medium">Type</th>
-                  <th className="p-3 font-medium">Side</th>
-                  <th className="p-3 font-medium text-right">Price</th>
-                  <th className="p-3 font-medium text-right">Amount</th>
-                  <th className="p-3 font-medium text-right">Total</th>
-                  <th className="p-3 font-medium">Status</th>
-                </tr>
-              </thead>
-              <tbody className="text-default-600">
-                {trades.map((trade) => (
-                  <tr
-                    key={trade.id}
-                    className="border-b border-default-50 dark:border-default-50/5 hover:bg-default-50 dark:hover:bg-default-50/5"
-                  >
-                    <td className="p-3">{new Date(trade.created_at).toLocaleTimeString()}</td>
-                    <td className="p-3 font-bold">{trade.pair}</td>
-                    <td className="p-3 capitalize">{trade.type}</td>
-                    <td className={`p-3 font-bold ${trade.side === "buy" ? "text-green-500" : "text-red-500"}`}>
-                      {trade.side.toUpperCase()}
-                    </td>
-                    <td className="p-3 text-right">{trade.price.toLocaleString()}</td>
-                    <td className="p-3 text-right">{trade.amount}</td>
-                    <td className="p-3 text-right">{trade.total.toFixed(2)}</td>
-                    <td className="p-3">
-                      <Chip size="sm" color={trade.status === "completed" ? "success" : "warning"} variant="flat">
-                        {trade.status}
-                      </Chip>
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="text-default-400 border-b border-default-100 dark:border-default-50/10 sticky top-0 bg-background z-10">
+                  <tr>
+                    <th className="p-2 sm:p-3 font-medium">Time</th>
+                    <th className="p-2 sm:p-3 font-medium">Pair</th>
+                    <th className="p-2 sm:p-3 font-medium hidden sm:table-cell">Type</th>
+                    <th className="p-2 sm:p-3 font-medium">Side</th>
+                    <th className="p-2 sm:p-3 font-medium text-right">Price</th>
+                    <th className="p-2 sm:p-3 font-medium text-right hidden md:table-cell">Amount</th>
+                    <th className="p-2 sm:p-3 font-medium text-right">Total</th>
+                    <th className="p-2 sm:p-3 font-medium hidden lg:table-cell">Status</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="text-default-600">
+                  {trades.map((trade) => (
+                    <tr
+                      key={trade.id}
+                      className="border-b border-default-50 dark:border-default-50/5 hover:bg-default-50 dark:hover:bg-default-50/5"
+                    >
+                      <td className="p-2 sm:p-3 whitespace-nowrap">{new Date(trade.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
+                      <td className="p-2 sm:p-3 font-bold">{trade.pair}</td>
+                      <td className="p-2 sm:p-3 capitalize hidden sm:table-cell">{trade.type}</td>
+                      <td className={`p-2 sm:p-3 font-bold ${trade.side === "buy" ? "text-green-500" : "text-red-500"}`}>
+                        {trade.side.toUpperCase()}
+                      </td>
+                      <td className="p-2 sm:p-3 text-right">{trade.price.toLocaleString()}</td>
+                      <td className="p-2 sm:p-3 text-right hidden md:table-cell">{trade.amount}</td>
+                      <td className="p-2 sm:p-3 text-right">{trade.total.toFixed(2)}</td>
+                      <td className="p-2 sm:p-3 hidden lg:table-cell">
+                        <Chip size="sm" color={trade.status === "completed" ? "success" : "warning"} variant="flat">
+                          {trade.status}
+                        </Chip>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </Tab>

@@ -1,12 +1,14 @@
 "use client";
 
 import { Button, Input, Card, CardBody, CardHeader, Form, Alert } from "@heroui/react";
+import { Eye, EyeOff } from "lucide-react";
 import { adminLoginAction } from "@/actions/auth";
 import { useState } from "react";
 
 export default function CpanelLoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -47,9 +49,22 @@ export default function CpanelLoginPage() {
             />
             <Input
               name="password"
-              type="password"
+              type={isPasswordVisible ? "text" : "password"}
               label="Password"
               isRequired
+              endContent={
+                <button
+                  type="button"
+                  onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                  className="focus:outline-none"
+                >
+                  {isPasswordVisible ? (
+                    <EyeOff className="text-default-400" size={20} />
+                  ) : (
+                    <Eye className="text-default-400" size={20} />
+                  )}
+                </button>
+              }
               errorMessage={({ validationDetails }) => {
                 if (validationDetails.valueMissing) return "Please enter your password";
               }}

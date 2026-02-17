@@ -205,7 +205,11 @@ export function DepositVerificationModal({
                 {/* Right: Payment Proof */}
                 <div className="space-y-2">
                   <p className="text-sm font-medium">Payment Proof</p>
-                  {proofUrl ? (
+                  {!deposit.proof_path ? (
+                    <div className="border border-default-200 rounded-xl p-8 flex items-center justify-center bg-default-50 h-64">
+                      <p className="text-sm text-default-400">No proof uploaded</p>
+                    </div>
+                  ) : proofUrl ? (
                     <div className="rounded-xl overflow-hidden sticky top-0 max-h-[400px] flex items-center justify-center">
                       <img
                         src={proofUrl}

@@ -31,6 +31,8 @@ export function CryptoPaymentModal({
     const [coins, setCoins] = useState<Array<{ label: string; value: string; icon: string; logo?: string }>>([]);
     const [cryptoAmount, setCryptoAmount] = useState<string>("0");
     const [isLoadingRate, setIsLoadingRate] = useState(false);
+    const [conversionError, setConversionError] = useState<string>("");
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
     const { isOpen: isProofOpen, onOpen: onProofOpen, onOpenChange: onProofOpenChange } = useDisclosure();
 
     // Fetch conversion rate when coin or amount changes
@@ -43,12 +45,17 @@ export function CryptoPaymentModal({
             }
 
             setIsLoadingRate(true);
+            setConversionError("");
             try {
+                if (selectedCoin === 'USDT' || selectedCoin === 'USDC') {
+                    setCryptoAmount(usdAmount.toFixed(2));
+                    setIsLoadingRate(false);
+                    return;
+                }
+
                 const coinIds: Record<string, string> = {
                     'BTC': 'bitcoin',
                     'ETH': 'ethereum',
-                    'USDT': 'tether',
-                    'USDC': 'usd-coin',
                     'BNB': 'binancecoin',
                     'SOL': 'solana',
                     'XRP': 'ripple',
@@ -56,15 +63,32 @@ export function CryptoPaymentModal({
                     'DOGE': 'dogecoin',
                 };
 
-                const coinId = coinIds[selectedCoin] || selectedCoin.toLowerCase();
-                const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd`);
-                const data = await response.json();
+                const coinId = coinIds[selectedCoin];
+                if (!coinId) {
+                    setConversionError("Unsupported currency");
+                    setCryptoAmount("0");
+                    setIsLoadingRate(false);
+                    return;
+                }
 
-                const rate = data[coinId]?.usd || 1;
+                const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd`);
+                
+                if (!response.ok) {
+                    throw new Error("Failed to fetch conversion rate");
+                }
+
+                const data = await response.json();
+                const rate = data[coinId]?.usd;
+
+                if (!rate) {
+                    throw new Error("Rate not available");
+                }
+
                 const crypto = usdAmount / rate;
                 setCryptoAmount(crypto.toFixed(8));
             } catch (error) {
                 console.error("Failed to fetch rate:", error);
+                setConversionError("Failed to get conversion rate. Please try again.");
                 setCryptoAmount("0");
             } finally {
                 setIsLoadingRate(false);
@@ -164,6 +188,8 @@ export function CryptoPaymentModal({
                                                     <p className="text-xs text-default-500 mb-1">You need to send</p>
                                                     {isLoadingRate ? (
                                                         <Skeleton className="h-8 w-32 rounded-lg" />
+                                                    ) : conversionError ? (
+                                                        <p className="text-sm text-danger">{conversionError}</p>
                                                     ) : (
                                                         <p className="text-2xl font-bold">{cryptoAmount} {selectedCoin}</p>
                                                     )}
@@ -210,12 +236,6 @@ export function CryptoPaymentModal({
                                             </div>
                                         )}
 
-                                        {/* Warning Message */}
-                                        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 mt-4">
-                                            <p className="text-xs text-red-700 dark:text-red-300">
-                                                <strong>⚠️ Important:</strong> Please send only <strong>{coins.find(c => c.value === selectedCoin)?.label.split(' ')[0]}</strong> to this address. Sending any other token may result in permanent loss.
-                                            </p>
-                                        </div>
                                     </div>
                                 </Tab>
                                 <Tab key="buy" title="Buy Crypto">
@@ -252,9 +272,11 @@ export function CryptoPaymentModal({
                                 Cancel
                             </Button>
                             {key === "send" && (
-                                <Button className="bg-zinc-900 text-white dark:bg-zinc-100 dark:text-black" onPress={() => {
-                                    onProofOpen();
-                                }}>
+                                <Button 
+                                    className="bg-zinc-900 text-white dark:bg-zinc-100 dark:text-black" 
+                                    onPress={() => setShowConfirmDialog(true)}
+                                    isDisabled={isLoadingRate || !!conversionError || !walletAddress || parseFloat(cryptoAmount) === 0}
+                                >
                                     I've Sent It
                                 </Button>
                             )}
@@ -262,6 +284,41 @@ export function CryptoPaymentModal({
                     </>
                 )}
             </ModalContent>
+
+            {/* Confirmation Dialog */}
+            <Modal isOpen={showConfirmDialog} onOpenChange={setShowConfirmDialog} size="md">
+                <ModalContent>
+                    {(onClose) => (
+                        <>
+                            <ModalHeader>Confirm Transaction</ModalHeader>
+                            <ModalBody>
+                                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+                                    <p className="text-sm text-red-700 dark:text-red-300">
+                                        <strong>⚠️ Important:</strong> Please send only <strong>{coins.find(c => c.value === selectedCoin)?.label.split(' ')[0]}</strong> to this address. Sending any other token may result in permanent loss.
+                                    </p>
+                                </div>
+                                <p className="text-sm text-default-600 mt-4">
+                                    Have you sent <strong>{cryptoAmount} {selectedCoin}</strong> to the provided wallet address?
+                                </p>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button variant="flat" onPress={onClose}>
+                                    Cancel
+                                </Button>
+                                <Button 
+                                    color="primary" 
+                                    onPress={() => {
+                                        setShowConfirmDialog(false);
+                                        onProofOpen();
+                                    }}
+                                >
+                                    Yes, Continue
+                                </Button>
+                            </ModalFooter>
+                        </>
+                    )}
+                </ModalContent>
+            </Modal>
 
             <ProofUploadModal
                 isOpen={isProofOpen}

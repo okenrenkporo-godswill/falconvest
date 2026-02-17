@@ -50,23 +50,27 @@ export function TradingHeader({ symbol, onSymbolChange, onToggleChart }: Trading
         setAssets(mockAssets);
     }, []);
 
-    // Fetch Ticker - Using mock data due to API restrictions
+    // Fetch real-time ticker data from Binance
     useEffect(() => {
         if (typeof window === 'undefined') return;
         
-        setLoading(true);
-        
-        // Mock price data for different symbols
-        const mockPrices: Record<string, any> = {
-            'BTCUSDT': { lastPrice: "45000.00", priceChangePercent: "2.5", highPrice: "46000.00", lowPrice: "44000.00", volume: "1000000" },
-            'ETHUSDT': { lastPrice: "2500.00", priceChangePercent: "3.2", highPrice: "2600.00", lowPrice: "2400.00", volume: "500000" },
-            'SOLUSDT': { lastPrice: "100.00", priceChangePercent: "-1.5", highPrice: "105.00", lowPrice: "98.00", volume: "200000" },
-            'BNBUSDT': { lastPrice: "320.00", priceChangePercent: "1.8", highPrice: "330.00", lowPrice: "315.00", volume: "150000" },
+        const fetchTicker = async () => {
+            try {
+                const response = await fetch(`/api/binance/ticker?symbol=${symbol}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setTicker(data);
+                }
+            } catch (error) {
+                console.error('Failed to fetch ticker:', error);
+            } finally {
+                setLoading(false);
+            }
         };
-        
-        const mockData = mockPrices[symbol] || mockPrices['BTCUSDT'];
-        setTicker(mockData);
-        setLoading(false);
+
+        fetchTicker();
+        const interval = setInterval(fetchTicker, 10000); // Update every 10 seconds
+        return () => clearInterval(interval);
     }, [symbol]);
 
     return (

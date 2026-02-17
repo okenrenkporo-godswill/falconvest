@@ -42,7 +42,7 @@ export async function approveTrader(traderId: string, adminUserId: string) {
 }
 
 // Reject/suspend trader
-export async function updateTraderStatus(traderId: string, status: "suspended" | "inactive") {
+export async function updateTraderStatus(traderId: string, status: "suspended" | "inactive" | "active") {
   const adminClient = createAdminClient();
   
   const { error } = await adminClient
