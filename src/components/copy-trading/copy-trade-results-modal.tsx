@@ -89,10 +89,10 @@ export function CopyTradeResultsModal({
                   key={result.id}
                   className="p-4 border border-default-200 dark:border-default-100 rounded-lg bg-default-50 dark:bg-default-50/5"
                 >
-                  <div className="flex items-start justify-between gap-4 mb-2">
+                  <div className="flex items-start justify-between gap-4 mb-3">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="font-semibold">{result.pair}</span>
+                        <span className="font-semibold text-base">{result.pair}</span>
                         <Chip
                           size="sm"
                           color={result.side === "buy" ? "success" : "danger"}
@@ -119,6 +119,7 @@ export function CopyTradeResultsModal({
                       </p>
                     </div>
                     <div className="text-right">
+                      <p className="text-xs text-default-400 mb-1">P&L</p>
                       <p
                         className={`text-lg font-bold ${
                           result.profit_loss >= 0 ? "text-success" : "text-danger"
@@ -129,21 +130,21 @@ export function CopyTradeResultsModal({
                       </p>
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-2 text-xs text-default-500">
+                  <div className="grid grid-cols-3 gap-3 text-sm">
                     <div>
-                      <span className="text-default-400">Amount:</span>{" "}
-                      {result.amount}
+                      <p className="text-xs text-default-400 mb-1">Amount</p>
+                      <p className="font-medium">{result.amount}</p>
                     </div>
                     <div>
-                      <span className="text-default-400">Entry:</span>{" "}
-                      {formatCurrency(result.entry_price)}
+                      <p className="text-xs text-default-400 mb-1">Entry Price</p>
+                      <p className="font-medium">{formatCurrency(result.entry_price)}</p>
                     </div>
-                    {result.exit_price && (
-                      <div>
-                        <span className="text-default-400">Exit:</span>{" "}
-                        {formatCurrency(result.exit_price)}
-                      </div>
-                    )}
+                    <div>
+                      <p className="text-xs text-default-400 mb-1">Exit Price</p>
+                      <p className="font-medium">
+                        {result.exit_price ? formatCurrency(result.exit_price) : "—"}
+                      </p>
+                    </div>
                   </div>
                 </div>
               ))}
