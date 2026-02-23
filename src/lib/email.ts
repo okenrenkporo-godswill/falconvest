@@ -320,3 +320,44 @@ export async function notifyAdminCopyTrade(
     <p>Time: ${new Date().toLocaleString()}</p>`,
   );
 }
+
+export async function sendCopyTradeResultEmail(
+  email: string,
+  name: string,
+  traderName: string,
+  pair: string,
+  outcome: "profit" | "loss",
+) {
+  if (!env.RESEND_API_KEY) {
+    console.warn("RESEND_API_KEY not configured, skipping email");
+    return;
+  }
+
+  const subject = outcome === "profit" 
+    ? "✓ Copy Trade Closed - Profitable" 
+    : "Copy Trade Closed";
+
+  await resend.emails.send({
+    from: "MasterSync <trading@mastersync.live>",
+    to: email,
+    subject,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #333;">Copy Trade Update</h2>
+        <p>Hi ${name},</p>
+        <p>A trade from <strong>${traderName}</strong> has been closed.</p>
+        <p><strong>Trading Pair:</strong> ${pair}</p>
+        <p>Your account balance has been updated. Log in to your dashboard to view the details.</p>
+        <p style="margin-top: 30px;">
+          <a href="https://app.mastersync.live/dashboard/my-copy-trades" 
+             style="background-color: #000; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
+            View My Copy Trades
+          </a>
+        </p>
+        <p style="color: #666; font-size: 12px; margin-top: 30px;">
+          This is an automated notification from MasterSync.
+        </p>
+      </div>
+    `,
+  });
+}

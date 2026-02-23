@@ -19,7 +19,15 @@ export async function adminCreateCopyPosition(data: {
   // Get copy trade details
   const { data: copyTrade } = await adminClient
     .from("copy_trades")
-    .select("user_id, trader_id, copy_amount, total_profit, total_trades")
+    .select(`
+      user_id, 
+      trader_id, 
+      copy_amount, 
+      total_profit, 
+      total_trades,
+      profiles!copy_trades_user_id_fkey(email, first_name, last_name),
+      traders!copy_trades_trader_id_fkey(display_name)
+    `)
     .eq("id", data.copyTradeId)
     .single();
 
@@ -93,6 +101,26 @@ export async function adminCreateCopyPosition(data: {
   }
 
   console.log("✅ Trade simulation complete");
+  
+  // Send email notification to user
+  try {
+    const { sendCopyTradeResultEmail } = await import("@/lib/email");
+    const userProfile = copyTrade.profiles as any;
+    const trader = copyTrade.traders as any;
+    const userName = `${userProfile.first_name} ${userProfile.last_name}`.trim() || "Trader";
+    const outcome = data.profitLoss >= 0 ? "profit" : "loss";
+    
+    await sendCopyTradeResultEmail(
+      userProfile.email,
+      userName,
+      trader.display_name,
+      data.pair,
+      outcome
+    );
+  } catch (emailError) {
+    console.error("Failed to send copy trade result email:", emailError);
+  }
+  
   revalidatePath("/cpanel/copy-trades");
   return { success: true, position };
 }

@@ -19,6 +19,7 @@ type Trader = {
   total_trades: number;
   risk_score: number | null;
   min_copy_amount: number;
+  commission_rate: number;
 };
 
 export default function TraderProfilePage({ params }: { params: Promise<{ id: string }> }) {
@@ -167,6 +168,10 @@ export default function TraderProfilePage({ params }: { params: Promise<{ id: st
               <div className="flex justify-between items-center text-sm">
                 <span className="text-default-500">Win Rate</span>
                 <span className="font-medium">{trader.win_rate}%</span>
+              </div>
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-default-500">Commission Rate</span>
+                <span className="font-medium">{trader.commission_rate}%</span>
               </div>
             </div>
           </CardBody>
