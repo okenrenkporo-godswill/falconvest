@@ -25,7 +25,7 @@ import {
 
 import { Suspense, useEffect } from "react";
 import { DepositHistory } from "@/components/deposit/deposit-history";
-import { getUserDeposits } from "@/actions/deposits";
+import { getUserDeposits, notifyDepositIntent } from "@/actions/deposits";
 import { useSearchParams } from "next/navigation";
 
 function DepositContent() {
@@ -66,6 +66,8 @@ function DepositContent() {
 
   const handleDeposit = () => {
     if (!amount || parseFloat(amount) <= 0) return;
+    // Fire admin email immediately — don't await, let it run in background
+    notifyDepositIntent(parseFloat(amount), accountType);
     onPaymentOpen();
   };
 
