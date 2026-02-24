@@ -127,7 +127,7 @@ export default function MyCopyTradesPage() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="grid grid-cols-3 gap-2 mb-3 text-center">
                     <div>
                       <p className="text-xs text-default-500">Amount</p>
@@ -181,7 +181,7 @@ export default function MyCopyTradesPage() {
                     />
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-bold text-lg">{ct.trader?.display_name}</h3>
+                        <h3 className="font-bold text-lg truncate">{ct.trader?.display_name}</h3>
                         <Chip
                           color={ct.status === "active" ? "success" : "default"}
                           variant="flat"

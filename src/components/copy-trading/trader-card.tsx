@@ -5,16 +5,16 @@ import { Users, Trophy } from "lucide-react";
 import Link from "next/link";
 
 type Trader = {
-  id: string;
-  display_name: string;
-  bio: string | null;
-  avatar_url: string | null;
-  total_followers: number;
-  total_profit: number;
-  win_rate: number;
-  total_trades: number;
-  risk_score: number | null;
-  min_copy_amount: number;
+    id: string;
+    display_name: string;
+    bio: string | null;
+    avatar_url: string | null;
+    total_followers: number;
+    total_profit: number;
+    win_rate: number;
+    total_trades: number;
+    risk_score: number | null;
+    min_copy_amount: number;
 };
 
 interface TraderCardProps {
@@ -24,7 +24,7 @@ interface TraderCardProps {
 
 export function TraderCard({ trader, onCopy }: TraderCardProps) {
     const riskScore = trader.risk_score || 5;
-    
+
     return (
         <Card className="border-none shadow-sm hover:shadow-md transition-shadow dark:bg-content1/50">
             <CardBody className="p-4">
@@ -37,8 +37,8 @@ export function TraderCard({ trader, onCopy }: TraderCardProps) {
                                 className="w-10 h-10 text-sm font-bold bg-gradient-to-br from-primary-500 to-secondary-500 text-white"
                             />
                         </Link>
-                        <div>
-                            <Link href={`/dashboard/copy-trading/${trader.id}`} className="font-bold text-sm hover:underline decoration-primary decoration-2 underline-offset-2">
+                        <div className="min-w-0 flex-1">
+                            <Link href={`/dashboard/copy-trading/${trader.id}`} className="font-bold text-sm hover:underline decoration-primary decoration-2 underline-offset-2 block truncate">
                                 {trader.display_name}
                             </Link>
                             <div className="flex gap-1 mt-0.5">

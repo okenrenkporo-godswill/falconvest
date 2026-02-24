@@ -36,6 +36,7 @@ export function AddCopyTradeResultModal({
     side: "buy" as "buy" | "sell",
     amount: "",
     entryPrice: "",
+    exitPrice: "",
     profitLoss: "",
   });
 
@@ -44,7 +45,7 @@ export function AddCopyTradeResultModal({
   };
 
   const handleSubmit = async () => {
-    if (!formData.amount || !formData.entryPrice || !formData.profitLoss) {
+    if (!formData.amount || !formData.entryPrice || !formData.exitPrice || !formData.profitLoss) {
       addToast({ title: "Please fill all fields", color: "danger" });
       return;
     }
@@ -57,6 +58,7 @@ export function AddCopyTradeResultModal({
         side: formData.side,
         amount: parseFloat(formData.amount),
         entryPrice: parseFloat(formData.entryPrice),
+        exitPrice: parseFloat(formData.exitPrice),
         profitLoss: parseFloat(formData.profitLoss),
       });
 
@@ -75,6 +77,7 @@ export function AddCopyTradeResultModal({
           side: "buy",
           amount: "",
           entryPrice: "",
+          exitPrice: "",
           profitLoss: "",
         });
       }
@@ -133,7 +136,15 @@ export function AddCopyTradeResultModal({
 
                 <Input
                   type="number"
-                  label="Exit Price (Profit/Loss in USDT)"
+                  label="Exit Price"
+                  placeholder="0.00"
+                  value={formData.exitPrice}
+                  onValueChange={(v) => handleChange("exitPrice", v)}
+                />
+
+                <Input
+                  type="number"
+                  label="Profit/Loss (USDT)"
                   placeholder="0.00"
                   description="Negative value for loss"
                   value={formData.profitLoss}
