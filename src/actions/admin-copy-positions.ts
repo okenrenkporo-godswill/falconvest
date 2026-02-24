@@ -10,30 +10,45 @@ export async function adminCreateCopyPosition(data: {
   side: "buy" | "sell";
   amount: number;
   entryPrice: number;
+  exitPrice: number;
   profitLoss: number;
 }) {
   console.log("🎯 Admin creating copy position:", data);
 
   const adminClient = createAdminClient();
 
-  // Get copy trade details
-  const { data: copyTrade } = await adminClient
+  // Get copy trade details (simple query without FK joins to avoid constraint name issues)
+  const { data: copyTrade, error: copyTradeError } = await adminClient
     .from("copy_trades")
-    .select(`
-      user_id, 
-      trader_id, 
-      copy_amount, 
-      total_profit, 
-      total_trades,
-      profiles!copy_trades_user_id_fkey(email, first_name, last_name),
-      traders!copy_trades_trader_id_fkey(display_name)
-    `)
+    .select("id, user_id, trader_id, copy_amount, total_profit, total_trades")
     .eq("id", data.copyTradeId)
     .single();
 
   console.log("📋 Copy trade details:", copyTrade);
+  if (copyTradeError) console.log("❌ Copy trade query error:", copyTradeError);
 
   if (!copyTrade) return { error: "Copy trade not found" };
+
+  // Fetch user profile and trader info separately
+  const [{ data: userProfile }, { data: traderInfo }] = await Promise.all([
+    adminClient
+      .from("profiles")
+      .select("email, first_name, last_name")
+      .eq("id", copyTrade.user_id)
+      .single(),
+    adminClient
+      .from("traders")
+      .select("display_name")
+      .eq("id", copyTrade.trader_id)
+      .single(),
+  ]);
+
+  // Attach profile and trader to copyTrade for later use
+  const copyTradeWithRelations = {
+    ...copyTrade,
+    profiles: userProfile,
+    traders: traderInfo,
+  };
 
   // Create position (already closed)
   console.log("📝 Creating position...");
@@ -46,6 +61,7 @@ export async function adminCreateCopyPosition(data: {
       pair: data.pair,
       side: data.side,
       entry_price: data.entryPrice,
+      exit_price: data.exitPrice,
       amount: data.amount,
       profit_loss: data.profitLoss,
       status: "closed",
@@ -101,17 +117,17 @@ export async function adminCreateCopyPosition(data: {
   }
 
   console.log("✅ Trade simulation complete");
-  
+
   // Send email notification to user
   try {
     const { sendCopyTradeResultEmail } = await import("@/lib/email");
-    const userProfile = copyTrade.profiles as any;
-    const trader = copyTrade.traders as any;
-    const userName = `${userProfile.first_name} ${userProfile.last_name}`.trim() || "Trader";
+    const userProfileData = copyTradeWithRelations.profiles as any;
+    const trader = copyTradeWithRelations.traders as any;
+    const userName = `${userProfileData?.first_name || ""} ${userProfileData?.last_name || ""}`.trim() || "Trader";
     const outcome = data.profitLoss >= 0 ? "profit" : "loss";
-    
+
     await sendCopyTradeResultEmail(
-      userProfile.email,
+      userProfileData?.email,
       userName,
       trader.display_name,
       data.pair,
@@ -120,7 +136,7 @@ export async function adminCreateCopyPosition(data: {
   } catch (emailError) {
     console.error("Failed to send copy trade result email:", emailError);
   }
-  
+
   revalidatePath("/cpanel/copy-trades");
   return { success: true, position };
 }

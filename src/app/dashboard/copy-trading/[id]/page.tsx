@@ -77,7 +77,7 @@ export default function TraderProfilePage({ params }: { params: Promise<{ id: st
                 className="w-20 h-20 text-3xl font-bold bg-gradient-to-br from-primary-500 to-secondary-500 text-white shadow-lg"
               />
               <div>
-                <h1 className="text-2xl sm:text-3xl font-bold">{trader.display_name}</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold break-words">{trader.display_name}</h1>
                 <div className="flex flex-wrap gap-2 mt-2">
                   {riskScore <= 3 ? (
                     <Chip size="sm" variant="flat" color="success">Low Risk</Chip>
