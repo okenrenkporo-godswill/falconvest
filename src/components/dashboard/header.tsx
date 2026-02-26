@@ -49,7 +49,7 @@ export function Header({ onMenu }: HeaderProps) {
 
     return (
         <>
-            <header className="flex h-14 items-center justify-between border-b bg-background px-3 sm:px-4">
+            <header className="flex h-14 items-center justify-between border-b border-divider bg-background px-3 sm:px-4">
                 {/* Left: Logo (visible on mobile) */}
                 <Link href="/dashboard" className="flex items-center gap-1.5 lg:hidden">
                     <div className="flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center relative">

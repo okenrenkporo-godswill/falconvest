@@ -25,12 +25,12 @@ export function Sidebar({ collapsed, onToggle, navItems }: SidebarProps) {
   return (
     <aside
       className={cn(
-        "hidden lg:flex h-screen flex-col border-r bg-background transition-all duration-300",
+        "hidden lg:flex h-screen flex-col border-r border-divider bg-background transition-all duration-300",
         collapsed ? "w-16" : "w-64",
       )}
     >
       {/* Header */}
-      <div className="flex h-14 items-center border-b px-4">
+      <div className="flex h-14 items-center border-b border-divider px-4">
         {!collapsed && (
           <Link href="/dashboard" className="flex items-center gap-2">
             <div className="flex h-7 w-7 items-center justify-center">
@@ -56,7 +56,7 @@ export function Sidebar({ collapsed, onToggle, navItems }: SidebarProps) {
 
       {/* Collapsed toggle button */}
       {collapsed && (
-        <div className="flex justify-center border-b p-2">
+        <div className="flex justify-center border-b border-divider p-2">
           <button
             onClick={onToggle}
             className="flex items-center justify-center rounded-md border p-1.5 hover:bg-accent"
@@ -95,7 +95,7 @@ export function Sidebar({ collapsed, onToggle, navItems }: SidebarProps) {
       </nav>
 
       {/* Logout */}
-      <div className="border-t p-2">
+      <div className="border-t border-divider p-2">
         <form action={logoutAction}>
           <button
             type="submit"
