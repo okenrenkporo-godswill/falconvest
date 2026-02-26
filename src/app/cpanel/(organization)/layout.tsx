@@ -8,7 +8,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { createClient } from "@/lib/supabase/client";
 import {
   LayoutDashboard, Users, FileCheck, Wallet, ArrowDownToLine,
-  ArrowUpFromLine, TrendingUp, UserCog, Menu, X, LogOut, Settings, Copy, Lock, Briefcase
+  ArrowUpFromLine, TrendingUp, UserCog, Menu, X, LogOut, Settings, Copy, Lock, Briefcase, Package
 } from "lucide-react";
 
 const navItems = [
@@ -16,6 +16,7 @@ const navItems = [
   { href: "/cpanel/users", label: "Users", icon: Users },
   { href: "/cpanel/kyc-pending", label: "KYC Queue", icon: FileCheck },
   { href: "/cpanel/wallets", label: "Wallets", icon: Wallet },
+  { href: "/cpanel/packages", label: "Packages", icon: Package },
   { href: "/cpanel/deposits", label: "Deposits", icon: ArrowDownToLine },
   { href: "/cpanel/withdrawals", label: "Withdrawals", icon: ArrowUpFromLine },
   { href: "/cpanel/traders", label: "Traders", icon: UserCog },
