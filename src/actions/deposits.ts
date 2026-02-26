@@ -4,6 +4,30 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 
+// Notify admin immediately when user clicks "Confirm Deposits"
+export async function notifyDepositIntent(amount: number, accountType: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "Unauthorized" };
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("email, first_name, last_name")
+    .eq("id", user.id)
+    .single();
+
+  if (profile?.email) {
+    try {
+      const { notifyAdminDeposit } = await import("@/lib/email");
+      await notifyAdminDeposit(profile.email, amount, `USD (${accountType})`);
+    } catch (error) {
+      console.error("Failed to notify admin of deposit intent:", error);
+    }
+  }
+
+  return { success: true };
+}
+
 export async function submitDepositProof(data: {
   coin: string;
   amount: number;
