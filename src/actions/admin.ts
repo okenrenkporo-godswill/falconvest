@@ -102,7 +102,7 @@ export async function getPendingKycSubmissions(page: number = 1, limit: number =
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) return { data: [], totalPages: 0 };
+  if (!user) return { data: [], totalPages: 0, stats: { total: 0, pending: 0, approved: 0, rejected: 0 } };
 
   // Check admin role
   const { data: profile } = await supabase
@@ -111,7 +111,7 @@ export async function getPendingKycSubmissions(page: number = 1, limit: number =
     .eq("id", user.id)
     .single();
 
-  if (profile?.role !== "admin") return { data: [], totalPages: 0 };
+  if (profile?.role !== "admin") return { data: [], totalPages: 0, stats: { total: 0, pending: 0, approved: 0, rejected: 0 } };
 
   // Use admin client to fetch all KYC submissions
   const adminClient = createAdminClient();
@@ -119,29 +119,62 @@ export async function getPendingKycSubmissions(page: number = 1, limit: number =
   const from = (page - 1) * limit;
   const to = from + limit - 1;
 
-  const { data, count, error } = await adminClient
+  // Get stats from ALL submissions
+  const { data: allSubmissions, error: statsError } = await adminClient
     .from("kyc_submissions")
-    .select(`
-      *,
-      profiles!inner (
-        email,
-        first_name,
-        last_name,
-        full_name
-      )
-    `, { count: "exact" })
+    .select("status");
+
+  console.log("ALL KYC Submissions query:", {
+    count: allSubmissions?.length,
+    error: statsError,
+    statuses: allSubmissions?.map(s => s.status)
+  });
+
+  const stats = {
+    total: allSubmissions?.length || 0,
+    pending: allSubmissions?.filter(s => s.status === "pending").length || 0,
+    approved: allSubmissions?.filter(s => s.status === "manually_verified" || s.status === "auto_verified").length || 0,
+    rejected: allSubmissions?.filter(s => s.status === "rejected").length || 0,
+  };
+
+  console.log("Calculated stats:", stats);
+
+  // First get paginated submissions
+  const { data: submissions, count, error } = await adminClient
+    .from("kyc_submissions")
+    .select("*", { count: "exact" })
     .order("created_at", { ascending: false })
     .range(from, to);
 
-  console.log("getPendingKycSubmissions query result:", {
-    data,
-    error,
-    count: data?.length,
+  if (error) {
+    console.error("Error fetching KYC submissions:", error);
+    return { data: [], totalPages: 0, stats };
+  }
+
+  // Then get profile data for each submission
+  const userIds = submissions?.map(s => s.user_id) || [];
+  const { data: profiles } = await adminClient
+    .from("profiles")
+    .select("id, email, first_name, last_name, full_name")
+    .in("id", userIds);
+
+  // Combine the data
+  const combinedData = submissions?.map(submission => ({
+    ...submission,
+    profiles: profiles?.find(p => p.id === submission.user_id) || null
+  })) || [];
+
+  console.log("getPendingKycSubmissions result:", {
+    count: combinedData.length,
+    totalCount: count,
+    stats,
+    sample: combinedData[0]
   });
 
   return {
-    data: data || [],
+    data: combinedData,
     totalPages: Math.ceil((count || 0) / limit),
+    stats,
   };
 }
 
@@ -311,6 +344,72 @@ export async function deleteUserAction(userId: string) {
   if (error) {
     return { error: error.message };
   }
+
+  revalidatePath("/cpanel/users");
+  return { success: true };
+}
+
+// Suspend user account
+export async function suspendUserAccount(userId: string, reason: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (!user) return { error: "Unauthorized" };
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (profile?.role !== "admin") return { error: "Unauthorized" };
+
+  const adminClient = createAdminClient();
+
+  const { error } = await adminClient
+    .from("profiles")
+    .update({
+      account_status: "suspended",
+      suspension_reason: reason,
+      suspended_at: new Date().toISOString(),
+      suspended_by: user.id,
+    })
+    .eq("id", userId);
+
+  if (error) return { error: error.message };
+
+  revalidatePath("/cpanel/users");
+  return { success: true };
+}
+
+// Reactivate user account
+export async function reactivateUserAccount(userId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (!user) return { error: "Unauthorized" };
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (profile?.role !== "admin") return { error: "Unauthorized" };
+
+  const adminClient = createAdminClient();
+
+  const { error } = await adminClient
+    .from("profiles")
+    .update({
+      account_status: "active",
+      suspension_reason: null,
+      suspended_at: null,
+      suspended_by: null,
+    })
+    .eq("id", userId);
+
+  if (error) return { error: error.message };
 
   revalidatePath("/cpanel/users");
   return { success: true };

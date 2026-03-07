@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react";
 import { Card, CardBody, Avatar, Button, Chip, Skeleton, addToast } from "@heroui/react";
 import { getUserCopyTrades, stopCopyTrading } from "@/actions/copy-trading";
-import { Users, X, TrendingUp } from "lucide-react";
+import { Users, X, TrendingUp, Plus } from "lucide-react";
 import { CopyTradeResultsModal } from "@/components/copy-trading/copy-trade-results-modal";
+import { IncreaseCopyAmountModal } from "@/components/copy-trading/increase-copy-amount-modal";
 
 type CopyTrade = {
   id: string;
@@ -26,6 +27,7 @@ export default function MyCopyTradesPage() {
   const [copyTrades, setCopyTrades] = useState<CopyTrade[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCopyTrade, setSelectedCopyTrade] = useState<{ id: string; name: string } | null>(null);
+  const [increaseModal, setIncreaseModal] = useState<{ id: string; name: string; amount: number } | null>(null);
 
   useEffect(() => {
     loadCopyTrades();
@@ -157,15 +159,26 @@ export default function MyCopyTradesPage() {
                       View Results
                     </Button>
                     {ct.status === "active" && (
-                      <Button
-                        size="sm"
-                        color="danger"
-                        variant="flat"
-                        onPress={() => handleStop(ct.id, ct.trader?.display_name || "trader")}
-                        startContent={<X size={14} />}
-                      >
-                        Stop
-                      </Button>
+                      <>
+                        <Button
+                          size="sm"
+                          color="success"
+                          variant="flat"
+                          onPress={() => setIncreaseModal({ id: ct.id, name: ct.trader?.display_name || "Trader", amount: ct.copy_amount })}
+                          startContent={<Plus size={14} />}
+                        >
+                          Add
+                        </Button>
+                        <Button
+                          size="sm"
+                          color="danger"
+                          variant="flat"
+                          onPress={() => handleStop(ct.id, ct.trader?.display_name || "trader")}
+                          startContent={<X size={14} />}
+                        >
+                          Stop
+                        </Button>
+                      </>
                     )}
                   </div>
                 </div>
@@ -229,15 +242,26 @@ export default function MyCopyTradesPage() {
                       View Results
                     </Button>
                     {ct.status === "active" && (
-                      <Button
-                        size="sm"
-                        color="danger"
-                        variant="flat"
-                        onPress={() => handleStop(ct.id, ct.trader?.display_name || "trader")}
-                        startContent={<X size={16} />}
-                      >
-                        Stop
-                      </Button>
+                      <>
+                        <Button
+                          size="sm"
+                          color="success"
+                          variant="flat"
+                          onPress={() => setIncreaseModal({ id: ct.id, name: ct.trader?.display_name || "Trader", amount: ct.copy_amount })}
+                          startContent={<Plus size={16} />}
+                        >
+                          Increase
+                        </Button>
+                        <Button
+                          size="sm"
+                          color="danger"
+                          variant="flat"
+                          onPress={() => handleStop(ct.id, ct.trader?.display_name || "trader")}
+                          startContent={<X size={16} />}
+                        >
+                          Stop
+                        </Button>
+                      </>
                     )}
                   </div>
                 </div>
@@ -253,6 +277,17 @@ export default function MyCopyTradesPage() {
           onClose={() => setSelectedCopyTrade(null)}
           copyTradeId={selectedCopyTrade.id}
           traderName={selectedCopyTrade.name}
+        />
+      )}
+
+      {increaseModal && (
+        <IncreaseCopyAmountModal
+          isOpen={!!increaseModal}
+          onClose={() => setIncreaseModal(null)}
+          copyTradeId={increaseModal.id}
+          traderName={increaseModal.name}
+          currentAmount={increaseModal.amount}
+          onSuccess={loadCopyTrades}
         />
       )}
     </div>

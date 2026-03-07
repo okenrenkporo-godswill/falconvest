@@ -1,38 +1,110 @@
 "use client";
 
-import { Card, CardBody, Skeleton, Chip, Tabs, Tab, Button, addToast, Avatar } from "@heroui/react"; // Added Avatar
+import { Card, CardBody, Skeleton, Chip, Tabs, Tab, Button, addToast, Avatar, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input } from "@heroui/react";
 import { useEffect, useState } from "react";
 import { getUserDetails } from "@/actions/admin-user-details";
+import { approveKycAction, rejectKycAction, suspendUserAccount, reactivateUserAccount } from "@/actions/admin";
 import { CopyTradesContent } from "./copy-trades-content";
-import { ArrowLeft, User, Wallet, TrendingUp, ArrowDownCircle, ArrowUpCircle, Lock, ShieldCheck, Plus } from "lucide-react"; // Added Plus
+import { ArrowLeft, User, Wallet, TrendingUp, ArrowDownCircle, ArrowUpCircle, Lock, ShieldCheck, Plus, CheckCircle, XCircle, Ban, Eye } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { AddCopyTradeResultModal } from "./add-copy-trade-result-modal";
-import { UpdateBalanceModal } from "./update-balance-modal"; // Import new modal
-
-import { getCryptoPrices } from "@/lib/crypto-prices"; // Import price fetcher
+import { UpdateBalanceModal } from "./update-balance-modal";
+import { getCryptoPrices } from "@/lib/crypto-prices";
 
 export function UserDetailsContent({ userId }: { userId: string }) {
   const [data, setData] = useState<any>(null);
-  const [prices, setPrices] = useState<Record<string, number>>({}); // Prices state
+  const [prices, setPrices] = useState<Record<string, number>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [isCopyTradeModalOpen, setIsCopyTradeModalOpen] = useState(false);
   const [isBalanceModalOpen, setIsBalanceModalOpen] = useState(false);
+  const [isKycModalOpen, setIsKycModalOpen] = useState(false);
+  const [isSuspendModalOpen, setIsSuspendModalOpen] = useState(false);
   const [selectedCopyTrade, setSelectedCopyTrade] = useState("");
   const [selectedTraderName, setSelectedTraderName] = useState("");
+  const [rejectReason, setRejectReason] = useState("");
+  const [suspendReason, setSuspendReason] = useState("");
+  const [actionLoading, setActionLoading] = useState(false);
+
+  const loadData = async () => {
+    const result = await getUserDetails(userId);
+    setData(result);
+    if (result?.balances) {
+      const assets = Array.from(new Set(result.balances.map((b: any) => b.asset))) as string[];
+      const fetchedPrices = await getCryptoPrices(assets);
+      setPrices(fetchedPrices);
+    }
+    setIsLoading(false);
+  };
 
   useEffect(() => {
-    getUserDetails(userId).then(async (result) => {
-      setData(result);
-      if (result?.balances) {
-        // Fetch prices for all assets in balance
-        const assets = Array.from(new Set(result.balances.map((b: any) => b.asset))) as string[];
-        const fetchedPrices = await getCryptoPrices(assets);
-        setPrices(fetchedPrices);
-      }
-      setIsLoading(false);
-    });
+    loadData();
   }, [userId]);
+
+  const handleApproveKyc = async () => {
+    if (!data.kycSubmission) return;
+    setActionLoading(true);
+    const result = await approveKycAction(data.kycSubmission.id);
+    setActionLoading(false);
+    
+    if (result.error) {
+      addToast({ title: "Error", description: result.error, color: "danger" });
+    } else {
+      addToast({ title: "Success", description: "KYC approved", color: "success" });
+      loadData();
+    }
+  };
+
+  const handleRejectKyc = async () => {
+    if (!data.kycSubmission || !rejectReason.trim()) {
+      addToast({ title: "Error", description: "Please provide a reason", color: "danger" });
+      return;
+    }
+    setActionLoading(true);
+    const result = await rejectKycAction(data.kycSubmission.id, rejectReason);
+    setActionLoading(false);
+    
+    if (result.error) {
+      addToast({ title: "Error", description: result.error, color: "danger" });
+    } else {
+      addToast({ title: "Success", description: "KYC rejected", color: "success" });
+      setIsKycModalOpen(false);
+      setRejectReason("");
+      loadData();
+    }
+  };
+
+  const handleSuspend = async () => {
+    if (!suspendReason.trim()) {
+      addToast({ title: "Error", description: "Please provide a reason", color: "danger" });
+      return;
+    }
+    setActionLoading(true);
+    const result = await suspendUserAccount(userId, suspendReason);
+    setActionLoading(false);
+    
+    if (result.error) {
+      addToast({ title: "Error", description: result.error, color: "danger" });
+    } else {
+      addToast({ title: "Success", description: "User suspended", color: "success" });
+      setIsSuspendModalOpen(false);
+      setSuspendReason("");
+      loadData();
+    }
+  };
+
+  const handleReactivate = async () => {
+    setActionLoading(true);
+    const result = await reactivateUserAccount(userId);
+    setActionLoading(false);
+    
+    if (result.error) {
+      addToast({ title: "Error", description: result.error, color: "danger" });
+    } else {
+      addToast({ title: "Success", description: "User reactivated", color: "success" });
+      loadData();
+    }
+  };
 
   if (isLoading) {
     return (
@@ -203,9 +275,75 @@ export function UserDetailsContent({ userId }: { userId: string }) {
         </CardBody>
       </Card>
 
+      {/* Admin Actions */}
+      <Card className="border-none shadow-sm dark:bg-zinc-900">
+        <CardBody className="p-6">
+          <h2 className="text-lg font-bold mb-4">Admin Actions</h2>
+          <div className="flex flex-wrap gap-3">
+            {/* KYC Actions */}
+            {data.kycSubmission && data.profile.kyc_status === "pending" && (
+              <>
+                <Button
+                  color="success"
+                  startContent={<CheckCircle size={16} />}
+                  onPress={handleApproveKyc}
+                  isLoading={actionLoading}
+                >
+                  Approve KYC
+                </Button>
+                <Button
+                  color="danger"
+                  variant="flat"
+                  startContent={<XCircle size={16} />}
+                  onPress={() => setIsKycModalOpen(true)}
+                >
+                  Reject KYC
+                </Button>
+              </>
+            )}
+
+            {/* Account Status Actions */}
+            {data.profile.account_status === "suspended" ? (
+              <Button
+                color="success"
+                variant="flat"
+                startContent={<CheckCircle size={16} />}
+                onPress={handleReactivate}
+                isLoading={actionLoading}
+              >
+                Reactivate Account
+              </Button>
+            ) : (
+              <Button
+                color="warning"
+                variant="flat"
+                startContent={<Ban size={16} />}
+                onPress={() => setIsSuspendModalOpen(true)}
+              >
+                Suspend Account
+              </Button>
+            )}
+
+            {/* View KYC Documents */}
+            {data.kycSubmission && (
+              <Button
+                variant="flat"
+                startContent={<Eye size={16} />}
+                onPress={() => {
+                  const element = document.getElementById("kyc-documents");
+                  element?.scrollIntoView({ behavior: "smooth" });
+                }}
+              >
+                View KYC Documents
+              </Button>
+            )}
+          </div>
+        </CardBody>
+      </Card>
+
       {/* KYC Documents */}
       {data.kycSubmission && (
-        <Card className="border-none shadow-sm dark:bg-zinc-900">
+        <Card id="kyc-documents" className="border-none shadow-sm dark:bg-zinc-900">
           <CardBody className="p-6">
             <h2 className="text-lg font-bold mb-4">KYC Documents</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -432,6 +570,64 @@ export function UserDetailsContent({ userId }: { userId: string }) {
         userId={userId}
         existingAssets={data?.balances?.map((b: any) => b.asset) || []}
       />
+
+      {/* Reject KYC Modal */}
+      <Modal isOpen={isKycModalOpen} onOpenChange={setIsKycModalOpen}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader>Reject KYC</ModalHeader>
+              <ModalBody>
+                <Input
+                  label="Rejection Reason"
+                  placeholder="Enter reason for rejection"
+                  value={rejectReason}
+                  onValueChange={setRejectReason}
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button variant="light" onPress={onClose}>Cancel</Button>
+                <Button 
+                  color="danger" 
+                  onPress={handleRejectKyc}
+                  isLoading={actionLoading}
+                >
+                  Reject
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+
+      {/* Suspend Account Modal */}
+      <Modal isOpen={isSuspendModalOpen} onOpenChange={setIsSuspendModalOpen}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader>Suspend Account</ModalHeader>
+              <ModalBody>
+                <Input
+                  label="Suspension Reason"
+                  placeholder="Enter reason for suspension"
+                  value={suspendReason}
+                  onValueChange={setSuspendReason}
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button variant="light" onPress={onClose}>Cancel</Button>
+                <Button 
+                  color="warning" 
+                  onPress={handleSuspend}
+                  isLoading={actionLoading}
+                >
+                  Suspend
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 }
