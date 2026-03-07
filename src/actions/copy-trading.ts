@@ -46,7 +46,7 @@ export async function startCopyTrading(data: {
   // Check if already copying this trader
   const { data: existing } = await supabase
     .from("copy_trades")
-    .select("id")
+    .select("id, copy_amount")
     .eq("user_id", user.id)
     .eq("trader_id", data.traderId)
     .eq("status", "active")
@@ -54,7 +54,11 @@ export async function startCopyTrading(data: {
 
 
   if (existing) {
-    return { error: "Already copying this trader" };
+    return { 
+      error: "You are already copying this trader", 
+      suggestion: "You can increase your copy amount from 'My Copy Trades'",
+      existingAmount: existing.copy_amount
+    };
   }
 
   // Check balance (trading account)
@@ -112,6 +116,52 @@ export async function startCopyTrading(data: {
 
   revalidatePath("/dashboard/copy-trading");
   return { success: true };
+}
+
+// Increase copy amount for existing copy trade
+export async function increaseCopyAmount(copyTradeId: string, additionalAmount: number) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "Unauthorized" };
+
+  // Get current copy trade
+  const { data: copyTrade } = await supabase
+    .from("copy_trades")
+    .select("copy_amount, trader_id")
+    .eq("id", copyTradeId)
+    .eq("user_id", user.id)
+    .eq("status", "active")
+    .single();
+
+  if (!copyTrade) return { error: "Copy trade not found or inactive" };
+
+  // Check balance
+  const { data: balance } = await supabase
+    .from("balances")
+    .select("amount")
+    .eq("user_id", user.id)
+    .eq("asset", "USDT")
+    .eq("account_type", "trading")
+    .single();
+
+  if (!balance || balance.amount < additionalAmount) {
+    return { error: "Insufficient balance in trading account" };
+  }
+
+  // Update copy amount
+  const newAmount = copyTrade.copy_amount + additionalAmount;
+  const { error } = await supabase
+    .from("copy_trades")
+    .update({ 
+      copy_amount: newAmount,
+      updated_at: new Date().toISOString()
+    })
+    .eq("id", copyTradeId);
+
+  if (error) return { error: error.message };
+
+  revalidatePath("/dashboard/my-copy-trades");
+  return { success: true, newAmount };
 }
 
 // Stop copying a trader

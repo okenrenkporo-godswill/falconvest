@@ -241,6 +241,20 @@ export async function notifyAdminNewAccount(
   );
 }
 
+export async function notifyAdminKycSubmission(
+  userEmail: string,
+  userName: string,
+) {
+  await sendAdminNotification(
+    "New KYC Submission",
+    `<p><strong>New KYC verification submitted:</strong></p>
+    <p>Name: ${userName}</p>
+    <p>Email: ${userEmail}</p>
+    <p>Time: ${new Date().toLocaleString()}</p>
+    <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/cpanel/kyc-pending">Review KYC Submissions</a></p>`,
+  );
+}
+
 export async function notifyAdminDeposit(
   userEmail: string,
   amount: number,

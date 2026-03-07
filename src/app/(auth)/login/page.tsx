@@ -14,9 +14,11 @@ import { Eye, EyeOff } from "lucide-react";
 
 import Link from "next/link";
 import { loginAction, loginVerifyOtpAction } from "@/actions/auth";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
+  const searchParams = useSearchParams();
   const [step, setStep] = useState<"credentials" | "otp">("credentials");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,6 +26,16 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  // Check for suspension error
+  useEffect(() => {
+    const errorParam = searchParams.get("error");
+    const reasonParam = searchParams.get("reason");
+    
+    if (errorParam === "account_suspended") {
+      setError(reasonParam || "Your account has been suspended. Please contact support.");
+    }
+  }, [searchParams]);
 
   async function handleResendOtp() {
     setResending(true);

@@ -87,6 +87,31 @@ export async function submitKycAction(formData: FormData) {
     console.error("Profile update error:", updateError);
   }
 
+  // Send email notifications
+  const { data: userProfile } = await supabase
+    .from("profiles")
+    .select("email, first_name, last_name")
+    .eq("id", user.id)
+    .single();
+
+  if (userProfile?.email) {
+    const userName = userProfile.first_name && userProfile.last_name
+      ? `${userProfile.first_name} ${userProfile.last_name}`.trim()
+      : userProfile.email.split("@")[0];
+
+    try {
+      const { sendKycSubmittedEmail, notifyAdminKycSubmission } = await import("@/lib/email");
+      
+      // Notify user
+      await sendKycSubmittedEmail(userProfile.email, userName);
+      
+      // Notify admin
+      await notifyAdminKycSubmission(userProfile.email, userName);
+    } catch (error) {
+      console.error("Failed to send email notifications:", error);
+    }
+  }
+
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/account");
   return { success: true };

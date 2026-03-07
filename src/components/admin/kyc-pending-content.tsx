@@ -11,6 +11,7 @@ export function KycPendingContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [stats, setStats] = useState({ total: 0, pending: 0, approved: 0, rejected: 0 });
 
   useEffect(() => {
     loadSubmissions(currentPage);
@@ -18,17 +19,17 @@ export function KycPendingContent() {
 
   const loadSubmissions = async (page: number) => {
     setIsLoading(true);
+    console.log("Loading KYC submissions for page:", page);
     const result = await getPendingKycSubmissions(page, 15);
+    console.log("Received result:", {
+      dataCount: result.data.length,
+      totalPages: result.totalPages,
+      stats: result.stats
+    });
     setSubmissions(result.data);
     setTotalPages(result.totalPages);
+    setStats(result.stats);
     setIsLoading(false);
-  };
-
-  const stats = {
-    total: submissions.length,
-    pending: submissions.filter((s) => s.status === "pending").length,
-    approved: submissions.filter((s) => s.status === "manually_verified").length,
-    rejected: submissions.filter((s) => s.status === "rejected").length,
   };
 
   if (isLoading) {

@@ -15,6 +15,7 @@ A production-grade cryptocurrency broker and trading platform built with Next.js
 ## ✨ Features
 
 ### Core Platform
+
 - Multi-step registration with OTP verification
 - Advanced KYC verification (document capture, OCR, face matching)
 - Admin control panel with KYC review
@@ -24,6 +25,7 @@ A production-grade cryptocurrency broker and trading platform built with Next.js
 - Deposit & Withdrawal system with admin approval
 
 ### Trading Features ✅
+
 - **Copy Trading System** - Follow and copy successful traders
 - **Spot Trading** - Execute market orders with real-time balance updates
 - **Positions Management** - Open/close trading positions with P&L tracking
@@ -31,6 +33,7 @@ A production-grade cryptocurrency broker and trading platform built with Next.js
 - **Holdings Management** - Portfolio overview with account transfers
 
 ### Admin Features ✅
+
 - Trader management and approval
 - Copy trades monitoring with manual trade simulation
 - Trading activity monitoring
@@ -93,6 +96,7 @@ Visit [http://localhost:3000](http://localhost:3000)
 ### 5. Test Accounts
 
 Ask team lead for:
+
 - **User account** - Test user flows
 - **Admin account** - Access `/cpanel`
 
@@ -123,11 +127,13 @@ src/
 ## 🧪 Testing Flows
 
 ### User Flow
+
 1. Register → Verify OTP → Complete profile
 2. Submit KYC (document + selfie)
 3. Check status at `/onboarding/kyc-advanced`
 
 ### Admin Flow
+
 1. Login at `/cpanel`
 2. Review KYC at `/cpanel/kyc-pending`
 3. Approve/reject with notes
@@ -141,6 +147,7 @@ src/
 5. Open Pull Request
 
 ### Code Style
+
 - TypeScript strict mode
 - Use server actions for mutations
 - Add error handling
@@ -149,14 +156,17 @@ src/
 ## 🐛 Common Issues
 
 **"Invalid JWT" errors**
+
 - Check `.env.local` has correct Supabase keys
 - Clear cookies and re-login
 
 **Models not loading**
+
 - Ensure models are in `public/models/`
 - Check browser console for 404 errors
 
 **Admin can't access cPanel**
+
 - Ask team lead to set your role to 'admin' in database
 
 ## 📚 Resources

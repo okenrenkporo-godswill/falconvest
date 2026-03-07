@@ -103,9 +103,13 @@ export function CopySettingsModal({ isOpen, onOpenChange, trader }: CopySettings
         setIsSubmitting(false);
 
         if (result.error) {
+            const description = result.suggestion 
+                ? `${result.error}. ${result.suggestion}` 
+                : result.error;
+            
             addToast({
-                title: "Error",
-                description: result.error,
+                title: "Cannot Start Copy Trading",
+                description,
                 color: "danger",
             });
         } else {

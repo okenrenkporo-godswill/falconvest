@@ -36,6 +36,26 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // Check if user account is suspended/deactivated
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("account_status, suspension_reason")
+      .eq("id", user.id)
+      .single();
+
+    if (profile?.account_status === "suspended" || profile?.account_status === "deactivated") {
+      // Sign out the user
+      await supabase.auth.signOut();
+      
+      // Redirect to login with error message
+      const redirectUrl = new URL("/login", request.url);
+      redirectUrl.searchParams.set("error", "account_suspended");
+      redirectUrl.searchParams.set("reason", profile.suspension_reason || "Your account has been suspended");
+      return NextResponse.redirect(redirectUrl);
+    }
+  }
+
   // Protected routes
   if (request.nextUrl.pathname.startsWith("/dashboard") && !user) {
     return NextResponse.redirect(new URL("/login", request.url));
