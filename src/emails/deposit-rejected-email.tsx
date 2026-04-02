@@ -57,7 +57,7 @@ export default function DepositRejectedEmail({
         </Button>
       </Section>
 
-      <Text style={signature}>MasterSync Team</Text>
+      <Text style={signature}>SyncTrade Team</Text>
     </EmailTemplate>
   );
 }

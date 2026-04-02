@@ -57,9 +57,9 @@ export default function AutoPortfolio() {
                    <div className="flex items-center justify-between mb-8">
                        <div className="flex items-center gap-2">
                            <div className="w-6 h-6 relative">
-                               <Image src="/images/logo.png" alt="Logo" fill className="object-contain" />
+                               <Image src="/images/logo1.png" alt="Logo" fill className="object-contain" />
                            </div>
-                           <span className="text-white font-bold text-sm">MasterSync</span>
+                           <span className="text-white font-bold text-sm">SyncTrade</span>
                        </div>
                        <div className="w-10 h-10 rounded-full bg-neutral-800 border-2 border-green-500 p-0.5 overflow-hidden shadow-lg shadow-green-500/20">
                            <div className="w-full h-full rounded-full bg-neutral-700 relative">

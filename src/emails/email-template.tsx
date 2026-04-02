@@ -27,8 +27,8 @@ export function EmailTemplate({ preview, children }: EmailTemplateProps) {
           <Section>
             <div className="w-[45px] h-[45px] flex justify-center items-center overflow-hidden relative">
               <Img
-                src="https://ik.imagekit.io/v5jcj7s4p/20260203_232251.png"
-                alt="MasterSync"
+                src="https://synctrade.live/images/logo1.png"
+                alt="SyncTrade"
                 style={logo}
               />
             </div>
@@ -36,11 +36,11 @@ export function EmailTemplate({ preview, children }: EmailTemplateProps) {
             {/* Footer */}
             <Text style={footer}>
               <Link
-                href="https://mastersync.live"
+                href="https://synctrade.live"
                 target="_blank"
                 style={footerLink}
               >
-                MasterSync
+                SyncTrade
               </Link>
               , the all-in-one crypto trading platform
               <br />

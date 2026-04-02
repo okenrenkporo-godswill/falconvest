@@ -18,7 +18,7 @@ const ProtectionAnimation = ({ t }: { t: any }) => {
                 {/* Header */}
                 <div className="flex justify-between items-center mb-4 border-b border-black/5 dark:border-white/5 pb-2">
                     <div className="flex items-center gap-2">
-                         <div className="w-2 h-2 rounded-full bg-[#FF6347] animate-pulse"></div>
+                         <div className="w-2 h-2 rounded-full bg-[#01C1D6] animate-pulse"></div>
                          <span className="text-black dark:text-white text-xs font-bold">BTC/USD</span>
                     </div>
                     <span className="text-neutral-500 dark:text-neutral-400 text-xs text-[10px]">{t('protection.liveProtection')}</span>
@@ -70,14 +70,14 @@ const ProtectionAnimation = ({ t }: { t: any }) => {
 
             </div>
 
-             {/* MasterSync Branding */}
+             {/* SyncTrade Branding */}
              <div className="absolute bottom-6 flex flex-col items-center gap-1 opacity-50">
                 <span className="text-[10px] text-neutral-500 uppercase tracking-widest">{t('protection.poweredBy')}</span>
                 <div className="flex items-center gap-1.5 grayscale">
                     <div className="w-4 h-4 relative">
-                         <Image src="/images/logo.png" alt="Logo" fill className="object-contain" />
+                         <Image src="/images/logo1.png" alt="Logo" fill className="object-contain" />
                     </div>
-                    <span className="text-black dark:text-white font-bold text-xs">MasterSync</span>
+                    <span className="text-black dark:text-white font-bold text-xs">SyncTrade</span>
                 </div>
             </div>
         </div>
@@ -147,8 +147,8 @@ export default function TradingToolsSlider() {
                 className="space-y-6"
               >
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-[1px] bg-[#FF6347]"></div>
-                    <span className="text-[#FF6347] font-bold uppercase tracking-wider text-sm">
+                    <div className="w-10 h-[1px] bg-[#01C1D6]"></div>
+                    <span className="text-[#01C1D6] font-bold uppercase tracking-wider text-sm">
                         {t(`slides.${currentSlide}.category`)}
                     </span>
                 </div>
@@ -174,7 +174,7 @@ export default function TradingToolsSlider() {
                     >
                         {currentSlide === index && (
                              <motion.div 
-                                className="absolute top-0 left-0 h-full bg-[#FF6347]"
+                                className="absolute top-0 left-0 h-full bg-[#01C1D6]"
                                 style={{ width: `${progress}%` }}
                              />
                         )}
@@ -190,9 +190,9 @@ export default function TradingToolsSlider() {
              {slides[currentSlide].mediaType !== 'animation' && (
                  <div className="absolute top-6 left-6 z-20 flex items-center gap-2 bg-white/80 backdrop-blur-md px-4 py-2 rounded-full border border-neutral-200">
                     <div className="w-5 h-5 relative">
-                        <Image src="/images/logo.png" alt="Logo" fill className="object-contain" />
+                        <Image src="/images/logo1.png" alt="Logo" fill className="object-contain" />
                     </div>
-                    <span className="text-neutral-900 font-bold text-xs">MasterSync</span>
+                    <span className="text-neutral-900 font-bold text-xs">SyncTrade</span>
                  </div>
              )}
 

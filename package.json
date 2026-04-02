@@ -1,5 +1,5 @@
 {
-  "name": "mastersync",
+  "name": "synctrade",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "seed:users": "node scripts/seed-users.js"
+    "seed:users": "npx tsx scripts/seed-users.ts"
   },
   "dependencies": {
     "@heroui/react": "^2.8.8",

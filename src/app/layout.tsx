@@ -8,12 +8,12 @@ import { getLocale, getMessages } from "next-intl/server";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "MasterSync - Crypto Trading Platform",
+  title: "SyncTrade - Trading Platform",
   description:
-    "Your trades in crypto, stocks, and options are now safeguarded with the highest encryption standards. Copy top strategies effortlessly—trade smarter, safer.",
+    "Your trades in stocks, crypto, and options are now safeguarded with the highest encryption standards. Copy top strategies effortlessly—trade smarter, safer.",
   icons: {
-    icon: [{ url: "/images/logo.png" }, { url: "/favicon.ico" }],
-    apple: "/images/logo.png",
+    icon: [{ url: "/images/logo1.png" }, { url: "/favicon.ico" }],
+    apple: "/images/logo1.png",
   },
 };
 

@@ -34,14 +34,14 @@ export function Sidebar({ collapsed, onToggle, navItems }: SidebarProps) {
         {!collapsed && (
           <Link href="/dashboard" className="flex items-center gap-2">
             <div className="flex h-7 w-7 items-center justify-center">
-              <Image src="/images/logo.png" alt="Logo" width={24} height={24} />
+              <Image src="/images/logo1.png" alt="Logo" width={24} height={24} />
             </div>
-            <span className="font-semibold">MasterSync</span>
+            <span className="font-semibold">SyncTrade</span>
           </Link>
         )}
         {collapsed && (
           <div className="mx-auto flex h-7 w-7 items-center justify-center">
-            <Image src="/images/logo.png" alt="Logo" width={24} height={24} />
+            <Image src="/images/logo1.png" alt="Logo" width={24} height={24} />
           </div>
         )}
         {!collapsed && (
@@ -80,7 +80,7 @@ export function Sidebar({ collapsed, onToggle, navItems }: SidebarProps) {
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                   isActive
-                    ? "bg-red-50 text-red-600 dark:bg-red-950/30 dark:text-red-500"
+                    ? "bg-[#01C1D6]/10 text-[#01C1D6] dark:bg-[#01C1D6]/20 dark:text-[#01C1D6]"
                     : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
                   collapsed && "justify-center",
                 )}

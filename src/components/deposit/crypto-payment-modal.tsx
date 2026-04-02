@@ -268,7 +268,7 @@ export function CryptoPaymentModal({
                             </Tabs>
                         </ModalBody>
                         <ModalFooter>
-                            <Button color="danger" variant="light" onPress={onClose}>
+                            <Button variant="light" onPress={onClose}>
                                 Cancel
                             </Button>
                             {key === "send" && (

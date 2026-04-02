@@ -13,7 +13,7 @@ import WithdrawalRejectedEmail from "@/emails/withdrawal-rejected-email";
 
 const resend = new Resend(env.RESEND_API_KEY);
 
-const ADMIN_EMAIL = "admin@mastersync.live";
+const ADMIN_EMAIL = "admin@synctrade.live";
 
 // Admin notification helper
 async function sendAdminNotification(subject: string, html: string) {
@@ -24,7 +24,7 @@ async function sendAdminNotification(subject: string, html: string) {
 
   try {
     const result = await resend.emails.send({
-      from: "MasterSync Alerts <alerts@mastersync.live>",
+      from: "SyncTrade Alerts <info@synctrade.live>",
       to: ADMIN_EMAIL,
       subject: `[Admin Alert] ${subject}`,
       html,
@@ -43,9 +43,9 @@ export async function sendOtpEmail(email: string, code: string) {
   }
 
   await resend.emails.send({
-    from: "MasterSync <onboarding@mastersync.live>",
+    from: "SyncTrade <info@synctrade.live>",
     to: email,
-    subject: "Your MasterSync verification code",
+    subject: "Your SyncTrade verification code",
     react: OtpEmail({ code }),
   });
 }
@@ -57,9 +57,9 @@ export async function sendWelcomeEmail(email: string, name: string) {
   }
 
   await resend.emails.send({
-    from: "MasterSync <welcome@mastersync.live>",
+    from: "SyncTrade <info@synctrade.live>",
     to: email,
-    subject: "Welcome to MasterSync - Complete Your KYC",
+    subject: "Welcome to SyncTrade - Complete Your KYC",
     react: WelcomeEmail({ name, email }),
   });
 }
@@ -71,7 +71,7 @@ export async function sendKycSubmittedEmail(email: string, name: string) {
   }
 
   await resend.emails.send({
-    from: "MasterSync <kyc@mastersync.live>",
+    from: "SyncTrade <info@synctrade.live>",
     to: email,
     subject: "Identity Verification Submitted",
     react: KycSubmittedEmail({ name }),
@@ -85,9 +85,9 @@ export async function sendKycApprovedEmail(email: string, name: string) {
   }
 
   await resend.emails.send({
-    from: "MasterSync <kyc@mastersync.live>",
+    from: "SyncTrade <info@synctrade.live>",
     to: email,
-    subject: "✓ Identity Verified - Welcome to MasterSync",
+    subject: "✓ Identity Verified - Welcome to SyncTrade",
     react: KycApprovedEmail({ name }),
   });
 }
@@ -103,7 +103,7 @@ export async function sendKycRejectedEmail(
   }
 
   await resend.emails.send({
-    from: "MasterSync <kyc@mastersync.live>",
+    from: "SyncTrade <info@synctrade.live>",
     to: email,
     subject: "Action Required: Identity Verification",
     react: KycRejectedEmail({ name, reason }),
@@ -127,9 +127,9 @@ export async function sendAdminLoginEmail(
   });
 
   await resend.emails.send({
-    from: "MasterSync <security@mastersync.live>",
+    from: "SyncTrade <security@synctrade.live>",
     to: email,
-    subject: "🔐 Admin Login Alert - MasterSync",
+    subject: "🔐 Admin Login Alert - SyncTrade",
     react: AdminLoginEmail({ adminName, loginTime, ipAddress, userAgent }),
   });
 }
@@ -147,7 +147,7 @@ export async function sendDepositConfirmedEmail(
   }
 
   await resend.emails.send({
-    from: "MasterSync <deposits@mastersync.live>",
+    from: "SyncTrade <deposits@synctrade.live>",
     to: email,
     subject: "✓ Deposit Confirmed - Funds Available",
     react: DepositConfirmedEmail({ name, amount, coin, accountType }),
@@ -167,7 +167,7 @@ export async function sendDepositRejectedEmail(
   }
 
   await resend.emails.send({
-    from: "MasterSync <deposits@mastersync.live>",
+    from: "SyncTrade <deposits@synctrade.live>",
     to: email,
     subject: "Action Required: Deposit Verification",
     react: DepositRejectedEmail({ name, amount, coin, reason }),
@@ -187,7 +187,7 @@ export async function sendWithdrawalConfirmedEmail(
   }
 
   await resend.emails.send({
-    from: "MasterSync <withdrawals@mastersync.live>",
+    from: "SyncTrade <withdrawals@synctrade.live>",
     to: email,
     subject: "✓ Withdrawal Processed Successfully",
     react: WithdrawalConfirmedEmail({ name, amount, coin, address }),
@@ -207,7 +207,7 @@ export async function sendWithdrawalRejectedEmail(
   }
 
   await resend.emails.send({
-    from: "MasterSync <withdrawals@mastersync.live>",
+    from: "SyncTrade <withdrawals@synctrade.live>",
     to: email,
     subject: "Withdrawal Request Declined",
     react: WithdrawalRejectedEmail({ name, amount, coin, reason }),
@@ -266,7 +266,7 @@ export async function notifyAdminDeposit(
     <p>Email: ${userEmail}</p>
     <p>Amount: ${amount} ${asset}</p>
     <p>Time: ${new Date().toLocaleString()}</p>
-    <p><a href="https://app.mastersync.live/cpanel/deposits">Review Deposits</a></p>`,
+    <p><a href="https://app.synctrade.live/cpanel/deposits">Review Deposits</a></p>`,
   );
 }
 
@@ -281,7 +281,7 @@ export async function notifyAdminWithdrawal(
     <p>Email: ${userEmail}</p>
     <p>Amount: ${amount} ${asset}</p>
     <p>Time: ${new Date().toLocaleString()}</p>
-    <p><a href="https://app.mastersync.live/cpanel/withdrawals">Review Withdrawals</a></p>`,
+    <p><a href="https://app.synctrade.live/cpanel/withdrawals">Review Withdrawals</a></p>`,
   );
 }
 
@@ -352,7 +352,7 @@ export async function sendCopyTradeResultEmail(
     : "Copy Trade Closed";
 
   await resend.emails.send({
-    from: "MasterSync <trading@mastersync.live>",
+    from: "SyncTrade <trading@synctrade.live>",
     to: email,
     subject,
     html: `
@@ -363,13 +363,13 @@ export async function sendCopyTradeResultEmail(
         <p><strong>Trading Pair:</strong> ${pair}</p>
         <p>Your account balance has been updated. Log in to your dashboard to view the details.</p>
         <p style="margin-top: 30px;">
-          <a href="https://app.mastersync.live/dashboard/my-copy-trades" 
+          <a href="https://app.synctrade.live/dashboard/my-copy-trades" 
              style="background-color: #000; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
             View My Copy Trades
           </a>
         </p>
         <p style="color: #666; font-size: 12px; margin-top: 30px;">
-          This is an automated notification from MasterSync.
+          This is an automated notification from SyncTrade.
         </p>
       </div>
     `,

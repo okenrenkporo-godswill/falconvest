@@ -39,7 +39,7 @@ const VALUES = [
   }
 ];
 
-export default function WhyMasterSync() {
+export default function WhySyncTrade() {
   return (
     <div className="min-h-screen bg-white dark:bg-black transition-colors duration-500">
       <Header />
@@ -51,7 +51,7 @@ export default function WhyMasterSync() {
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="px-4 py-1.5 rounded-full bg-[#FF6347]/10 text-[#FF6347] text-[10px] font-black uppercase tracking-[0.2em]"
+              className="px-4 py-1.5 rounded-full bg-[#01C1D6]/10 text-[#01C1D6] text-[10px] font-black uppercase tracking-[0.2em]"
             >
               Our Mission
             </motion.div>
@@ -60,7 +60,7 @@ export default function WhyMasterSync() {
               animate={{ opacity: 1, y: 0 }}
               className="text-6xl md:text-8xl font-black text-black dark:text-white tracking-tighter uppercase leading-[0.9]"
             >
-              Redefining <span className="text-[#FF6347] italic">Institutional</span> Trading.
+              Redefining <span className="text-[#01C1D6] italic">Institutional</span> Trading.
             </motion.h1>
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
@@ -68,7 +68,7 @@ export default function WhyMasterSync() {
               transition={{ delay: 0.1 }}
               className="text-xl md:text-2xl text-neutral-600 dark:text-neutral-400 font-light leading-relaxed"
             >
-              MasterSync was born from a simple realization: that professional-grade tools shouldn't be reserved for elite institutions. We've built a platform that combines bank-level security with the accessibility of modern fintech.
+              SyncTrade was born from a simple realization: that professional-grade tools shouldn't be reserved for elite institutions. We've built a platform that combines bank-level security with the accessibility of modern fintech.
             </motion.p>
           </div>
         </section>
@@ -110,9 +110,9 @@ export default function WhyMasterSync() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="p-10 rounded-[2.5rem] bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/5 hover:border-[#FF6347]/30 transition-all group"
+                className="p-10 rounded-[2.5rem] bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/5 hover:border-[#01C1D6]/30 transition-all group"
               >
-                <div className="w-14 h-14 rounded-2xl bg-[#FF6347]/5 flex items-center justify-center text-[#FF6347] mb-8 group-hover:scale-110 transition-transform">
+                <div className="w-14 h-14 rounded-2xl bg-[#01C1D6]/5 flex items-center justify-center text-[#01C1D6] mb-8 group-hover:scale-110 transition-transform">
                   <val.icon size={28} />
                 </div>
                 <h3 className="text-xl font-bold text-black dark:text-white mb-4 uppercase tracking-tight">{val.title}</h3>

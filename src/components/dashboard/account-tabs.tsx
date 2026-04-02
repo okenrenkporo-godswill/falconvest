@@ -47,25 +47,25 @@ export function AccountTabs({ totalBalance, balances }: AccountTabsProps) {
                         <button
                             onClick={() => setActiveTab('asset')}
                             className={`flex-1 py-2.5 sm:py-3 px-3 sm:px-4 text-sm sm:text-base font-medium transition-colors relative ${activeTab === 'asset'
-                                ? 'text-red-600'
+                                ? 'text-[#01C1D6]'
                                 : 'text-default-600 hover:text-default-900'
                                 }`}
                         >
                             Assets
                             {activeTab === 'asset' && (
-                                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-red-600"></div>
+                                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#01C1D6]"></div>
                             )}
                         </button>
                         <button
                             onClick={() => setActiveTab('account')}
                             className={`flex-1 py-2.5 sm:py-3 px-3 sm:px-4 text-sm sm:text-base font-medium transition-colors relative ${activeTab === 'account'
-                                ? 'text-red-600'
+                                ? 'text-[#01C1D6]'
                                 : 'text-default-600 hover:text-default-900'
                                 }`}
                         >
                             Account
                             {activeTab === 'account' && (
-                                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-red-600"></div>
+                                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#01C1D6]"></div>
                             )}
                         </button>
 
@@ -171,7 +171,7 @@ export function AccountTabs({ totalBalance, balances }: AccountTabsProps) {
                                 <div className="text-center py-6 sm:py-8 text-default-500">
                                     <p className="text-sm mb-2">No assets or open trades yet</p>
                                     <Link href="/dashboard/deposit">
-                                        <Button className="font-bold bg-zinc-900 bg-red-500 text-white hover:bg-red-600" size="sm">Deposit Funds</Button>
+                                        <Button className="font-bold bg-[#01C1D6] text-white hover:bg-[#00ADC0]" size="sm">Deposit Funds</Button>
                                     </Link>
                                 </div>
                             )}

@@ -13,7 +13,7 @@ export default function PromoPage() {
         
         {/* Background Ambience / Noise */}
         <div className="absolute inset-0 z-0 pointer-events-none">
-            <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-[#FF6347]/10 rounded-full blur-[120px]" />
+            <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-[#01C1D6]/10 rounded-full blur-[120px]" />
             <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-blue-900/10 rounded-full blur-[120px]" />
             <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay"></div>
         </div>
@@ -29,7 +29,7 @@ export default function PromoPage() {
                 transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
                 className="text-5xl lg:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-white via-neutral-200 to-neutral-500 mb-6 leading-tight"
             >
-                Elevate Your <br /> <span className="text-[#FF6347]">Trading Game.</span>
+                Elevate Your <br /> <span className="text-[#01C1D6]">Trading Game.</span>
             </motion.h2>
 
             <motion.p 
@@ -54,7 +54,7 @@ export default function PromoPage() {
                     as={Link} 
                     href="/register" 
                     size="lg"
-                    className="bg-[#FF6347] hover:bg-[#e05035] text-white font-bold px-10 py-6 rounded-full shadow-[0_0_30px_rgba(255,99,71,0.4)] hover:shadow-[0_0_50px_rgba(255,99,71,0.6)] transition-all transform hover:-translate-y-1 text-lg"
+                    className="bg-[#01C1D6] hover:bg-[#00ADC0] text-white font-bold px-10 py-6 rounded-full shadow-lg shadow-[#01C1D6]/40 hover:shadow-xl hover:shadow-[#01C1D6]/60 transition-all transform hover:-translate-y-1 text-lg"
                 >
                     Get Started Now
                 </Button>
@@ -90,7 +90,7 @@ export default function PromoPage() {
              className="relative z-10 flex-shrink-0"
         >
              {/* Glow behind phone */}
-             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-b from-[#FF6347]/20 to-transparent rounded-full blur-3xl -z-10"></div>
+             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-b from-[#01C1D6]/20 to-transparent rounded-full blur-3xl -z-10"></div>
             <PromoVideo />
         </motion.div>
 

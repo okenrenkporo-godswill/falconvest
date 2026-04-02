@@ -49,13 +49,13 @@ export default function OnboardingLayout({
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center gap-2">
             <Image
-              src="/images/logo.png"
-              alt="MasterSync"
+              src="/images/logo1.png"
+              alt="SyncTrade"
               width={40}
               height={40}
               className="w-10 h-10"
             />
-            <span className="text-xl font-bold">MasterSync</span>
+            <span className="text-xl font-bold">SyncTrade</span>
           </Link>
 
           <Dropdown placement="bottom-end">

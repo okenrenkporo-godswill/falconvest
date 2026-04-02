@@ -96,14 +96,14 @@ export default function Legal() {
                           whileInView={{ opacity: 1, scale: 1 }}
                           viewport={{ once: true }}
                           transition={{ delay: dIdx * 0.1 }}
-                          className="group p-6 rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-black/5 dark:border-white/5 hover:border-[#FF6347]/30 transition-all cursor-pointer flex items-center justify-between"
+                          className="group p-6 rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-black/5 dark:border-white/5 hover:border-[#01C1D6]/30 transition-all cursor-pointer flex items-center justify-between"
                         >
                           <div className="flex items-center gap-4">
-                             <div className="w-10 h-10 rounded-xl bg-white dark:bg-neutral-800 flex items-center justify-center text-neutral-400 group-hover:text-[#FF6347] transition-colors shadow-sm">
+                             <div className="w-10 h-10 rounded-xl bg-white dark:bg-neutral-800 flex items-center justify-center text-neutral-400 group-hover:text-[#01C1D6] transition-colors shadow-sm">
                                 <FileText size={18} />
                              </div>
                              <div>
-                                <h4 className="font-bold text-black dark:text-white text-sm group-hover:text-[#FF6347] transition-colors">{doc.title}</h4>
+                                <h4 className="font-bold text-black dark:text-white text-sm group-hover:text-[#01C1D6] transition-colors">{doc.title}</h4>
                                 <p className="text-[10px] text-neutral-500 font-bold uppercase tracking-widest mt-0.5">{doc.version}</p>
                              </div>
                           </div>
@@ -127,7 +127,7 @@ export default function Legal() {
               <Lock size={200} className="absolute -left-20 -bottom-20 text-white/[0.02] -rotate-12" />
               <div className="relative z-10 max-w-2xl mx-auto space-y-8">
                  <h3 className="text-3xl font-black text-white uppercase tracking-tight">Security First. Always.</h3>
-                 <p className="text-neutral-500 italic">MasterSync Limited is authorized and regulated by the Financial Services Authority (FSA). We maintain segregated client accounts and industry-standard security protocols for all assets.</p>
+                 <p className="text-neutral-500 italic">SyncTrade Limited is authorized and regulated by the Financial Services Authority (FSA). We maintain segregated client accounts and industry-standard security protocols for all assets.</p>
                  <div className="flex flex-wrap justify-center gap-6">
                     <div className="px-6 py-3 rounded-xl border border-white/10 text-white text-xs font-bold uppercase tracking-widest flex items-center gap-2">
                        <CheckCircle size={14} className="text-blue-500" />

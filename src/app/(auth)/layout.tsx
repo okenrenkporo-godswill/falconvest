@@ -18,13 +18,13 @@ export default function AuthLayout({
             <CardBody>
               <Link href="/" className="flex items-center gap-2">
                 <Image
-                  src="/images/logo.png"
-                  alt="MasterSync"
+                  src="/images/logo1.png"
+                  alt="SyncTrade"
                   width={40}
                   height={40}
                   className="w-10 h-10"
                 />
-                <span className="text-xl font-bold">MasterSync</span>
+                <span className="text-xl font-bold">SyncTrade</span>
               </Link>
             </CardBody>
           </Card>
@@ -42,14 +42,14 @@ export default function AuthLayout({
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <Image
-                src="/images/logo.png"
-                alt="MasterSync"
+                src="/images/logo1.png"
+                alt="SyncTrade"
                 width={24}
                 height={24}
                 className="w-6 h-6"
               />
               <span className="text-sm text-default-600">
-                © 2026 MasterSync. All rights reserved.
+                © 2026 SyncTrade. All rights reserved.
               </span>
             </div>
             <div className="flex items-center gap-6">
@@ -66,7 +66,7 @@ export default function AuthLayout({
                 Privacy
               </Link>
               <Link
-                href="mailto:support@mastersync.live"
+                href="mailto:support@synctrade.live"
                 className="text-sm text-default-600 hover:text-foreground"
               >
                 Support

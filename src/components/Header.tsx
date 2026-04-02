@@ -61,10 +61,10 @@ export default function Header() {
         <div className="flex items-center gap-4 md:gap-8">
             <Link href="/" className="flex items-center gap-1.5 md:gap-2 group">
                 <div className="relative w-6 h-6 md:w-8 md:h-8 transition-transform group-hover:scale-110 duration-300">
-                    <Image src="/images/logo.png" alt="MasterSync Logo" fill className="object-contain" />
+                    <Image src="/images/logo1.png" alt="SyncTrade Logo" fill className="object-contain" />
                 </div>
                 <span className="text-lg md:text-2xl font-black text-black dark:text-white tracking-tighter uppercase italic">
-                    MasterSync
+                    SyncTrade
                 </span>
             </Link>
 
@@ -73,7 +73,7 @@ export default function Header() {
                 
                 {/* Offering Dropdown */}
                 <div className="relative group/offering py-4">
-                    <button className="flex items-center gap-1.5 text-sm font-bold text-neutral-600 dark:text-neutral-400 group-hover/offering:text-[#FF6347] transition-colors">
+                    <button className="flex items-center gap-1.5 text-sm font-bold text-neutral-600 dark:text-neutral-400 group-hover/offering:text-[#01C1D6] transition-colors">
                         {t('offering')} <ChevronDown size={14} className="transition-transform group-hover/offering:rotate-180" />
                     </button>
                     <div className="absolute top-full left-0 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover/offering:opacity-100 group-hover/offering:translate-y-0 group-hover/offering:pointer-events-auto transition-all duration-300">
@@ -83,15 +83,15 @@ export default function Header() {
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-900 dark:text-neutral-400 mb-6">{t('tradingMarkets')}</h3>
                                     <div className="flex flex-col gap-4">
                                         <Link href="/markets/forex" className="group/link flex flex-col gap-1">
-                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">{t('forexExchange')}</span>
+                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#01C1D6] transition-colors">{t('forexExchange')}</span>
                                             <span className="text-[10px] text-neutral-500 font-medium italic">{t('forexDesc')}</span>
                                         </Link>
                                         <Link href="/markets/stocks" className="group/link flex flex-col gap-1">
-                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">{t('stockMarkets')}</span>
+                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#01C1D6] transition-colors">{t('stockMarkets')}</span>
                                             <span className="text-[10px] text-neutral-500 font-medium italic">{t('stocksDesc')}</span>
                                         </Link>
                                         <Link href="/markets/crypto" className="group/link flex flex-col gap-1">
-                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">{t('cryptoAssets')}</span>
+                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#01C1D6] transition-colors">{t('cryptoAssets')}</span>
                                             <span className="text-[10px] text-neutral-500 font-medium italic">{t('cryptoDesc')}</span>
                                         </Link>
                                     </div>
@@ -104,18 +104,18 @@ export default function Header() {
 
                 {/* Social Dropdown */}
                 <div className="relative group/social py-4">
-                    <button className="flex items-center gap-1.5 text-sm font-bold text-neutral-600 dark:text-neutral-400 group-hover/social:text-[#FF6347] transition-colors">
+                    <button className="flex items-center gap-1.5 text-sm font-bold text-neutral-600 dark:text-neutral-400 group-hover/social:text-[#01C1D6] transition-colors">
                         {t('social')} <ChevronDown size={14} className="transition-transform group-hover/social:rotate-180" />
                     </button>
                     <div className="absolute top-full left-0 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover/social:opacity-100 group-hover/social:translate-y-0 group-hover/social:pointer-events-auto transition-all duration-300">
                         <div className="w-[320px] bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 rounded-3xl shadow-2xl p-6 backdrop-blur-xl">
                             <div className="flex flex-col gap-4">
                                 <Link href="/social" className="group/link flex flex-col gap-1">
-                                    <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">{t('socialHub')}</span>
+                                    <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#01C1D6] transition-colors">{t('socialHub')}</span>
                                     <span className="text-[10px] text-neutral-500 font-medium">{t('socialHubDesc')}</span>
                                 </Link>
                                 <Link href="/" className="group/link flex flex-col gap-1">
-                                    <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">{t('copyTrading')}</span>
+                                    <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#01C1D6] transition-colors">{t('copyTrading')}</span>
                                     <span className="text-[10px] text-neutral-500 font-medium">{t('copyTradingDesc')}</span>
                                 </Link>
                             </div>
@@ -125,7 +125,7 @@ export default function Header() {
                 
                 {/* Company Dropdown */}
                 <div className="relative group/company py-4">
-                    <button className="flex items-center gap-1.5 text-sm font-bold text-neutral-600 dark:text-neutral-400 group-hover/company:text-[#FF6347] transition-colors">
+                    <button className="flex items-center gap-1.5 text-sm font-bold text-neutral-600 dark:text-neutral-400 group-hover/company:text-[#01C1D6] transition-colors">
                         {t('company')} <ChevronDown size={14} className="transition-transform group-hover/company:rotate-180" />
                     </button>
                     
@@ -135,20 +135,20 @@ export default function Header() {
                                 <div>
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-900 dark:text-neutral-400 mb-6">{t('aboutUs')}</h3>
                                     <div className="flex flex-col gap-4">
-                                        <Link href="/why-mastersync" className="group/link flex flex-col gap-1">
-                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">{t('whyMastersync')}</span>
-                                            <span className="text-[10px] text-neutral-500 font-medium">{t('whyMastersyncDesc')}</span>
+                                        <Link href="/why-synctrade" className="group/link flex flex-col gap-1">
+                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#01C1D6] transition-colors">{t('whySynctrade')}</span>
+                                            <span className="text-[10px] text-neutral-500 font-medium">{t('whySynctradeDesc')}</span>
                                         </Link>
                                         <Link href="/reviews" className="group/link flex flex-col gap-1">
-                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">{t('reviews')}</span>
+                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#01C1D6] transition-colors">{t('reviews')}</span>
                                             <span className="text-[10px] text-neutral-500 font-medium">{t('reviewsDesc')}</span>
                                         </Link>
                                         <Link href="/blog" className="group/link flex flex-col gap-1">
-                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">{t('blog')}</span>
+                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#01C1D6] transition-colors">{t('blog')}</span>
                                             <span className="text-[10px] text-neutral-500 font-medium">{t('blogDesc')}</span>
                                         </Link>
                                         <Link href="/careers" className="group/link flex flex-col gap-1">
-                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">{t('careers')}</span>
+                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#01C1D6] transition-colors">{t('careers')}</span>
                                             <span className="text-[10px] text-neutral-500 font-medium italic">{t('careersDesc')}</span>
                                         </Link>
                                     </div>
@@ -157,19 +157,19 @@ export default function Header() {
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-900 dark:text-neutral-400 mb-6">{t('resources')}</h3>
                                     <div className="flex flex-col gap-4">
                                         <Link href="/investor-relations" className="group/link flex flex-col gap-1">
-                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">{t('investorRelations')}</span>
+                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#01C1D6] transition-colors">{t('investorRelations')}</span>
                                             <span className="text-[10px] text-neutral-500 font-medium">{t('investorRelationsDesc')}</span>
                                         </Link>
                                         <Link href="/help-center" className="group/link flex flex-col gap-1">
-                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">{t('helpCenter')}</span>
+                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#01C1D6] transition-colors">{t('helpCenter')}</span>
                                             <span className="text-[10px] text-neutral-500 font-medium">{t('helpCenterDesc')}</span>
                                         </Link>
                                         <Link href="/legal" className="group/link flex flex-col gap-1">
-                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">{t('legalCompliance')}</span>
+                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#01C1D6] transition-colors">{t('legalCompliance')}</span>
                                             <span className="text-[10px] text-neutral-500 font-medium">{t('legalComplianceDesc')}</span>
                                         </Link>
                                         <Link href="/contact" className="group/link flex flex-col gap-1">
-                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#FF6347] transition-colors">{t('contactUs')}</span>
+                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#01C1D6] transition-colors">{t('contactUs')}</span>
                                             <span className="text-[10px] text-neutral-500 font-medium">{t('contactUsDesc')}</span>
                                         </Link>
                                     </div>
@@ -179,7 +179,7 @@ export default function Header() {
                     </div>
                 </div>
 
-                <Link href="/partnerships" className="text-sm font-bold text-neutral-600 dark:text-neutral-400 hover:text-[#FF6347] transition-colors">{t('partnerships')}</Link>
+                <Link href="/partnerships" className="text-sm font-bold text-neutral-600 dark:text-neutral-400 hover:text-[#01C1D6] transition-colors">{t('partnerships')}</Link>
             </div>
         </div>
 
@@ -214,12 +214,12 @@ export default function Header() {
                                         }
                                         setIsLangOpen(false);
                                     }}
-                                    className={`w-full text-left px-5 py-3 text-sm flex items-center gap-3 group hover:bg-black/5 dark:hover:bg-white/5 transition-colors ${selectedLang.code === lang.code ? 'text-[#FF6347] bg-black/5 dark:bg-white/5 font-black' : 'text-neutral-500 dark:text-neutral-400 font-medium'}`}
+                                    className={`w-full text-left px-5 py-3 text-sm flex items-center gap-3 group hover:bg-black/5 dark:hover:bg-white/5 transition-colors ${selectedLang.code === lang.code ? 'text-[#01C1D6] bg-black/5 dark:bg-white/5 font-black' : 'text-neutral-500 dark:text-neutral-400 font-medium'}`}
                                 >
                                     <span className="text-lg">{lang.flag}</span>
                                     <span className="flex-1">{lang.name}</span>
                                     {selectedLang.code === lang.code && (
-                                        <div className="w-1.5 h-1.5 rounded-full bg-[#FF6347]" />
+                                        <div className="w-1.5 h-1.5 rounded-full bg-[#01C1D6]" />
                                     )}
                                 </button>
                             ))}
@@ -231,7 +231,7 @@ export default function Header() {
             {/* Theme Toggle */}
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="p-2 rounded-xl bg-black/5 dark:bg-white/5 text-neutral-500 dark:text-neutral-400 hover:text-[#FF6347] transition-all"
+              className="p-2 rounded-xl bg-black/5 dark:bg-white/5 text-neutral-500 dark:text-neutral-400 hover:text-[#01C1D6] transition-all"
               aria-label="Toggle Theme"
             >
               {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
@@ -261,7 +261,7 @@ export default function Header() {
                 <Button 
                     as={Link} 
                     href="/register" 
-                    className="bg-[#FF6347] hover:bg-[#e05035] text-white font-black text-xs uppercase tracking-[0.15em] px-8 rounded-xl shadow-lg shadow-[#FF6347]/20"
+                    className="bg-[#01C1D6] hover:bg-[#00ADC0] text-white font-black text-xs uppercase tracking-[0.15em] px-8 rounded-xl shadow-lg shadow-[#01C1D6]/20"
                 >
                 {t('signUp')}
                 </Button>
@@ -286,9 +286,9 @@ export default function Header() {
                     <div className="w-full px-6 flex items-center justify-between">
                         <Link href="/" className="flex items-center gap-2" onClick={() => setIsMenuOpen(false)}>
                             <div className="relative w-7 h-7">
-                                <Image src="/images/logo.png" alt="MasterSync Logo" fill className="object-contain" />
+                                <Image src="/images/logo1.png" alt="SyncTrade Logo" fill className="object-contain" />
                             </div>
-                            <span className="text-xl font-black text-black dark:text-white uppercase italic tracking-tighter">MasterSync</span>
+                            <span className="text-xl font-black text-black dark:text-white uppercase italic tracking-tighter">SyncTrade</span>
                         </Link>
                         
                         <div className="flex items-center gap-4">
@@ -315,25 +315,25 @@ export default function Header() {
                 <div className="w-full px-6 py-10 flex flex-col min-h-screen text-black dark:text-white">
                     
                     {/* Grid Blocks (NAGA Style - Matching hambuger.png) */}
-                    <div className="grid grid-cols-2 gap-4 mb-12">
+                    <div className="grid grid-cols-2 gap-3 mb-8">
                         {[
-                            { label: t('menu.trade'), icon: <CandlestickChart size={14} />, active: true, href: "/markets/forex" },
-                            { label: t('menu.invest'), icon: <BarChart3 size={24} />, href: "/markets/stocks" },
-                            { label: t('menu.crypto'), icon: <Wallet size={24} />, soon: true, href: "/markets/crypto" },
-                            { label: t('menu.pay'), icon: <CreditCard size={24} />, soon: true, href: "/register" }
+                            { label: t('menu.trade'), icon: <CandlestickChart size={20} />, active: true, href: "/markets/forex" },
+                            { label: t('menu.invest'), icon: <BarChart3 size={20} />, href: "/markets/stocks" },
+                            { label: t('menu.crypto'), icon: <Wallet size={20} />, soon: true, href: "/markets/crypto" },
+                            { label: t('menu.pay'), icon: <CreditCard size={20} />, soon: true, href: "/register" }
                         ].map((item, i) => (
                             <Link 
                               key={i} 
                               href={item.href}
                               onClick={() => setIsMenuOpen(false)}
-                              className={`flex flex-col items-start  p-1  border-2 transition-all ${item.active ? 'bg-black dark:bg-[#050505] border-[#FF6347] shadow-2xl shadow-[#FF6347]/20 scale-[1.02]' : 'bg-[#fafafa] dark:bg-[#0a0a0a] border-black/5 dark:border-white/5 opacity-80'}`}
+                              className={`flex flex-col items-start p-3 border-2 transition-all rounded-2xl ${item.active ? 'bg-black dark:bg-[#050505] border-[#01C1D6] shadow-xl shadow-[#01C1D6]/10 scale-[1.01]' : 'bg-[#fafafa] dark:bg-[#0a0a0a] border-black/5 dark:border-white/5'}`}
                             >
-                                <div className={`p-2 rounded-xl ${item.active ? 'text-[#FF6347] bg-[#FF6347]/10' : 'text-neutral-500'}`}>
+                                <div className={`p-2 rounded-xl mb-2 ${item.active ? 'text-[#01C1D6] bg-[#01C1D6]/10' : 'text-neutral-500'}`}>
                                     {item.icon}
                                 </div>
-                                <div className="flex items-center justify-between w-full">
-                                    <span className={`text-[15px] font-black uppercase tracking-tight ${item.active ? 'text-[#FF6347]' : 'text-neutral-500 dark:text-neutral-400'}`}>{item.label}</span>
-                                    {item.soon && <span className="text-[9px] font-black uppercase tracking-widest bg-[#FF6347] text-white px-2 py-0.5 rounded-full">{t('menu.soon')}</span>}
+                                <div className="flex items-center justify-between w-full mt-1">
+                                    <span className={`text-[13px] font-black uppercase tracking-tight ${item.active ? 'text-[#01C1D6]' : 'text-neutral-500 dark:text-neutral-400'}`}>{item.label}</span>
+                                    {item.soon && <span className="text-[8px] font-black uppercase tracking-widest bg-[#01C1D6] text-white px-1.5 py-0.5 rounded-full">{t('menu.soon')}</span>}
                                 </div>
                             </Link>
                         ))}
@@ -368,7 +368,7 @@ export default function Header() {
                             { 
                               label: t('company'), 
                               subItems: [
-                                  { label: t('whyMastersync'), href: "/why-mastersync" },
+                                  { label: t('whySynctrade'), href: "/why-synctrade" },
                                   { label: t('reviews'), href: "/reviews" },
                                   { label: t('blog'), href: "/blog" },
                                   { label: t('careers'), href: "/careers" },
@@ -385,10 +385,10 @@ export default function Header() {
                                     <>
                                         <button 
                                           onClick={() => setOpenSection(openSection === item.label ? null : item.label)}
-                                          className="w-full flex items-center justify-between py-5"
+                                          className="w-full flex items-center justify-between py-3"
                                         >
-                                            <span className="font-black text-lg text-black dark:text-white uppercase tracking-tight">{item.label}</span>
-                                            <ChevronDown size={22} className={`text-neutral-400 transition-transform duration-500 ${openSection === item.label ? 'rotate-180' : ''}`} />
+                                            <span className="font-black text-base text-black dark:text-white uppercase tracking-tight">{item.label}</span>
+                                            <ChevronDown size={18} className={`text-neutral-400 transition-transform duration-500 ${openSection === item.label ? 'rotate-180' : ''}`} />
                                         </button>
                                         <AnimatePresence>
                                             {openSection === item.label && (
@@ -403,7 +403,7 @@ export default function Header() {
                                                           key={j} 
                                                           href={sub.href}
                                                           onClick={() => setIsMenuOpen(false)}
-                                                          className="text-base font-bold text-neutral-500 dark:text-neutral-400 hover:text-[#FF6347] transition-colors"
+                                                          className="text-base font-bold text-neutral-500 dark:text-neutral-400 hover:text-[#01C1D6] transition-colors"
                                                         >
                                                             {sub.label}
                                                         </Link>
@@ -426,12 +426,12 @@ export default function Header() {
                     </div>
 
                     {/* Mobile Footer CTAs */}
-                    <div className="mt-16 pb-20 grid grid-cols-2 gap-5">
+                    <div className="mt-8 pb-10 grid grid-cols-2 gap-3">
                         <Button 
                           as={Link} 
                           href="/login"
                           variant="bordered"
-                          className="border-neutral-200 dark:border-neutral-800 font-black h-16 rounded-[1.5rem] text-xs uppercase bg-neutral-100 dark:bg-neutral-900 tracking-widest flex-1"
+                          className="border-neutral-200 dark:border-neutral-800 font-black h-12 rounded-xl text-[10px] uppercase bg-neutral-100 dark:bg-neutral-900 tracking-widest flex-1 hover:bg-neutral-200 dark:hover:bg-neutral-800"
                           onClick={() => setIsMenuOpen(false)}
                         >
                             {t('login')}
@@ -439,10 +439,10 @@ export default function Header() {
                         <Button 
                           as={Link} 
                           href="/register"
-                          className="bg-[#FF6347] text-white font-black h-16 rounded-[1.5rem] shadow-2xl shadow-[#FF6347]/30 text-xs uppercase tracking-widest flex-1"
+                          className="bg-[#01C1D6] text-white font-black h-12 rounded-xl shadow-lg shadow-[#01C1D6]/20 text-[10px] uppercase tracking-widest flex-1 hover:bg-[#00ADC0]"
                           onClick={() => setIsMenuOpen(false)}
                         >
-                            {t('getStarted')}
+                            {t('signUp')}
                         </Button>
                     </div>
                 </div>

@@ -52,12 +52,12 @@ export default function SocialPage() {
                       radius="full" 
                       size="lg" 
                       src={`https://i.pravatar.cc/150?u=${post.user}`} 
-                      className="border-[#FF6347]"
+                      className="border-[#01C1D6]"
                     />
                     <div className="flex flex-col gap-1 items-start justify-center">
                       <h4 className="text-lg font-black text-black dark:text-white leading-none">{post.user}</h4>
                       <div className="flex items-center gap-2">
-                         <span className="text-[10px] font-bold text-[#FF6347] uppercase tracking-widest">{post.role}</span>
+                         <span className="text-[10px] font-bold text-[#01C1D6] uppercase tracking-widest">{post.role}</span>
                          <span className="text-xs text-neutral-500">•</span>
                          <span className="text-xs text-neutral-500">{post.time}</span>
                       </div>
@@ -69,21 +69,21 @@ export default function SocialPage() {
                     </p>
                     <div className="p-4 rounded-2xl bg-white dark:bg-black/40 border border-black/5 dark:border-white/5 mb-8 flex justify-between items-center">
                        <span className="text-xs font-bold text-neutral-500 uppercase tracking-widest">Performance</span>
-                       <span className="text-sm font-black text-[#FF6347]">{post.stats}</span>
+                       <span className="text-sm font-black text-[#01C1D6]">{post.stats}</span>
                     </div>
                     
                     <Divider className="opacity-10 mb-6" />
                     
                     <div className="flex justify-between px-2 text-neutral-500">
-                       <button className="flex items-center gap-2 hover:text-[#FF6347] transition-colors">
+                       <button className="flex items-center gap-2 hover:text-[#01C1D6] transition-colors">
                           <Heart size={18} />
                           <span className="text-xs font-bold">Like</span>
                        </button>
-                       <button className="flex items-center gap-2 hover:text-[#FF6347] transition-colors">
+                       <button className="flex items-center gap-2 hover:text-[#01C1D6] transition-colors">
                           <MessageSquare size={18} />
                           <span className="text-xs font-bold">Discuss</span>
                        </button>
-                       <button className="flex items-center gap-2 hover:text-[#FF6347] transition-colors">
+                       <button className="flex items-center gap-2 hover:text-[#01C1D6] transition-colors">
                           <Repeat2 size={18} />
                           <span className="text-xs font-bold">Copy Trade</span>
                        </button>

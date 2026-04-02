@@ -5,7 +5,7 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ["res.cloudinary.com", "npxptwvoifmbqytivgqp.supabase.co"],
+    domains: ["res.cloudinary.com", "zcpiiqvvxlstatfyrnpb.supabase.co"],
     remotePatterns: [
       {
         protocol: "https",

@@ -14,7 +14,7 @@ export default function PageHero({ title, subtitle, badge, compact = true }: Pag
   return (
     <section className={`relative overflow-hidden bg-white dark:bg-black transition-colors duration-500 ${compact ? 'py-16 md:py-20' : 'py-24 md:py-32'}`}>
       {/* Background Ambience */}
-      <div className="absolute top-0 right-0 w-[40%] h-[100%] bg-[#FF6347]/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[40%] h-[100%] bg-[#01C1D6]/5 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[30%] h-[100%] bg-blue-600/5 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none" />
 
@@ -26,12 +26,12 @@ export default function PageHero({ title, subtitle, badge, compact = true }: Pag
           className="max-w-3xl"
         >
           {badge && (
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#FF6347]/20 bg-[#FF6347]/5 mb-6">
-              <span className="text-[10px] font-black tracking-widest text-[#FF6347] uppercase">{badge}</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#01C1D6]/20 bg-[#01C1D6]/5 mb-6">
+              <span className="text-[10px] font-black tracking-widest text-[#01C1D6] uppercase">{badge}</span>
             </div>
           )}
           <h1 className="text-4xl md:text-5xl font-black text-black dark:text-white tracking-tighter leading-none mb-6">
-            {title} <span className="text-[#FF6347]">.</span>
+            {title} <span className="text-[#01C1D6]">.</span>
           </h1>
           <p className="text-lg text-neutral-500 dark:text-neutral-400 font-medium leading-relaxed max-w-xl">
             {subtitle}

@@ -198,4 +198,4 @@ CREATE TRIGGER on_auth_user_created
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
 -- Seed default admin user (run after creating admin via Supabase Auth)
--- UPDATE public.profiles SET role = 'admin' WHERE email = 'admin@mastersync.com';
+-- UPDATE public.profiles SET role = 'admin' WHERE email = 'admin@synctrade.com';

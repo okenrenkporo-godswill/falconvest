@@ -357,14 +357,14 @@ export default function RegisterPage() {
                         <p>
                           <strong>1. Acceptance of Terms</strong>
                           <br />
-                          By accessing and using MasterSync, you accept and
+                          By accessing and using SyncTrade, you accept and
                           agree to be bound by the terms and provision of this
                           agreement.
                         </p>
                         <p>
                           <strong>2. Use License</strong>
                           <br />
-                          Permission is granted to temporarily use MasterSync
+                          Permission is granted to temporarily use SyncTrade
                           for personal, non-commercial transitory viewing only.
                           This is the grant of a license, not a transfer of
                           title.

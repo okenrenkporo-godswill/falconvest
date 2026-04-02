@@ -74,7 +74,7 @@ export default function TradingPlans() {
   return (
     <section className="relative w-full py-32 px-4 bg-transparent overflow-hidden transition-colors duration-500">
       {/* Background Ornaments */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#FF6347]/5 rounded-full blur-[120px] -z-10" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#01C1D6]/5 rounded-full blur-[120px] -z-10" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-600/5 rounded-full blur-[120px] -z-10" />
 
       <div className="container mx-auto">
@@ -86,7 +86,7 @@ export default function TradingPlans() {
             viewport={{ once: true }}
             className="text-4xl md:text-6xl font-black text-black dark:text-white uppercase tracking-tighter"
           >
-            {t('headline.prefix')} <span className="text-[#FF6347]">{t('headline.suffix')}</span>
+            {t('headline.prefix')} <span className="text-[#01C1D6]">{t('headline.suffix')}</span>
           </motion.h2>
           <motion.p 
              initial={{ opacity: 0, y: 20 }}
@@ -111,12 +111,12 @@ export default function TradingPlans() {
               whileHover={{ y: -12 }}
               className={`relative flex flex-col p-8 rounded-[2.5rem] border transition-all duration-500 group ${
                 plan.highlight 
-                  ? "bg-white dark:bg-[#111111] border-[#FF6347]/30 shadow-[0_20px_50px_rgba(255,99,71,0.15)]" 
+                  ? "bg-white dark:bg-[#111111] border-[#01C1D6]/30 shadow-xl shadow-[#01C1D6]/10" 
                   : "bg-white dark:bg-neutral-900/40 border-black/5 dark:border-white/5 hover:bg-neutral-50 dark:hover:bg-neutral-900 hover:border-black/10 dark:hover:border-white/10 shadow-sm dark:shadow-none"
               }`}
             >
               {plan.highlight && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#FF6347] text-white text-[10px] font-black uppercase px-4 py-1.5 rounded-full shadow-[0_4px_20px_rgba(255,99,71,0.4)] tracking-widest">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#01C1D6] text-white text-[10px] font-black uppercase px-4 py-1.5 rounded-full shadow-lg shadow-[#01C1D6]/30 tracking-widest">
                   {t('mostPopular')}
                 </div>
               )}
@@ -144,8 +144,8 @@ export default function TradingPlans() {
               <div className="flex-1 space-y-4 mb-10">
                 {plan.features.map((feature, fidx) => (
                   <div key={fidx} className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-[#FF6347]/10 flex items-center justify-center shrink-0">
-                      <Check size={12} className="text-[#FF6347]" />
+                    <div className="w-5 h-5 rounded-full bg-[#01C1D6]/10 flex items-center justify-center shrink-0">
+                      <Check size={12} className="text-[#01C1D6]" />
                     </div>
                     <span className="text-sm text-neutral-600 dark:text-neutral-400 font-medium group-hover:text-black dark:group-hover:text-neutral-300 transition-colors">
                       {feature}
@@ -162,8 +162,8 @@ export default function TradingPlans() {
                 size="lg"
                 className={`h-16 rounded-[1.5rem] font-black text-sm uppercase tracking-[0.15em] transition-all transform active:scale-95 ${
                   plan.highlight
-                    ? "bg-[#FF6347] text-white shadow-[0_10px_25px_-5px_rgba(255,99,71,0.5)] hover:bg-[#e05035]"
-                    : "bg-black/5 dark:bg-white/5 text-black dark:text-white hover:bg-[#FF6347] hover:text-white border border-black/5 dark:border-white/5 hover:border-transparent"
+                    ? "bg-[#01C1D6] text-white shadow-lg shadow-[#01C1D6]/20 hover:bg-[#00ADC0]"
+                    : "bg-black/5 dark:bg-white/5 text-black dark:text-white hover:bg-[#01C1D6] hover:text-white border border-black/5 dark:border-white/5 hover:border-transparent"
                 }`}
               >
                 {t('fundPlan')}
@@ -179,7 +179,7 @@ export default function TradingPlans() {
            viewport={{ once: true }}
            className="mt-20 text-center"
         >
-          <div className="inline-block p-1 rounded-2xl bg-gradient-to-r from-transparent via-[#FF6347]/20 to-transparent">
+          <div className="inline-block p-1 rounded-2xl bg-gradient-to-r from-transparent via-[#01C1D6]/20 to-transparent">
              <div className="px-8 py-3 rounded-xl bg-black/60 backdrop-blur-sm border border-white/5">
                 <p className="text-xs text-neutral-400 dark:text-neutral-500 font-mono italic tracking-wide">
                    {t('disclaimer')}

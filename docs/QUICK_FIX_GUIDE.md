@@ -101,7 +101,7 @@ Time: 3/7/2026, 3:30 PM
 ```bash
 # 1. User submits KYC at /onboarding/kyc-advanced
 # 2. Check user's email → Should receive confirmation
-# 3. Check admin@mastersync.live → Should receive alert
+# 3. Check admin@synctrade.live → Should receive alert
 # 4. Click link in admin email → Opens KYC pending page
 ```
 
@@ -189,7 +189,7 @@ const combined = merge(submissions, profiles)
 
 ### "Admin not receiving KYC emails"
 - Check RESEND_API_KEY in .env.local
-- Check admin email: `admin@mastersync.live`
+- Check admin email: `admin@synctrade.live`
 - Check Resend dashboard for delivery status
 - Check server logs for email errors
 

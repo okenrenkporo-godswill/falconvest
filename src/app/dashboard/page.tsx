@@ -36,6 +36,7 @@ export default async function DashboardPage() {
 
   // Get wallet logos from platform_wallets using admin client (bypass RLS)
   const { createAdminClient } = await import("@/lib/supabase/admin");
+  const { getAssetLogo } = await import("@/lib/assets");
   const adminClient = createAdminClient();
   const { data: wallets } = await adminClient
     .from("platform_wallets")
@@ -52,7 +53,7 @@ export default async function DashboardPage() {
 
     return {
       ...balance,
-      logo_url: wallets?.find((w) => w.symbol === balance.asset)?.logo_url,
+      logo_url: wallets?.find((w) => w.symbol === balance.asset.toUpperCase())?.logo_url || getAssetLogo(balance.asset),
       usd_value: usdValue,
       current_price: price
     };
@@ -139,7 +140,7 @@ export default async function DashboardPage() {
             <Link href="/dashboard/deposit" passHref>
               <Button
                 size="sm"
-                className="bg-red-500 text-white hover:bg-red-600 font-medium"
+                className="bg-[#01C1D6] text-white hover:bg-[#00ADC0] font-medium"
                 startContent={<ArrowDownCircle className="w-4 h-4" />}
               >
                 Deposit
@@ -185,7 +186,7 @@ export default async function DashboardPage() {
           <div className="flex flex-col items-center gap-1.5">
             <Link
               href="/dashboard/deposit"
-              className="w-12 h-12 rounded-full bg-red-500 hover:bg-red-600 transition-colors flex items-center justify-center"
+              className="w-12 h-12 rounded-full bg-[#01C1D6] hover:bg-[#00ADC0] transition-colors flex items-center justify-center"
             >
               <ArrowDownCircle className="w-5 h-5 text-white" />
             </Link>

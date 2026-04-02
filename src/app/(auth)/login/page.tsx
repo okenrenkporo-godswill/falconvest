@@ -205,7 +205,7 @@ export default function LoginPage() {
         <CardHeader className="flex flex-col gap-2 items-start pb-6">
           <h1 className="text-2xl font-bold">Sign in</h1>
           <p className="text-sm text-default-600">
-            Sign in to your MasterSync account
+            Sign in to your SyncTrade account
           </p>
         </CardHeader>
         <CardBody className="gap-6">

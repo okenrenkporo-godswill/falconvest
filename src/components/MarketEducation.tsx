@@ -42,7 +42,7 @@ export default function MarketEducation({ type }: MarketEducationProps) {
               className="space-y-6"
             >
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-[#FF6347]/10 text-[#FF6347]">
+                <div className="p-2 rounded-lg bg-[#01C1D6]/10 text-[#01C1D6]">
                   <Info size={24} />
                 </div>
                 <h2 className="text-3xl font-black text-black dark:text-white uppercase tracking-tighter">
@@ -62,7 +62,7 @@ export default function MarketEducation({ type }: MarketEducationProps) {
               className="space-y-6"
             >
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-[#FF6347]/10 text-[#FF6347]">
+                <div className="p-2 rounded-lg bg-[#01C1D6]/10 text-[#01C1D6]">
                   <Clock size={24} />
                 </div>
                 <h2 className="text-3xl font-black text-black dark:text-white uppercase tracking-tighter">
@@ -85,7 +85,7 @@ export default function MarketEducation({ type }: MarketEducationProps) {
               className="space-y-6"
             >
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-[#FF6347]/10 text-[#FF6347]">
+                <div className="p-2 rounded-lg bg-[#01C1D6]/10 text-[#01C1D6]">
                   <BarChart3 size={24} />
                 </div>
                 <h2 className="text-3xl font-black text-black dark:text-white uppercase tracking-tighter">
@@ -105,7 +105,7 @@ export default function MarketEducation({ type }: MarketEducationProps) {
               className="space-y-6"
             >
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-[#FF6347]/10 text-[#FF6347]">
+                <div className="p-2 rounded-lg bg-[#01C1D6]/10 text-[#01C1D6]">
                   <Zap size={24} />
                 </div>
                 <h2 className="text-3xl font-black text-black dark:text-white uppercase tracking-tighter">

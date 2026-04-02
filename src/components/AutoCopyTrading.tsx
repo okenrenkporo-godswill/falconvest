@@ -40,9 +40,9 @@ const PhoneDashboardContent = ({
         <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-2">
                 <div className="w-6 h-6 relative">
-                    <Image src="/images/logo.png" alt="Logo" fill className="object-contain" />
+                    <Image src="/images/logo1.png" alt="Logo" fill className="object-contain" />
                 </div>
-                <span className="text-white font-bold text-sm">MasterSync</span>
+                <span className="text-white font-bold text-sm">SyncTrade</span>
             </div>
             
             {isMaster ? (
@@ -80,7 +80,7 @@ const PhoneDashboardContent = ({
         <div className="flex-1 overflow-y-auto no-scrollbar mask-gradient-b">
             <div className="flex items-center justify-between mb-4 sticky top-0 bg-neutral-950/95 backdrop-blur z-10 py-2">
                 <h4 className="text-white font-bold text-sm">{t('activePositions')}</h4>
-                <span className="text-[10px] text-[#FF6347] bg-[#FF6347]/5 border border-[#FF6347]/10 px-2 py-0.5 rounded-full animate-pulse font-bold">● {t('liveSync')}</span>
+                <span className="text-[10px] text-[#01C1D6] bg-[#01C1D6]/5 border border-[#01C1D6]/10 px-2 py-0.5 rounded-full animate-pulse font-bold">● {t('liveSync')}</span>
             </div>
 
             <div className="space-y-3 pb-4">
@@ -117,7 +117,7 @@ const PhoneDashboardContent = ({
                            </div>
                        </div>
                        <div className="text-right">
-                           <p className="text-[#FF6347] text-xs font-bold">{item.profit}</p>
+                           <p className="text-[#01C1D6] text-xs font-bold">{item.profit}</p>
                            <p className="text-neutral-500 text-[10px]">{item.amt}</p>
                        </div>
                    </motion.div>
@@ -128,7 +128,7 @@ const PhoneDashboardContent = ({
         {/* Footer Nav Simulation */}
         <div className="mt-4 pt-4 border-t border-neutral-100 flex justify-around opacity-50 relative z-20 bg-white p-2 rounded-2xl mb-2">
            <div className="w-6 h-6 rounded-full bg-neutral-100"></div>
-           <div className="w-6 h-6 rounded-full bg-[#FF6347] scale-110 shadow-md"></div>
+           <div className="w-6 h-6 rounded-full bg-[#01C1D6] scale-110 shadow-md"></div>
            <div className="w-6 h-6 rounded-full bg-neutral-100"></div>
            <div className="w-6 h-6 rounded-full bg-neutral-100"></div>
        </div>
@@ -169,7 +169,7 @@ export default function AutoCopyTrading() {
 
                     {/* Flying Coin: Bitcoin */}
                     <motion.div
-                        initial={{ x: -100, y: 0, opacity: 0, scale: 0.5 }}
+                        initial={{ x: -10, y: 0, opacity: 0, scale: 0.5 }}
                         whileInView={{ 
                             x: [ -100, 0, 100 ], 
                             y: [ 0, -50, 0 ],
@@ -183,14 +183,14 @@ export default function AutoCopyTrading() {
                             ease: "easeInOut",
                             repeatDelay: 0.5
                         }}
-                        className="absolute w-10 h-10 rounded-full bg-[#FF6347] border-2 border-white shadow-[0_0_20px_rgba(255,99,71,0.5)] z-30 flex items-center justify-center text-white font-bold text-lg"
+                        className="absolute w-10 h-10 rounded-full bg-[#01C1D6] border-2 border-white shadow-lg shadow-[#01C1D6]/40 z-30 flex items-center justify-center text-white font-bold text-lg"
                     >
                         ₿
                     </motion.div>
 
                     {/* Flying Coin: Tron (TRX) */}
                     <motion.div
-                        initial={{ x: -100, y: 0, opacity: 0, scale: 0.5 }}
+                        initial={{ x: -10, y: 0, opacity: 0, scale: 0.5 }}
                         whileInView={{ 
                             x: [ -100, 0, 100 ], 
                             y: [ 0, 50, 0 ], // Curves below
@@ -205,7 +205,7 @@ export default function AutoCopyTrading() {
                             ease: "easeInOut",
                             repeatDelay: 0.5
                         }}
-                        className="absolute w-10 h-10 rounded-full bg-[#FF6347] border-2 border-white shadow-[0_0_20px_rgba(255,99,71,0.5)] z-30 flex items-center justify-center text-white font-bold text-[10px]"
+                        className="absolute w-10 h-10 rounded-full bg-[#01C1D6] border-2 border-white shadow-lg shadow-[#01C1D6]/40 z-30 flex items-center justify-center text-white font-bold text-[10px]"
                     >
                         TRX
                     </motion.div>
@@ -236,7 +236,7 @@ export default function AutoCopyTrading() {
                     transition={{ duration: 0.6 }}
                     className="text-5xl md:text-7xl font-bold text-black dark:text-white tracking-tight leading-[1.1]"
                 >
-                    {t('headline.introducing')} <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF6347] to-[#e05035]">{t('headline.autocopy')}</span>
+                    {t('headline.introducing')} <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#01C1D6] to-blue-600">{t('headline.autocopy')}</span>
                 </motion.h2>
 
                 <motion.p 
@@ -256,7 +256,7 @@ export default function AutoCopyTrading() {
                     transition={{ duration: 0.6, delay: 0.4 }}
                 >
                     <Link href="/register">
-                        <button className="bg-[#FF6347] hover:bg-[#e05035] text-white text-lg font-bold px-8 py-4 rounded-xl shadow-lg shadow-[#FF6347]/20 transition-all transform hover:-translate-y-1">
+                        <button className="bg-[#01C1D6] hover:bg-[#00ADC0] text-white text-lg font-bold px-8 py-4 rounded-xl shadow-lg shadow-[#01C1D6]/20 transition-all transform hover:-translate-y-1">
                             {t('cta')}
                         </button>
                     </Link>

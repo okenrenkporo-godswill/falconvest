@@ -17,6 +17,8 @@ import { WithdrawalHistory } from "@/components/withdrawal/withdrawal-history";
 import { getUserWithdrawals, submitWithdrawal, getUserBalances } from "@/actions/withdrawals";
 import { getUserWallets } from "@/actions/wallets";
 import { addToast } from "@heroui/react";
+import { getCryptoPrices } from "@/lib/crypto-prices";
+import { getAssetMetadata, ASSET_METADATA } from "@/lib/assets";
 
 const ACCOUNTS = {
   trading: { label: "Trading Account", icon: TrendingUp },
@@ -24,11 +26,13 @@ const ACCOUNTS = {
   staking: { label: "Staking Account", icon: ShieldCheck }
 };
 
-const COINS = [
-  { label: "Bitcoin (BTC)", value: "BTC", icon: "₿", network: "Bitcoin" },
-  { label: "Ethereum (ETH)", value: "ETH", icon: "Ξ", network: "ERC-20" },
-  { label: "Tether (USDT)", value: "USDT", icon: "₮", network: "TRC-20" },
-];
+const STATIC_COINS = Object.values(ASSET_METADATA).map(m => ({
+  label: `${m.name} (${m.symbol})`,
+  value: m.symbol,
+  icon: m.symbol.charAt(0),
+  network: m.network || "Mainnet",
+  logo: m.logo_url
+}));
 
 export default function WithdrawalPage() {
   const [accountType, setAccountType] = useState<string>("trading");
@@ -41,32 +45,59 @@ export default function WithdrawalPage() {
   const [balances, setBalances] = useState<any[]>([]);
   const [savedWallets, setSavedWallets] = useState<any[]>([]);
   const [useManualAddress, setUseManualAddress] = useState(false);
+  const [prices, setPrices] = useState<Record<string, number>>({});
 
   const currentAccount = ACCOUNTS[accountType as keyof typeof ACCOUNTS];
   
-  // Get unique accounts that have balances
-  const accountsWithBalances = useMemo(() => {
-    const accounts = [...new Set(balances.map(b => b.account_type))];
-    return accounts.map(accType => ({
-      value: accType,
-      label: ACCOUNTS[accType as keyof typeof ACCOUNTS]?.label || accType,
-      icon: ACCOUNTS[accType as keyof typeof ACCOUNTS]?.icon,
-      balance: balances
-        .filter(b => b.account_type === accType)
-        .reduce((sum, b) => sum + Number(b.amount), 0)
-    }));
-  }, [balances]);
+  // Get all accounts (always show all 3)
+  const accountsData = useMemo(() => {
+    return Object.entries(ACCOUNTS).map(([accType, accInfo]) => {
+      const accountBalances = balances.filter(b => b.account_type === accType);
+      const totalUsd = accountBalances.reduce((sum, b) => {
+        const price = prices[b.asset] || (["USDT", "USDC"].includes(b.asset) ? 1 : 0);
+        return sum + (Number(b.amount) * price);
+      }, 0);
 
-  // Get coins available in selected account
-  const availableCoins = useMemo(() => {
-    return balances
-      .filter(b => b.account_type === accountType && Number(b.amount) > 0)
-      .map(b => ({
-        value: b.asset,
-        label: b.asset,
-        balance: Number(b.amount)
-      }));
-  }, [balances, accountType]);
+      return {
+        value: accType,
+        label: accInfo.label,
+        icon: accInfo.icon,
+        balance: totalUsd
+      };
+    });
+  }, [balances, prices]);
+
+  // Get coins available for withdrawal (static COINS + any other in balance)
+  const availableCoinsData = useMemo(() => {
+    // Start with static coins
+    const displayCoins = STATIC_COINS.map(c => {
+      const balanceAmount = balances.find(b => b.asset === c.value && b.account_type === accountType)?.amount || 0;
+      const price = prices[c.value] || (["USDT", "USDC"].includes(c.value) ? 1 : 0);
+      return {
+        ...c,
+        balance: Number(balanceAmount),
+        balanceUsd: Number(balanceAmount) * price
+      };
+    });
+
+    // Add any other coins user has balance for that aren't in static list
+    const otherCoins = balances
+      .filter(b => b.account_type === accountType && !STATIC_COINS.find(c => c.value === b.asset))
+      .map(b => {
+        const price = prices[b.asset] || 0;
+        return {
+          value: b.asset,
+          label: b.asset,
+          balance: Number(b.amount),
+          balanceUsd: Number(b.amount) * price,
+          icon: b.asset.charAt(0),
+          network: "Unknown",
+          logo: undefined
+        };
+      });
+
+    return [...displayCoins, ...otherCoins];
+  }, [balances, accountType, prices]);
   
   // Get balance for selected account and coin
   const accountBalance = useMemo(() => {
@@ -83,20 +114,29 @@ export default function WithdrawalPage() {
 
   useEffect(() => {
     setIsLoadingWithdrawals(true);
-    Promise.all([getUserWithdrawals(), getUserBalances(), getUserWallets()]).then(([withdrawalsData, balancesData, walletsData]) => {
-      setWithdrawals(withdrawalsData);
-      setBalances(balancesData);
-      setSavedWallets(walletsData);
-      setIsLoadingWithdrawals(false);
+    Promise.all([getUserWithdrawals(), getUserBalances(), getUserWallets()])
+      .then(async ([withdrawalsData, balancesData, walletsData]) => {
+        setWithdrawals(withdrawalsData);
+        setBalances(balancesData);
+        setSavedWallets(walletsData);
+        setIsLoadingWithdrawals(false);
 
-      // Set first available account and coin
-      if (balancesData && balancesData.length > 0) {
-        const firstAccount = balancesData[0].account_type;
-        const firstCoin = balancesData[0].asset;
-        setAccountType(firstAccount);
-        setCoin(firstCoin);
-      }
-    });
+        // Fetch prices for all assets in user balance + default coins
+        const assetsToFetch = [...new Set([
+          ...balancesData.map((b: any) => b.asset),
+          ...STATIC_COINS.map(c => c.value)
+        ])];
+        const priceData = await getCryptoPrices(assetsToFetch);
+        setPrices(priceData);
+
+        // Set first available account and coin
+        if (balancesData && balancesData.length > 0) {
+          const firstAccount = balancesData[0].account_type;
+          const firstCoin = balancesData[0].asset;
+          setAccountType(firstAccount);
+          setCoin(firstCoin);
+        }
+      });
   }, []);
 
   // Update coin when account changes
@@ -116,7 +156,11 @@ export default function WithdrawalPage() {
     }
   }, [coin, savedWallets]);
 
-  const handleMax = () => setAmount(accountBalance.toString());
+  const handleMax = () => {
+    const price = prices[coin] || (["USDT", "USDC"].includes(coin) ? 1 : 0);
+    const usdBalance = Number(accountBalance) * price;
+    setAmount(usdBalance.toFixed(2));
+  };
 
   const handleSubmit = async () => {
     if (!amount || !walletAddress) {
@@ -130,11 +174,14 @@ export default function WithdrawalPage() {
     }
 
     setIsSubmitting(true);
+    const price = prices[coin] || (["USDT", "USDC"].includes(coin) ? 1 : 0);
+    const coinAmount = parseFloat(amount) / price;
+
     const result = await submitWithdrawal({
       coin,
-      amount: parseFloat(amount),
+      amount: coinAmount,
       destinationAddress: walletAddress,
-      network: COINS.find((c) => c.value === coin)?.network || "",
+      network: STATIC_COINS.find((c) => c.value === coin)?.network || "Mainnet",
       accountType,
     });
 
@@ -158,9 +205,11 @@ export default function WithdrawalPage() {
 
   const isValidAmount = useMemo(() => {
     if (!amount) return true;
-    const val = parseFloat(amount);
-    return val > 0 && val <= accountBalance;
-  }, [amount, accountBalance]);
+    const valUsd = parseFloat(amount);
+    const price = prices[coin] || (["USDT", "USDC"].includes(coin) ? 1 : 0);
+    const maxUsd = Number(accountBalance) * price;
+    return valUsd > 0 && valUsd <= maxUsd;
+  }, [amount, accountBalance, prices, coin]);
 
   return (
     <div className="max-w-2xl mx-auto space-y-6 pt-8 pb-12">
@@ -180,19 +229,18 @@ export default function WithdrawalPage() {
                 placeholder="Select source account"
                 selectedKeys={[accountType]}
                 onChange={(e) => setAccountType(e.target.value)}
-                startContent={currentAccount && <currentAccount.icon size={18} />}
-                description={`Available Balance: $${accountBalance.toFixed(2)}`}
-                isDisabled={accountsWithBalances.length === 0}
+                startContent={currentAccount && <currentAccount.icon size={18} className="text-primary" />}
+                description={`Total Account Value: $${(accountsData.find(a => a.value === accountType)?.balance || 0).toFixed(2)}`}
               >
-                {accountsWithBalances.map((acc) => (
+                {accountsData.map((acc) => (
                   <SelectItem 
                     key={acc.value} 
-                    startContent={acc.icon && <acc.icon size={18} className="text-default-400" />} 
+                    startContent={acc.icon && <acc.icon size={18} className="text-default-400 font-bold" />} 
                     textValue={acc.label}
                   >
                     <div className="flex justify-between items-center w-full pr-2">
-                      <span>{acc.label}</span>
-                      <span className="text-xs text-default-400 font-mono">${acc.balance.toFixed(2)}</span>
+                      <span className="font-medium">{acc.label}</span>
+                      <span className="text-xs text-default-400 font-mono">${Number(acc.balance).toFixed(2)}</span>
                     </div>
                   </SelectItem>
                 ))}
@@ -205,14 +253,44 @@ export default function WithdrawalPage() {
                 placeholder="Select Coin"
                 selectedKeys={coin ? [coin] : []}
                 onChange={(e) => setCoin(e.target.value)}
-                isDisabled={availableCoins.length === 0}
-                description={availableCoins.length === 0 ? "No assets in this account" : undefined}
+                description={
+                  coin ? (
+                    <span className="text-xs">
+                      Available: <span className="font-mono">{Number(accountBalance).toFixed(8)} {coin}</span> 
+                      <span className="text-default-400"> (${(Number(accountBalance) * (prices[coin] || (["USDT", "USDC"].includes(coin) ? 1 : 0))).toFixed(2)})</span>
+                    </span>
+                  ) : undefined
+                }
+                startContent={
+                  availableCoinsData.find(c => c.value === coin)?.logo && (
+                    <img 
+                      src={availableCoinsData.find(c => c.value === coin)?.logo} 
+                      className="w-5 h-5 rounded-full object-contain" 
+                      alt={coin} 
+                    />
+                  )
+                }
               >
-                {availableCoins.map((c) => (
-                  <SelectItem key={c.value} textValue={c.label}>
+                {availableCoinsData.map((c) => (
+                  <SelectItem 
+                    key={c.value} 
+                    textValue={c.label}
+                    startContent={
+                      c.logo ? (
+                        <img src={c.logo} className="w-5 h-5 rounded-full object-contain" alt={c.value} />
+                      ) : (
+                        <div className="w-5 h-5 flex items-center justify-center bg-default-100 rounded-full text-[10px]">
+                          {c.icon}
+                        </div>
+                      )
+                    }
+                  >
                     <div className="flex justify-between items-center w-full pr-2">
-                      <span>{c.label}</span>
-                      <span className="text-xs text-default-400 font-mono">{c.balance.toFixed(8)}</span>
+                      <span className="font-medium">{c.label}</span>
+                      <div className="flex flex-col items-end">
+                        <span className="text-xs text-default-600 font-mono">{Number(c.balance).toFixed(8)}</span>
+                        <span className="text-[10px] text-default-400 font-mono">${Number(c.balanceUsd).toFixed(2)}</span>
+                      </div>
                     </div>
                   </SelectItem>
                 ))}
@@ -232,13 +310,27 @@ export default function WithdrawalPage() {
                 variant="flat"
                 startContent={<span className="text-default-400 text-sm">$</span>}
                 endContent={
-                  <Button size="sm" variant="flat" color="primary" className="h-6 min-w-unit-12 px-2 text-xs" onPress={handleMax}>
+                  <Button 
+                    size="sm" 
+                    variant="flat" 
+                    color="primary" 
+                    className="h-6 min-w-unit-12 px-2 text-xs" 
+                    onPress={handleMax}
+                    isDisabled={accountBalance <= 0}
+                  >
                     MAX
                   </Button>
                 }
                 isInvalid={!isValidAmount}
                 errorMessage={!isValidAmount ? "Insufficient balance" : ""}
                 classNames={{ input: "font-semibold text-lg font-mono" }}
+                description={
+                  amount && isValidAmount ? (
+                    <span className="text-xs text-default-400">
+                      ≈ { (parseFloat(amount) / (prices[coin] || (["USDT", "USDC"].includes(coin) ? 1 : 1))).toFixed(8) } {coin}
+                    </span>
+                  ) : undefined
+                }
               />
             </div>
 

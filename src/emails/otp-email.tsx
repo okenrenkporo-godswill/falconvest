@@ -7,8 +7,8 @@ interface OtpEmailProps {
 
 export default function OtpEmail({ code }: OtpEmailProps) {
   return (
-    <EmailTemplate preview={`Your MasterSync verification code: ${code}`}>
-      <Preview>Your MasterSync verification code: {code}</Preview>
+    <EmailTemplate preview={`Your SyncTrade verification code: ${code}`}>
+      <Preview>Your SyncTrade verification code: {code}</Preview>
 
       <Text style={text}>Your verification code is:</Text>
       <Section style={codeContainer}>

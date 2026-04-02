@@ -53,7 +53,7 @@ export default function WithdrawalConfirmedEmail({
         </Button>
       </Section>
 
-      <Text style={signature}>MasterSync Team</Text>
+      <Text style={signature}>SyncTrade Team</Text>
     </EmailTemplate>
   );
 }

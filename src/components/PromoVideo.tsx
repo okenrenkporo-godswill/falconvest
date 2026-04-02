@@ -113,8 +113,8 @@ export default function PromoVideo() {
             
             {/* Background Ambience */}
             <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute -top-20 -left-20 w-64 h-64 bg-red-600/10 rounded-full blur-3xl animate-pulse"></div>
-                <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-red-900/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                <div className="absolute -top-20 -left-20 w-64 h-64 bg-[#01C1D6]/10 rounded-full blur-3xl animate-pulse"></div>
+                <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-[#01C1D6]/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
                 {/* Chart Grid Line (Subtle) */}
                 <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
             </div>
@@ -210,10 +210,10 @@ export default function PromoVideo() {
                             transition={{ type: "spring", stiffness: 100, delay: 0.2 }}
                             className="relative w-32 h-32"
                          >
-                             <div className="absolute inset-0 bg-red-500/20 blur-2xl rounded-full"></div>
+                             <div className="absolute inset-0 bg-[#01C1D6]/20 blur-2xl rounded-full"></div>
                              <Image 
-                                src="/images/logo.png" 
-                                alt="MasterSync Logo" 
+                                src="/images/logo1.png" 
+                                alt="SyncTrade Logo" 
                                 fill 
                                 className="object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
                              />
@@ -225,7 +225,7 @@ export default function PromoVideo() {
                             transition={{ delay: 0.5 }}
                             className="text-4xl font-extrabold text-white tracking-tighter"
                          >
-                            MasterSync
+                            SyncTrade
                          </motion.h1>
                     </motion.div>
                 )}
@@ -257,7 +257,7 @@ export default function PromoVideo() {
                             className="bg-neutral-800/90 backdrop-blur border border-white/10 px-6 py-4 rounded-2xl rounded-tr-sm shadow-xl max-w-[80%]"
                         >
                             <p className="text-white text-lg font-medium">
-                                👋 Hey, Welcome to <span className="text-red-500 font-bold">MasterSync</span>
+                                👋 Hey, Welcome to <span className="text-[#01C1D6] font-bold">SyncTrade</span>
                             </p>
                         </motion.div>
                     </motion.div>
@@ -267,7 +267,7 @@ export default function PromoVideo() {
             {/* Progress Bar */}
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-1/3 h-1 bg-neutral-800 rounded-full overflow-hidden">
                 <motion.div 
-                    className="h-full bg-gradient-to-r from-red-600 to-orange-500"
+                    className="h-full bg-gradient-to-r from-[#01C1D6] to-[#01C1D6]/40"
                     animate={{ width: ["0%", "100%"] }}
                     transition={{ duration: 15, ease: "linear", repeat: Infinity }}
                 />

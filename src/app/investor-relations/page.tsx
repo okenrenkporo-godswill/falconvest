@@ -35,7 +35,7 @@ export default function InvestorRelations() {
               animate={{ opacity: 1, y: 0 }}
               className="text-6xl md:text-8xl font-black text-black dark:text-white tracking-tighter uppercase mb-8"
             >
-              Investor <span className="text-[#FF6347]">Hub.</span>
+              Investor <span className="text-[#01C1D6]">Hub.</span>
             </motion.h1>
             <p className="text-xl md:text-2xl text-neutral-600 dark:text-neutral-400 font-light max-w-2xl leading-relaxed">
               We are committed to long-term value creation and absolute transparency for our global stakeholders and institutional partners.
@@ -52,7 +52,7 @@ export default function InvestorRelations() {
            </div>
            <div className="p-10 rounded-[2.5rem] bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/5 relative overflow-hidden group">
               <Landmark size={100} className="absolute -right-5 -bottom-5 text-black/[0.02] dark:text-white/[0.03] group-hover:scale-110 transition-transform" />
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#FF6347] mb-2">Total Funding</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#01C1D6] mb-2">Total Funding</p>
               <h3 className="text-4xl font-black text-black dark:text-white">$450M</h3>
            </div>
            <div className="p-10 rounded-[2.5rem] bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/5 relative overflow-hidden group">
@@ -77,11 +77,11 @@ export default function InvestorRelations() {
                             <FileBarChart size={20} />
                          </div>
                          <div>
-                            <h4 className="font-bold text-black dark:text-white group-hover:text-[#FF6347] transition-colors">{report.title}</h4>
+                            <h4 className="font-bold text-black dark:text-white group-hover:text-[#01C1D6] transition-colors">{report.title}</h4>
                             <p className="text-[10px] text-neutral-500 font-bold uppercase tracking-widest mt-1">{report.type} • {report.date}</p>
                          </div>
                       </div>
-                      <div className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center group-hover:bg-[#FF6347] group-hover:text-white transition-all">
+                      <div className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center group-hover:bg-[#01C1D6] group-hover:text-white transition-all">
                          <ArrowRight size={16} />
                       </div>
                    </div>
@@ -101,8 +101,8 @@ export default function InvestorRelations() {
                    { date: "APR 22", event: "Annual General Meeting", time: "02:30 PM EST" },
                    { date: "MAY 10", event: "Investor Day 2026", time: "All Day" }
                  ].map((ev, i) => (
-                   <div key={i} className="flex gap-8 items-start border-l-2 border-[#FF6347] pl-8 py-2">
-                      <div className="text-[#FF6347] font-black text-xl whitespace-nowrap">{ev.date}</div>
+                   <div key={i} className="flex gap-8 items-start border-l-2 border-[#01C1D6] pl-8 py-2">
+                      <div className="text-[#01C1D6] font-black text-xl whitespace-nowrap">{ev.date}</div>
                       <div>
                          <h4 className="font-bold text-black dark:text-white uppercase tracking-tight text-lg">{ev.event}</h4>
                          <p className="text-neutral-500 text-sm font-medium mt-1">{ev.time}</p>

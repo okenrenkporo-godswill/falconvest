@@ -37,9 +37,9 @@ export function MobileNav({
         <div className="flex items-center justify-between h-14 px-4 border-b">
           <div className="flex items-center gap-2">
             <div className="flex h-7 w-7 items-center justify-center">
-              <Image src="/images/logo.png" alt="Logo" width={24} height={24} />
+              <Image src="/images/logo1.png" alt="Logo" width={24} height={24} />
             </div>
-            <span className="font-bold">MasterSync</span>
+            <span className="font-bold">SyncTrade</span>
           </div>
           <button
             onClick={onClose}
@@ -58,7 +58,7 @@ export function MobileNav({
               className={cn(
                 "block rounded-md px-3 py-2.5 text-sm font-medium transition-colors",
                 pathname === item.href
-                  ? "bg-red-50 text-red-600 dark:bg-red-950/30 dark:text-red-500"
+                  ? "bg-[#01C1D6]/10 text-[#01C1D6] dark:bg-[#01C1D6]/20 dark:text-[#01C1D6]"
                   : "hover:bg-accent",
               )}
             >

@@ -53,9 +53,9 @@ export function Header({ onMenu }: HeaderProps) {
                 {/* Left: Logo (visible on mobile) */}
                 <Link href="/dashboard" className="flex items-center gap-1.5 lg:hidden">
                     <div className="flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center relative">
-                        <Image src="/images/logo.png" alt="Logo" fill className="object-contain" />
+                        <Image src="/images/logo1.png" alt="Logo" fill className="object-contain" />
                     </div>
-                    <span className="font-semibold text-sm sm:text-base">MasterSync</span>
+                    <span className="font-semibold text-sm sm:text-base">SyncTrade</span>
                 </Link>
 
                 {/* Desktop: Spacer */}

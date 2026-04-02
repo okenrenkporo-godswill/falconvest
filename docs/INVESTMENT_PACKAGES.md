@@ -46,7 +46,7 @@ Dynamic investment packages system that allows admins to create and manage depos
 
 ### Option 1: Using Supabase CLI
 ```bash
-cd /Users/omegauwedia/development/mastersync
+cd /Users/omegauwedia/development/synctrade
 ./scripts/migrate-packages.sh
 ```
 

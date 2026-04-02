@@ -38,7 +38,7 @@ export default function StocksPage() {
         {/* Stock Video Section */}
         {/* <div className="container mx-auto px-6 lg:px-12 py-16">
           <div className="relative max-w-5xl mx-auto">
-            <div className="absolute inset-0 bg-[#FF6347]/10 blur-[120px] -z-10" />
+            <div className="absolute inset-0 bg-[#01C1D6]/10 blur-[120px] -z-10" />
             <div className="relative rounded-[2.5rem] overflow-hidden border border-black/5 dark:border-white/5 shadow-2xl">
               <video 
                 autoPlay 
@@ -81,12 +81,12 @@ export default function StocksPage() {
                       <TableCell className="py-8 px-8">
                         <div className="flex items-center gap-4">
                            <div className="w-12 h-12 rounded-2xl bg-white dark:bg-black border border-black/5 dark:border-white/5 flex items-center justify-center overflow-hidden shadow-sm">
-                              <div className="p-2 rounded-lg bg-[#FF6347]/10 text-[#FF6347]">
+                              <div className="p-2 rounded-lg bg-[#01C1D6]/10 text-[#01C1D6]">
                                 <TrendingUp size={16} />
                               </div>
                            </div>
                            <div>
-                              <p className="font-black text-black dark:text-white uppercase tracking-tighter text-lg group-hover:text-[#FF6347] transition-colors">{item.name}</p>
+                              <p className="font-black text-black dark:text-white uppercase tracking-tighter text-lg group-hover:text-[#01C1D6] transition-colors">{item.name}</p>
                               <p className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">{item.symbol}</p>
                            </div>
                         </div>
@@ -106,7 +106,7 @@ export default function StocksPage() {
                          </span>
                       </TableCell>
                       <TableCell className="text-right px-8">
-                        <button className="bg-black dark:bg-white text-white dark:text-black text-[10px] font-black uppercase tracking-widest px-8 py-3 rounded-full hover:bg-[#FF6347] dark:hover:bg-[#FF6347] hover:text-white transition-all">
+                        <button className="bg-black dark:bg-white text-white dark:text-black text-[10px] font-black uppercase tracking-widest px-8 py-3 rounded-full hover:bg-[#01C1D6] dark:hover:bg-[#01C1D6] hover:text-white transition-all">
                           Trade
                         </button>
                       </TableCell>
@@ -123,7 +123,7 @@ export default function StocksPage() {
                   <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                   NYSE/NASDAQ Status: Real-time Simulation Active
                </div>
-               <div className="italic opacity-50">MasterSync High-Fidelity Market Engine</div>
+               <div className="italic opacity-50">SyncTrade High-Fidelity Market Engine</div>
             </div>
         </div>
         

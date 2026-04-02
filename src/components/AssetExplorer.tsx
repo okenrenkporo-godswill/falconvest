@@ -64,7 +64,7 @@ export default function AssetExplorer() {
             viewport={{ once: true }}
             className="text-4xl md:text-6xl font-black tracking-tight text-black dark:text-white"
           >
-            {t('headline.prefix')} <span className="text-[#FF6347] italic">{t('headline.suffix')}</span>
+            {t('headline.prefix')} <span className="text-[#01C1D6] italic">{t('headline.suffix')}</span>
           </motion.h2>
           <p className="text-neutral-800 dark:text-neutral-400 text-lg max-w-2xl mx-auto leading-relaxed font-medium">
             {t('description')}
@@ -83,7 +83,7 @@ export default function AssetExplorer() {
                       placeholder={t('searchPlaceholder')} 
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
-                      className="w-full bg-neutral-100 dark:bg-black border border-black/5 dark:border-white/5 rounded-2xl py-3 pl-12 pr-4 text-sm text-black dark:text-white focus:outline-none focus:border-[#FF6347] transition-all"
+                      className="w-full bg-neutral-100 dark:bg-black border border-black/5 dark:border-white/5 rounded-2xl py-3 pl-12 pr-4 text-sm text-black dark:text-white focus:outline-none focus:border-[#01C1D6] transition-all"
                     />
                 </div>
             </div>
@@ -94,7 +94,7 @@ export default function AssetExplorer() {
                   onClick={() => setActiveCategory(cat)}
                   className={`w-full text-left px-6 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ${
                     activeCategory === cat 
-                      ? "bg-[#FF6347] text-white shadow-lg shadow-[#FF6347]/20" 
+                      ? "bg-[#01C1D6] text-white shadow-lg shadow-[#01C1D6]/20" 
                       : "text-neutral-500 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5"
                   }`}
                 >
@@ -108,7 +108,7 @@ export default function AssetExplorer() {
           <div className="flex-1 w-full relative min-h-[500px]">
             {loading ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-                    <Spinner color="danger" size="lg" />
+                    <Spinner color="primary" size="lg" />
                     <p className="text-xs font-black uppercase tracking-widest text-neutral-900 dark:text-neutral-500">{t('connecting')}</p>
                 </div>
             ) : (
@@ -142,7 +142,7 @@ export default function AssetExplorer() {
                                                 {asset.image ? (
                                                     <img src={asset.image} alt={asset.name} className="w-6 h-6 object-contain" />
                                                 ) : (
-                                                    <div className="p-2 rounded-lg bg-[#FF6347]/10 text-[#FF6347]">
+                                                    <div className="p-2 rounded-lg bg-[#01C1D6]/10 text-[#01C1D6]">
                                                         <TrendingUp size={16} />
                                                     </div>
                                                 )}
@@ -174,7 +174,7 @@ export default function AssetExplorer() {
                                             as={Link}
                                             href="/register"
                                             size="sm"
-                                            className="bg-black dark:bg-white text-white dark:text-black font-black uppercase text-[10px] tracking-widest rounded-full px-6 hover:bg-[#FF6347] dark:hover:bg-[#FF6347] hover:text-white transition-all"
+                                            className="bg-black dark:bg-white text-white dark:text-black font-black uppercase text-[10px] tracking-widest rounded-full px-6 hover:bg-[#01C1D6] dark:hover:bg-[#01C1D6] hover:text-white transition-all"
                                         >
                                             {t('table.trade')}
                                         </Button>

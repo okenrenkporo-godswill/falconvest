@@ -41,12 +41,12 @@ export default function KycRejectedEmail({
       <Section style={buttonContainer}>
         <Button
           style={button}
-          href={`${process.env.NEXT_PUBLIC_APP_URL || "https://mastersync.live"}/onboarding/kyc`}
+          href={`${process.env.NEXT_PUBLIC_APP_URL || "https://synctrade.live"}/onboarding/kyc`}
         >
           Resubmit Documents
         </Button>
       </Section>
-      <Text style={signature}>MasterSync Team</Text>
+      <Text style={signature}>SyncTrade Team</Text>
     </EmailTemplate>
   );
 }

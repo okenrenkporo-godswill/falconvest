@@ -12,14 +12,14 @@
         "socialHub": "Social Hub",
         "socialHubDesc": "Connect with top institutional traders",
         "copyTrading": "Copy Trading",
-        "copyTradingDesc": "Automate your success with MasterSync",
+        "copyTradingDesc": "Automate your success with SyncTrade",
         "company": "Company",
         "aboutUs": "About Us",
-        "whyMastersync": "Why MasterSync",
-        "whyMastersyncDesc": "Our mission and institutional roots",
+        "whySynctrade": "Why SyncTrade",
+        "whySynctradeDesc": "Our mission and institutional roots",
         "reviews": "Reviews",
         "reviewsDesc": "What our global traders say",
-        "blog": "MasterSync Blog",
+        "blog": "SyncTrade Blog",
         "blogDesc": "Latest market insights and news",
         "careers": "Careers",
         "careersDesc": "Join our global network",
@@ -74,7 +74,7 @@
                 "part2": "REIMAGINED"
             }
         },
-        "dashboardPlaceholder": "MasterSync copy trading"
+        "dashboardPlaceholder": "SyncTrade copy trading"
     },
     "AutoCopyTrading": {
         "masterBalance": "Master Balance",
@@ -95,7 +95,7 @@
             "autocopy": "Autocopy"
         },
         "description": "Learn, copy, and trade in one click. Tap into the experience of others and collaborate with a growing community of traders.",
-        "cta": "Try MasterSync Autocopy"
+        "cta": "Try SyncTrade Autocopy"
     },
     "TradingToolsSlider": {
         "protection": {
@@ -119,7 +119,7 @@
             "2": {
                 "category": "Tools for every trading style",
                 "title": "Protect your positions",
-                "description": "Traders can safeguard their positions with Stop Loss and Take Profit orders. Additionally, MasterSync offers negative balance protection, ensuring that losses will never exceed the funds in your account."
+                "description": "Traders can safeguard their positions with Stop Loss and Take Profit orders. Additionally, SyncTrade offers negative balance protection, ensuring that losses will never exceed the funds in your account."
             }
         }
     },
@@ -183,15 +183,15 @@
             "prefix": "GOT",
             "suffix": "QUESTIONS?"
         },
-        "description": "Everything you need to know about the MasterSync ecosystem.",
+        "description": "Everything you need to know about the SyncTrade ecosystem.",
         "contact": {
             "text": "Still have questions?",
             "link": "Contact our 24/7 support team."
         },
         "questions": {
             "0": {
-                "question": "How to start trading with MasterSync?",
-                "answer": "Starting your journey is simple: \n1. Create your secure MasterSync account.\n2. Complete our streamlined identity verification (KYC).\n3. Fund your account via your preferred digital wallet or bank transfer.\n4. Launch the dashboard and start executing trades instantly."
+                "question": "How to start trading with SyncTrade?",
+                "answer": "Starting your journey is simple: \n1. Create your secure SyncTrade account.\n2. Complete our streamlined identity verification (KYC).\n3. Fund your account via your preferred digital wallet or bank transfer.\n4. Launch the dashboard and start executing trades instantly."
             },
             "1": {
                 "question": "How to create an account and confirm your email address?",
@@ -203,14 +203,14 @@
             },
             "3": {
                 "question": "How do I deposit money and fund my account?",
-                "answer": "MasterSync supports a wide range of funding methods. Navigate to the 'Funding' section in your dashboard to choose between instant crypto transfers, credit/debit cards, or traditional wire transfers. All funds are held in segregated, institutional-grade accounts."
+                "answer": "SyncTrade supports a wide range of funding methods. Navigate to the 'Funding' section in your dashboard to choose between instant crypto transfers, credit/debit cards, or traditional wire transfers. All funds are held in segregated, institutional-grade accounts."
             },
             "4": {
-                "question": "Is MasterSync a regulated broker?",
-                "answer": "Yes, MasterSync operates under strict regulatory frameworks to provide a secure and transparent trading environment. We maintain high capital requirements and undergo regular independent audits to ensure client protection."
+                "question": "Is SyncTrade a regulated broker?",
+                "answer": "Yes, SyncTrade operates under strict regulatory frameworks to provide a secure and transparent trading environment. We maintain high capital requirements and undergo regular independent audits to ensure client protection."
             },
             "5": {
-                "question": "How to withdraw money from MasterSync?",
+                "question": "How to withdraw money from SyncTrade?",
                 "answer": "Withdrawals are processed swiftly. Simply go to 'My Wallet', select 'Withdraw', and choose your destination. Most crypto withdrawals are instant, while traditional bank transfers typically complete within 1-2 business days."
             }
         }
@@ -226,7 +226,7 @@
             "prefix": "Your Assets Are",
             "suffix": "Guaranteed Secure."
         },
-        "description": "At MasterSync, we employ the most advanced security protocols in the industry to ensure your peace of mind.",
+        "description": "At SyncTrade, we employ the most advanced security protocols in the industry to ensure your peace of mind.",
         "features": {
             "dataEncryption": "Data Encryption",
             "aes256": "AES-256",
@@ -273,7 +273,7 @@
             "trade": "Trade"
         },
         "liveFeeds": "Live Feeds Active",
-        "liquidity": "Liquidity by MasterSync Institutional",
+        "liquidity": "Liquidity by SyncTrade Institutional",
         "categories": {
             "Forex": "Forex",
             "Shares": "Shares",
@@ -299,13 +299,13 @@
                 "desc": "Instant Payouts 24/7"
             }
         },
-        "riskWarning": "Risk Warning: Trading financial instruments involves significant risk. The value of investments can go down as well as up and you may receive back less than you originally invested. MasterSync Limited is authorized and regulated by the Financial Services Authority (FSA). Please ensure you fully understand the risks involved by reading our full risk disclosure or consulting an independent financial advisor.",
+        "riskWarning": "Risk Warning: Trading financial instruments involves significant risk. The value of investments can go down as well as up and you may receive back less than you originally invested. SyncTrade Limited is authorized and regulated by the Financial Services Authority (FSA). Please ensure you fully understand the risks involved by reading our full risk disclosure or consulting an independent financial advisor.",
         "links": {
             "compliance": "Compliance",
             "ethics": "Ethics",
             "security": "Security"
         },
-        "copyright": "© 2026 MasterSync Global. All Rights Reserved.",
+        "copyright": "© 2026 SyncTrade Global. All Rights Reserved.",
         "systemStatus": "System Online: LDN-01 Stable",
         "panelCommon": {
             "needMoreInfo": "Still need more information?",
@@ -333,7 +333,7 @@
             "Commodities": "Commodities",
             "Futures": "Futures",
             "ETFs": "ETFs",
-            "MasterSync Web": "MasterSync Web",
+            "SyncTrade Web": "SyncTrade Web",
             "Sync iOS": "Sync iOS",
             "Sync Android": "Sync Android",
             "MT5 Terminal": "MT5 Terminal",
@@ -343,7 +343,7 @@
             "Deposit Methods": "Deposit Methods",
             "Execution Policy": "Execution Policy",
             "Spreads": "Spreads",
-            "Why MasterSync": "Why MasterSync",
+            "Why SyncTrade": "Why SyncTrade",
             "Sponsorship": "Sponsorship",
             "Contact Us": "Contact Us",
             "Investors Relations": "Investors Relations",
@@ -424,7 +424,7 @@
                     },
                     "1": {
                         "title": "Terms of Service",
-                        "desc": "The agreement between you and MasterSync."
+                        "desc": "The agreement between you and SyncTrade."
                     },
                     "2": {
                         "title": "Risk Disclosure",
@@ -433,7 +433,7 @@
                 }
             },
             "about": {
-                "title": "About MasterSync",
+                "title": "About SyncTrade",
                 "description": "Redefining the standard of trading.",
                 "items": {
                     "0": {
@@ -478,7 +478,7 @@
                     },
                     "1": {
                         "title": "Email Us",
-                        "desc": "support@mastersync.live | info@mastersync.live"
+                        "desc": "support@synctrade.live | info@synctrade.live"
                     },
                     "2": {
                         "title": "Call Direct",
