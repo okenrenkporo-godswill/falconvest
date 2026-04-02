@@ -130,8 +130,15 @@ export async function increaseCopyAmount(copyTradeId: string, additionalAmount: 
   if (rpcError) return { error: rpcError.message };
   if (!result.success) return { error: result.error };
 
+  // Fetch the new amount to return to the UI (optional but good for UX)
+  const { data: updatedTrade } = await supabase
+    .from("copy_trades")
+    .select("copy_amount")
+    .eq("id", copyTradeId)
+    .single();
+
   revalidatePath("/dashboard/my-copy-trades");
-  return { success: true };
+  return { success: true, newAmount: updatedTrade?.copy_amount };
 }
 
 // Stop copying a trader
