@@ -1,10 +1,5 @@
--- =========================================================
--- SYNCTRADE ATOMIC ASSET SWAP RPC
--- Resolves: Asset accumulation bug (swapping without deduction)
--- Ensures: Atomic transaction for both debit and credit.
--- =========================================================
-
-CREATE OR REPLACE FUNCTION swap_assets(
+-- Upgrade swap_assets to a Strict Atomic Ledger version
+CREATE OR REPLACE FUNCTION public.swap_assets(
   p_user_id UUID,
   p_from_asset TEXT,
   p_to_asset TEXT,
@@ -14,52 +9,62 @@ CREATE OR REPLACE FUNCTION swap_assets(
 )
 RETURNS JSONB AS $$
 DECLARE
-  current_balance DECIMAL;
-  target_amount DECIMAL;
+  v_before_from DECIMAL;
+  v_after_from DECIMAL;
+  v_before_to DECIMAL;
+  v_after_to DECIMAL;
+  v_target_amount DECIMAL;
   v_row_count INT;
 BEGIN
-  -- 1. Check source balance
-  SELECT amount INTO current_balance
-  FROM public.balances
-  WHERE user_id = p_user_id 
-    AND UPPER(asset) = UPPER(p_from_asset) 
-    AND account_type = p_account_type;
-
-  IF current_balance IS NULL OR current_balance < p_amount THEN
-    RETURN jsonb_build_object('success', false, 'error', 'Insufficient ' || p_from_asset || ' balance in ' || p_account_type || ' account.');
+  -- 1. Capture BEFORE balances for Ledger
+  SELECT amount INTO v_before_from FROM public.balances
+  WHERE user_id = p_user_id AND UPPER(asset) = UPPER(p_from_asset) AND account_type = p_account_type;
+  
+  IF v_before_from IS NULL OR v_before_from < p_amount THEN
+    RETURN jsonb_build_object('success', false, 'error', 'Insufficient ' || p_from_asset || ' balance.');
   END IF;
 
-  -- 2. Deduct from source (Strict Integrity Check)
+  SELECT COALESCE(amount, 0) INTO v_before_to FROM public.balances
+  WHERE user_id = p_user_id AND UPPER(asset) = UPPER(p_to_asset) AND account_type = p_account_type;
+
+  -- 2. Deduct from source (STRICT INTEGRITY)
   UPDATE public.balances
-  SET amount = amount - p_amount, 
-      updated_at = NOW()
-  WHERE user_id = p_user_id 
-    AND UPPER(asset) = UPPER(p_from_asset) 
-    AND account_type = p_account_type;
+  SET amount = amount - p_amount, updated_at = NOW()
+  WHERE user_id = p_user_id AND UPPER(asset) = UPPER(p_from_asset) AND account_type = p_account_type;
 
   GET DIAGNOSTICS v_row_count = ROW_COUNT;
   IF v_row_count = 0 THEN
-    -- If no row was updated, it means our search criteria failed. ROLLBACK.
-    RAISE EXCEPTION 'Internal Error: Could not find % balance record to debit. Swap cancelled.', p_from_asset;
+    RAISE EXCEPTION 'Critical Integrity Error: Could not verify % deduction. Swap aborted.', p_from_asset;
   END IF;
 
+  SELECT amount INTO v_after_from FROM public.balances
+  WHERE user_id = p_user_id AND UPPER(asset) = UPPER(p_from_asset) AND account_type = p_account_type;
+
   -- 3. Calculate and Credit to target
-  target_amount := p_amount * p_conversion_rate;
+  v_target_amount := p_amount * p_conversion_rate;
   
   INSERT INTO public.balances (user_id, asset, amount, account_type)
-  VALUES (p_user_id, UPPER(p_to_asset), target_amount, p_account_type)
+  VALUES (p_user_id, UPPER(p_to_asset), v_target_amount, p_account_type)
   ON CONFLICT (user_id, asset, account_type)
   DO UPDATE SET
-    amount = public.balances.amount + target_amount,
+    amount = public.balances.amount + v_target_amount,
     updated_at = NOW();
 
-  -- 4. Return success
+  SELECT amount INTO v_after_to FROM public.balances
+  WHERE user_id = p_user_id AND UPPER(asset) = UPPER(p_to_asset) AND account_type = p_account_type;
+
+  -- 4. RECORD TO LEDGER (Permanently log the transaction)
+  INSERT INTO public.transaction_ledger (
+    user_id, transaction_type, from_asset, to_asset, from_amount, to_amount, rate,
+    before_balance_from, after_balance_from, before_balance_to, after_balance_to
+  ) VALUES (
+    p_user_id, 'swap', UPPER(p_from_asset), UPPER(p_to_asset), p_amount, v_target_amount, p_conversion_rate,
+    v_before_from, v_after_from, v_before_to, v_after_to
+  );
+
   RETURN jsonb_build_object(
     'success', true, 
-    'message', 'Successfully swapped ' || p_amount || ' ' || p_from_asset || ' to ' || target_amount || ' ' || p_to_asset
+    'message', 'Successfully swapped ' || p_amount || ' ' || p_from_asset || ' to ' || v_target_amount || ' ' || p_to_asset
   );
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
-
--- Ensure authenticated users can call it
-GRANT EXECUTE ON FUNCTION swap_assets TO authenticated;

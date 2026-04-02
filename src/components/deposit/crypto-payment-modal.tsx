@@ -38,8 +38,13 @@ export function CryptoPaymentModal({
     // Fetch conversion rate when coin or amount changes
     useEffect(() => {
         const fetchRate = async () => {
-            const usdAmount = parseFloat(amount.replace(/[^0-9.]/g, ""));
-            if (!usdAmount || !selectedCoin) {
+            // Robust parsing: handles $5,00.00, etc.
+            const cleanAmount = amount.replace(/[$,]/g, "").trim();
+            const usdAmount = parseFloat(cleanAmount);
+            
+            console.log("[DEBUG] Deposit Math:", { original: amount, cleaned: cleanAmount, parsed: usdAmount });
+
+            if (!usdAmount || usdAmount <= 0 || !selectedCoin) {
                 setCryptoAmount("0");
                 return;
             }
@@ -275,7 +280,8 @@ export function CryptoPaymentModal({
                                 <Button 
                                     className="bg-zinc-900 text-white dark:bg-zinc-100 dark:text-black" 
                                     onPress={() => setShowConfirmDialog(true)}
-                                    isDisabled={isLoadingRate || !!conversionError || !walletAddress || parseFloat(cryptoAmount) === 0}
+                                    // Remove conversionError check so user can proceed even if API lags
+                                    isDisabled={isLoadingRate || !walletAddress}
                                 >
                                     I've Sent It
                                 </Button>

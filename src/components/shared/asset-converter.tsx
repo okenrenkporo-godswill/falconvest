@@ -130,39 +130,35 @@ export function AssetConverter({ targetAsset, accountType, otherBalances, onConv
     }
 
     try {
-      // Debit source asset
-      await supabase.rpc("debit_balance", {
+      // Use the strict atomic swap RPC
+      const { data, error } = await supabase.rpc("swap_assets", {
         p_user_id: user.id,
-        p_asset: selectedAsset,
+        p_from_asset: selectedAsset,
+        p_to_asset: effectiveTargetAsset,
         p_amount: amount,
+        p_conversion_rate: conversionRate,
         p_account_type: accountType,
       });
-
-      // Credit target asset
-      const targetAmount = amount * conversionRate;
-      await supabase.rpc("credit_balance", {
-        p_user_id: user.id,
-        p_asset: effectiveTargetAsset,
-        p_amount: targetAmount,
-        p_account_type: accountType,
-      });
+      
+      if (error || !data?.success) {
+        throw new Error(error?.message || data?.error || "Transaction failed");
+      }
 
       addToast({
         title: "Success",
-        description: `Converted ${amount} ${selectedAsset} to ${targetAmount.toFixed(6)} ${effectiveTargetAsset}`,
+        description: `Converted ${amount} ${selectedAsset} to ${(amount * conversionRate).toFixed(6)} ${effectiveTargetAsset}`,
         color: "success",
       });
 
       setShowSwap(false);
       setSwapFrom(new Set());
-      // Don't reset swapTo if it was passed via props
       if (!targetAsset) setSwapTo(new Set());
       setSwapAmount("");
       setConversionRate(1);
       onConversionComplete();
     } catch (error: any) {
       addToast({
-        title: "Error",
+        title: "Conversion Failed",
         description: error.message,
         color: "danger",
       });
