@@ -178,24 +178,36 @@ export function KycReviewTable({ submissions, onUpdate }: { submissions: KycSubm
                     <div className="space-y-4">
                       <div>
                         <p className="text-sm font-semibold mb-2">Front ID</p>
-                        <div className="relative w-full h-64 bg-default-100 rounded-lg overflow-hidden">
-                          <Image
-                            src={selectedSubmission.document_front_url}
-                            alt="Front ID"
-                            fill
-                            className="object-contain"
-                          />
+                        <div className="relative w-full h-64 bg-default-100 rounded-lg overflow-hidden flex items-center justify-center">
+                          {selectedSubmission.document_front_url ? (
+                            <Image
+                              src={selectedSubmission.document_front_url}
+                              alt="Front ID"
+                              fill
+                              className="object-contain"
+                            />
+                          ) : (
+                            <div className="text-center p-4">
+                              <p className="text-default-400">No front document uploaded</p>
+                            </div>
+                          )}
                         </div>
                       </div>
                       <div>
                         <p className="text-sm font-semibold mb-2">Back ID</p>
-                        <div className="relative w-full h-64 bg-default-100 rounded-lg overflow-hidden">
-                          <Image
-                            src={selectedSubmission.document_back_url}
-                            alt="Back ID"
-                            fill
-                            className="object-contain"
-                          />
+                        <div className="relative w-full h-64 bg-default-100 rounded-lg overflow-hidden flex items-center justify-center">
+                          {selectedSubmission.document_back_url ? (
+                            <Image
+                              src={selectedSubmission.document_back_url}
+                              alt="Back ID"
+                              fill
+                              className="object-contain"
+                            />
+                          ) : (
+                            <div className="text-center p-4">
+                              <p className="text-default-400">No back document uploaded</p>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>

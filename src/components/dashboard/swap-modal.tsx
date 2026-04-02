@@ -125,26 +125,28 @@ export function SwapModal({ isOpen, onOpenChange, balances }: SwapModalProps) {
         }
 
         try {
-            // Debit source asset
-            await supabase.rpc("debit_balance", {
+            // Use the atomic swap RPC
+            const { data, error } = await supabase.rpc("swap_assets", {
                 p_user_id: user.id,
-                p_asset: fromAsset,
+                p_from_asset: fromAsset,
+                p_to_asset: toAsset,
                 p_amount: parseFloat(amount),
-                p_account_type: "trading", // Defaulting to trading for simple swap
+                p_conversion_rate: conversionRate,
+                p_account_type: balances?.find(b => b.asset === fromAsset)?.account_type || "trading",
             });
-
-            // Credit target asset
-            const targetAmount = parseFloat(amount) * conversionRate;
-            await supabase.rpc("credit_balance", {
-                p_user_id: user.id,
-                p_asset: toAsset,
-                p_amount: targetAmount,
-                p_account_type: "trading",
-            });
+            
+            if (error || !data?.success) {
+                addToast({ 
+                    title: "Swap Failed", 
+                    description: error?.message || data?.error || "Transaction error", 
+                    color: "danger" 
+                });
+                return;
+            }
 
             addToast({
                 title: "Swap Successful",
-                description: `Swapped ${amount} ${fromAsset} to ${targetAmount.toFixed(6)} ${toAsset}`,
+                description: data.message,
                 color: "success",
             });
 

@@ -97,82 +97,74 @@ export async function updateKycStatusAction(
 
 export async function getPendingKycSubmissions(page: number = 1, limit: number = 15) {
   const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
+  const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { data: [], totalPages: 0, stats: { total: 0, pending: 0, approved: 0, rejected: 0 } };
 
   // Check admin role
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single();
-
+  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
   if (profile?.role !== "admin") return { data: [], totalPages: 0, stats: { total: 0, pending: 0, approved: 0, rejected: 0 } };
 
-  // Use admin client to fetch all KYC submissions
   const adminClient = createAdminClient();
-
   const from = (page - 1) * limit;
   const to = from + limit - 1;
 
-  // Get stats from ALL submissions
-  const { data: allSubmissions, error: statsError } = await adminClient
-    .from("kyc_submissions")
-    .select("status");
-
-  console.log("ALL KYC Submissions query:", {
-    count: allSubmissions?.length,
-    error: statsError,
-    statuses: allSubmissions?.map(s => s.status)
-  });
-
-  const stats = {
-    total: allSubmissions?.length || 0,
-    pending: allSubmissions?.filter(s => s.status === "pending").length || 0,
-    approved: allSubmissions?.filter(s => s.status === "manually_verified" || s.status === "auto_verified").length || 0,
-    rejected: allSubmissions?.filter(s => s.status === "rejected").length || 0,
-  };
-
-  console.log("Calculated stats:", stats);
-
-  // First get paginated submissions
-  const { data: submissions, count, error } = await adminClient
-    .from("kyc_submissions")
-    .select("*", { count: "exact" })
+  // 1. Get all profiles that are NOT traders and have 'pending' status
+  // We use a subquery to exclude IDs that exist in the traders table
+  const { data: pendingProfiles, count, error: profileError } = await adminClient
+    .from("profiles")
+    .select("*, traders(id)", { count: "exact" })
+    .eq("kyc_status", "pending")
+    .is("traders", null) // This works because of the joined select
     .order("created_at", { ascending: false })
     .range(from, to);
 
-  if (error) {
-    console.error("Error fetching KYC submissions:", error);
-    return { data: [], totalPages: 0, stats };
+  if (profileError) {
+    console.error("Error fetching pending profiles:", profileError);
+    return { data: [], totalPages: 0, stats: { total: 0, pending: 0, approved: 0, rejected: 0 } };
   }
 
-  // Then get profile data for each submission
-  const userIds = submissions?.map(s => s.user_id) || [];
-  const { data: profiles } = await adminClient
+  // 2. Fetch submissions for these profiles
+  const profileIds = pendingProfiles?.map(p => p.id) || [];
+  const { data: submissions } = await adminClient
+    .from("kyc_submissions")
+    .select("*")
+    .in("user_id", profileIds);
+
+  // 3. Map to unified structure
+  const unifiedData = pendingProfiles?.map(p => {
+    const sub = submissions?.find(s => s.user_id === p.id);
+    return {
+      id: sub ? sub.id : `PROFILE:${p.id}`,
+      user_id: p.id,
+      full_name: p.full_name || p.email.split('@')[0],
+      id_number: sub ? sub.id_number : "Not provided",
+      document_front_url: sub ? sub.document_front_url : "",
+      document_back_url: sub ? sub.document_back_url : "",
+      status: p.kyc_status,
+      created_at: sub ? sub.created_at : p.created_at,
+      profiles: {
+        email: p.email,
+        full_name: p.full_name
+      }
+    };
+  }) || [];
+
+  // Update stats based on full profile list
+  const { data: allPending } = await adminClient
     .from("profiles")
-    .select("id, email, first_name, last_name, full_name")
-    .in("id", userIds);
+    .select("id, traders(id)")
+    .eq("kyc_status", "pending")
+    .is("traders", null);
 
-  // Combine the data
-  const combinedData = submissions?.map(submission => ({
-    ...submission,
-    profiles: profiles?.find(p => p.id === submission.user_id) || null
-  })) || [];
-
-  console.log("getPendingKycSubmissions result:", {
-    count: combinedData.length,
-    totalCount: count,
-    stats,
-    sample: combinedData[0]
-  });
+  const stats = {
+    total: allPending?.length || 0,
+    pending: allPending?.length || 0,
+    approved: 0, // In this partial view, we only care about what's pending
+    rejected: 0,
+  };
 
   return {
-    data: combinedData,
+    data: unifiedData,
     totalPages: Math.ceil((count || 0) / limit),
     stats,
   };
@@ -181,40 +173,34 @@ export async function getPendingKycSubmissions(page: number = 1, limit: number =
 export async function approveKycAction(submissionId: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  
   if (!user) return { error: "Not authenticated" };
 
-  // Check admin role
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single();
-
-  if (profile?.role !== "admin") return { error: "Unauthorized" };
-
   const adminClient = createAdminClient();
+  let userId = "";
 
-  // Get submission
-  const { data: submission } = await adminClient
-    .from("kyc_submissions")
-    .select("user_id")
-    .eq("id", submissionId)
-    .single();
+  if (submissionId.startsWith("PROFILE:")) {
+    userId = submissionId.replace("PROFILE:", "");
+  } else {
+    const { data: submission } = await adminClient
+      .from("kyc_submissions")
+      .select("user_id")
+      .eq("id", submissionId)
+      .single();
+    if (!submission) return { error: "Submission not found" };
+    userId = submission.user_id;
 
-  if (!submission) return { error: "Submission not found" };
-
-  // Update submission status
-  await adminClient
-    .from("kyc_submissions")
-    .update({ status: "manually_verified" })
-    .eq("id", submissionId);
+    // Update submission record if it exists
+    await adminClient
+      .from("kyc_submissions")
+      .update({ status: "manually_verified" })
+      .eq("id", submissionId);
+  }
 
   // Update profile KYC status
   await adminClient
     .from("profiles")
     .update({ kyc_status: "manually_verified" })
-    .eq("id", submission.user_id);
+    .eq("id", userId);
 
   revalidatePath("/cpanel/kyc-pending");
   return { success: true };
@@ -223,43 +209,36 @@ export async function approveKycAction(submissionId: string) {
 export async function rejectKycAction(submissionId: string, reason: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  
   if (!user) return { error: "Not authenticated" };
 
-  // Check admin role
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single();
-
-  if (profile?.role !== "admin") return { error: "Unauthorized" };
-
   const adminClient = createAdminClient();
+  let userId = "";
 
-  // Get submission
-  const { data: submission } = await adminClient
-    .from("kyc_submissions")
-    .select("user_id")
-    .eq("id", submissionId)
-    .single();
+  if (submissionId.startsWith("PROFILE:")) {
+    userId = submissionId.replace("PROFILE:", "");
+  } else {
+    const { data: submission } = await adminClient
+      .from("kyc_submissions")
+      .select("user_id")
+      .eq("id", submissionId)
+      .single();
+    if (!submission) return { error: "Submission not found" };
+    userId = submission.user_id;
 
-  if (!submission) return { error: "Submission not found" };
-
-  // Update submission status
-  await adminClient
-    .from("kyc_submissions")
-    .update({ 
-      status: "rejected",
-      admin_notes: reason 
-    })
-    .eq("id", submissionId);
+    await adminClient
+      .from("kyc_submissions")
+      .update({ 
+        status: "rejected",
+        admin_notes: reason 
+      })
+      .eq("id", submissionId);
+  }
 
   // Update profile KYC status
   await adminClient
     .from("profiles")
     .update({ kyc_status: "rejected" })
-    .eq("id", submission.user_id);
+    .eq("id", userId);
 
   revalidatePath("/cpanel/kyc-pending");
   return { success: true };
