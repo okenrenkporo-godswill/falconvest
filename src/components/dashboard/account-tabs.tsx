@@ -79,22 +79,20 @@ export function AccountTabs({ totalBalance, balances }: AccountTabsProps) {
                                     {balances.length > 1 && (
                                         <Button
                                             size="sm"
-                                            variant="flat"
-                                            color="primary"
+                                            variant="bordered"
+                                            className="flex-1 sm:flex-none border-default-300"
                                             startContent={<ArrowRightLeft size={16} />}
                                             onPress={onOpen}
-                                            className="flex-1 sm:flex-none"
                                         >
                                             Transfer
                                         </Button>
                                     )}
                                     <Button
                                         size="sm"
-                                        variant="flat"
-                                        color="secondary"
+                                        variant="bordered"
+                                        className="flex-1 sm:flex-none border-default-300"
                                         startContent={<ArrowRightLeft size={16} />}
                                         onPress={() => setIsSwapModalOpen(true)}
-                                        className="flex-1 sm:flex-none"
                                     >
                                         Swap Assets
                                     </Button>
