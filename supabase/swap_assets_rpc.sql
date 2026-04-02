@@ -21,7 +21,7 @@ BEGIN
   SELECT amount INTO current_balance
   FROM public.balances
   WHERE user_id = p_user_id 
-    AND asset = p_from_asset 
+    AND UPPER(asset) = UPPER(p_from_asset)
     AND account_type = p_account_type;
 
   IF current_balance IS NULL OR current_balance < p_amount THEN
@@ -33,14 +33,14 @@ BEGIN
   SET amount = amount - p_amount, 
       updated_at = NOW()
   WHERE user_id = p_user_id 
-    AND asset = p_from_asset 
+    AND UPPER(asset) = UPPER(p_from_asset)
     AND account_type = p_account_type;
 
   -- 3. Calculate and Credit to target
   target_amount := p_amount * p_conversion_rate;
   
   INSERT INTO public.balances (user_id, asset, amount, account_type)
-  VALUES (p_user_id, p_to_asset, target_amount, p_account_type)
+  VALUES (p_user_id, UPPER(p_to_asset), target_amount, p_account_type)
   ON CONFLICT (user_id, asset, account_type)
   DO UPDATE SET
     amount = public.balances.amount + target_amount,

@@ -34,6 +34,15 @@ export default async function DashboardPage() {
     .select("*")
     .eq("user_id", user.id);
 
+  // 1. Get active copy trades to calculate "Locked" funds
+  const { data: activeCopyTrades } = await supabase
+    .from("copy_trades")
+    .select("copy_amount")
+    .eq("user_id", user.id)
+    .eq("status", "active");
+
+  const lockedCopyFunds = activeCopyTrades?.reduce((sum, ct) => sum + Number(ct.copy_amount), 0) || 0;
+
   // Get wallet logos from platform_wallets using admin client (bypass RLS)
   const { createAdminClient } = await import("@/lib/supabase/admin");
   const { getAssetLogo } = await import("@/lib/assets");
@@ -42,11 +51,11 @@ export default async function DashboardPage() {
     .from("platform_wallets")
     .select("symbol, logo_url");
 
-  // Get current crypto prices
+  // 2. Get current crypto prices
   const uniqueAssets = [...new Set(balances?.map((b) => b.asset) || [])];
   const prices = await getCryptoPrices(uniqueAssets);
 
-  // Map logos and calculate USD value for balances
+  // 3. Map logos and calculate USD value for balances
   const balancesWithLogos = balances?.map((balance) => {
     const price = prices[balance.asset] || (["USDT", "USDC"].includes(balance.asset) ? 1 : 0);
     const usdValue = Number(balance.amount) * price;
@@ -59,14 +68,17 @@ export default async function DashboardPage() {
     };
   });
 
-  const totalBalance =
-    balancesWithLogos?.reduce((sum, b) => sum + b.usd_value, 0) || 0;
+  // 4. Calculate final totals including LOCKED funds
+  // Total Balance = All liquid assets + All funds in copy trades
+  const liquidTotal = balancesWithLogos?.reduce((sum, b) => sum + b.usd_value, 0) || 0;
+  const totalBalance = liquidTotal + lockedCopyFunds;
 
-  // Calculate balances by account type
-  const tradingBalance =
-    balancesWithLogos
+  // Trading Balance = Liquid USDT in trading account + Funds in active copy trades
+  const liquidTrading = balancesWithLogos
       ?.filter((b) => b.account_type === "trading")
       .reduce((sum, b) => sum + b.usd_value, 0) || 0;
+  const tradingBalance = liquidTrading + lockedCopyFunds;
+
   const holdingsBalance =
     balancesWithLogos
       ?.filter((b) => b.account_type === "holdings")

@@ -61,37 +61,22 @@ export async function startCopyTrading(data: {
     };
   }
 
-  // Check balance (trading account)
-  const { data: balance } = await supabase
-    .from("balances")
-    .select("amount")
-    .eq("user_id", user.id)
-    .eq("asset", "USDT") // Assuming USDT for copy trading
-    .eq("account_type", "trading")
-    .single();
-
-
-  if (!balance || balance.amount < data.copyAmount) {
-    return { error: "Insufficient balance in trading account" };
-  }
-
-  // Create copy trade
-  const { error } = await supabase.from("copy_trades").insert({
-    user_id: user.id,
-    trader_id: data.traderId,
-    copy_amount: data.copyAmount,
-    copy_percentage: data.copyPercentage,
-    status: "active",
+  // 1. Call atomic RPC to handle balance and registration
+  const { data: result, error: rpcError } = await supabase.rpc("start_copy_trade_atomic", {
+    p_user_id: user.id,
+    p_trader_id: data.traderId,
+    p_copy_amount: data.copyAmount,
+    p_copy_percentage: data.copyPercentage || null
   });
 
+  if (rpcError) return { error: rpcError.message };
+  if (!result.success) return { error: result.error };
 
-  if (error) return { error: error.message };
-
-  // Update trader followers count
+  // 2. Update trader followers count
   const adminClient = createAdminClient();
   await adminClient.rpc("increment_trader_followers", { trader_id: data.traderId });
 
-  // Get trader and user info for notification
+  // 3. Get trader and user info for notification
   const { data: trader } = await supabase
     .from("traders")
     .select("display_name")
@@ -104,7 +89,7 @@ export async function startCopyTrading(data: {
     .eq("id", user.id)
     .single();
 
-  // Notify admin
+  // 4. Notify admin
   if (profile?.email && trader?.display_name) {
     try {
       const { notifyAdminCopyTrade } = await import("@/lib/email");
@@ -135,33 +120,18 @@ export async function increaseCopyAmount(copyTradeId: string, additionalAmount: 
 
   if (!copyTrade) return { error: "Copy trade not found or inactive" };
 
-  // Check balance
-  const { data: balance } = await supabase
-    .from("balances")
-    .select("amount")
-    .eq("user_id", user.id)
-    .eq("asset", "USDT")
-    .eq("account_type", "trading")
-    .single();
+  // Call atomic RPC
+  const { data: result, error: rpcError } = await supabase.rpc("increase_copy_amount_atomic", {
+    p_user_id: user.id,
+    p_copy_trade_id: copyTradeId,
+    p_additional_amount: additionalAmount
+  });
 
-  if (!balance || balance.amount < additionalAmount) {
-    return { error: "Insufficient balance in trading account" };
-  }
-
-  // Update copy amount
-  const newAmount = copyTrade.copy_amount + additionalAmount;
-  const { error } = await supabase
-    .from("copy_trades")
-    .update({ 
-      copy_amount: newAmount,
-      updated_at: new Date().toISOString()
-    })
-    .eq("id", copyTradeId);
-
-  if (error) return { error: error.message };
+  if (rpcError) return { error: rpcError.message };
+  if (!result.success) return { error: result.error };
 
   revalidatePath("/dashboard/my-copy-trades");
-  return { success: true, newAmount };
+  return { success: true };
 }
 
 // Stop copying a trader
@@ -170,19 +140,17 @@ export async function stopCopyTrading(copyTradeId: string) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: "Unauthorized" };
 
-  const { error } = await supabase
-    .from("copy_trades")
-    .update({
-      status: "stopped",
-      stopped_at: new Date().toISOString(),
-      stopped_by: "user",
-    })
-    .eq("id", copyTradeId)
-    .eq("user_id", user.id);
+  // Call atomic RPC to stop and refund
+  const { data: result, error: rpcError } = await supabase.rpc("stop_copy_trade_atomic", {
+    p_user_id: user.id,
+    p_copy_trade_id: copyTradeId
+  });
 
-  if (error) return { error: error.message };
+  if (rpcError) return { error: rpcError.message };
+  if (!result.success) return { error: result.error };
 
   revalidatePath("/dashboard/copy-trading");
+  revalidatePath("/dashboard/my-copy-trades");
   return { success: true };
 }
 
