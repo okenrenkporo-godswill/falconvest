@@ -154,6 +154,24 @@ export function AdminDashboardContent() {
           </Card>
         </Link>
 
+        <Link href="/cpanel/users">
+          <Card className="border-none shadow-sm bg-zinc-50 dark:bg-zinc-800/20 hover:shadow-md transition-shadow cursor-pointer">
+            <CardBody className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-zinc-500/10 rounded-lg">
+                  <UserPlus size={20} className="text-zinc-500" />
+                </div>
+                <div>
+                  <p className="text-sm text-zinc-700 dark:text-zinc-300">Unverified Users</p>
+                  <p className="text-3xl font-bold text-zinc-900 dark:text-zinc-100 mt-1">
+                    {stats.unverifiedUsers}
+                  </p>
+                </div>
+              </div>
+            </CardBody>
+          </Card>
+        </Link>
+
         <Link href="/cpanel/deposits">
           <Card className="border-none shadow-sm bg-success-50 dark:bg-success-900/20 hover:shadow-md transition-shadow cursor-pointer">
             <CardBody className="p-4">

@@ -17,11 +17,16 @@ export async function getAdminStats() {
     u.kyc_status === "auto_verified" || u.kyc_status === "manually_verified"
   ).length || 0;
 
-  const { data: allKyc } = await adminClient
-    .from("kyc_submissions")
-    .select("status");
-
-  const pendingKyc = allKyc?.filter(k => k.status === "pending").length || 0;
+  // Count KYC statuses from PROFILES
+  // We simplify this to include EVERY profile with the right status
+  const { data: kycsRaw } = await adminClient
+    .from("profiles")
+    .select("kyc_status")
+    .eq("role", "user")
+    .in("kyc_status", ["pending", "unverified"]);
+  
+  const pendingKyc = kycsRaw?.filter(p => p.kyc_status === "pending").length || 0;
+  const unverifiedUsers = kycsRaw?.filter(p => p.kyc_status === "unverified").length || 0;
 
   // Financial stats - fetch all deposits
   const { data: allDeposits } = await adminClient
@@ -80,6 +85,7 @@ export async function getAdminStats() {
     totalUsers,
     verifiedUsers,
     pendingKyc,
+    unverifiedUsers,
     pendingDeposits,
     confirmedDeposits,
     rejectedDeposits,

@@ -108,30 +108,33 @@ export async function getPendingKycSubmissions(page: number = 1, limit: number =
   const from = (page - 1) * limit;
   const to = from + limit - 1;
 
-  // 1. Get all profiles that are NOT traders and have 'pending' status
-  // We use a subquery to exclude IDs that exist in the traders table
-  const { data: pendingProfiles, count, error: profileError } = await adminClient
+  // 1. Get all profiles that have 'pending' status
+  // We've removed the trader filter to ensure all normal signups show up
+  const { data: pendingProfiles, error: profileError } = await adminClient
     .from("profiles")
-    .select("*, traders(id)", { count: "exact" })
+    .select("*")
     .eq("kyc_status", "pending")
-    .is("traders", null) // This works because of the joined select
-    .order("created_at", { ascending: false })
-    .range(from, to);
+    .order("created_at", { ascending: false });
 
   if (profileError) {
     console.error("Error fetching pending profiles:", profileError);
     return { data: [], totalPages: 0, stats: { total: 0, pending: 0, approved: 0, rejected: 0 } };
   }
 
+  const count = pendingProfiles?.length || 0;
+  
+  // Paginate the local list
+  const paginatedProfiles = (pendingProfiles || []).slice(from, to + 1);
+
   // 2. Fetch submissions for these profiles
-  const profileIds = pendingProfiles?.map(p => p.id) || [];
+  const profileIds = paginatedProfiles.map(p => p.id);
   const { data: submissions } = await adminClient
     .from("kyc_submissions")
     .select("*")
     .in("user_id", profileIds);
 
   // 3. Map to unified structure
-  const unifiedData = pendingProfiles?.map(p => {
+  const unifiedData = paginatedProfiles.map(p => {
     const sub = submissions?.find(s => s.user_id === p.id);
     return {
       id: sub ? sub.id : `PROFILE:${p.id}`,
@@ -147,19 +150,12 @@ export async function getPendingKycSubmissions(page: number = 1, limit: number =
         full_name: p.full_name
       }
     };
-  }) || [];
-
-  // Update stats based on full profile list
-  const { data: allPending } = await adminClient
-    .from("profiles")
-    .select("id, traders(id)")
-    .eq("kyc_status", "pending")
-    .is("traders", null);
+  });
 
   const stats = {
-    total: allPending?.length || 0,
-    pending: allPending?.length || 0,
-    approved: 0, // In this partial view, we only care about what's pending
+    total: pendingProfiles.length,
+    pending: pendingProfiles.length,
+    approved: 0, 
     rejected: 0,
   };
 
@@ -282,7 +278,7 @@ export async function getAllUsers(page: number = 1, limit: number = 20) {
   const stats = {
     verified: allUsers?.filter((u) => u.kyc_status === "manually_verified" || u.kyc_status === "auto_verified").length || 0,
     pending: allUsers?.filter((u) => u.kyc_status === "pending").length || 0,
-    unverified: allUsers?.filter((u) => !u.kyc_status || u.kyc_status === "rejected").length || 0,
+    unverified: allUsers?.filter((u) => !u.kyc_status || u.kyc_status === "unverified" || u.kyc_status === "rejected").length || 0,
   };
 
   return {
