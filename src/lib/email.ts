@@ -347,8 +347,8 @@ export async function sendCopyTradeResultEmail(
     return;
   }
 
-  const subject = outcome === "profit" 
-    ? "✓ Copy Trade Closed - Profitable" 
+  const subject = outcome === "profit"
+    ? "✓ Copy Trade Closed - Profitable"
     : "Copy Trade Closed";
 
   await resend.emails.send({
@@ -365,7 +365,7 @@ export async function sendCopyTradeResultEmail(
         <p style="margin-top: 30px;">
           <a href="https://app.synctrade.live/dashboard/my-copy-trades" 
              style="background-color: #000; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
-            View My Copy Trades
+            View My Copy Trades Now
           </a>
         </p>
         <p style="color: #666; font-size: 12px; margin-top: 30px;">
