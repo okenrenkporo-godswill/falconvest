@@ -133,16 +133,37 @@ export async function getPendingKycSubmissions(page: number = 1, limit: number =
     .select("*")
     .in("user_id", profileIds);
 
-  // 3. Map to unified structure
-  const unifiedData = paginatedProfiles.map(p => {
+  // 3. Map to unified structure and generate signed URLs for documents
+  const unifiedData = await Promise.all((paginatedProfiles || []).map(async p => {
     const sub = submissions?.find(s => s.user_id === p.id);
+    
+    let frontUrl = sub?.document_front_url || "";
+    let backUrl = sub?.document_back_url || "";
+
+    // Generate signed URLs if it's a Supabase storage URL
+    if (frontUrl && frontUrl.includes("supabase.co/storage/v1/object/public/kyc-documents/")) {
+      const path = frontUrl.split("kyc-documents/")[1];
+      const { data } = await adminClient.storage
+        .from("kyc-documents")
+        .createSignedUrl(path, 3600); // 1 hour expiry
+      if (data) frontUrl = data.signedUrl;
+    }
+
+    if (backUrl && backUrl.includes("supabase.co/storage/v1/object/public/kyc-documents/")) {
+      const path = backUrl.split("kyc-documents/")[1];
+      const { data } = await adminClient.storage
+        .from("kyc-documents")
+        .createSignedUrl(path, 3600);
+      if (data) backUrl = data.signedUrl;
+    }
+
     return {
       id: sub ? sub.id : `PROFILE:${p.id}`,
       user_id: p.id,
       full_name: p.full_name || p.email.split('@')[0],
       id_number: sub ? sub.id_number : "Not provided",
-      document_front_url: sub ? sub.document_front_url : "",
-      document_back_url: sub ? sub.document_back_url : "",
+      document_front_url: frontUrl,
+      document_back_url: backUrl,
       status: p.kyc_status,
       created_at: sub ? sub.created_at : p.created_at,
       profiles: {
@@ -150,7 +171,7 @@ export async function getPendingKycSubmissions(page: number = 1, limit: number =
         full_name: p.full_name
       }
     };
-  });
+  }));
 
   const stats = {
     total: pendingProfiles.length,
