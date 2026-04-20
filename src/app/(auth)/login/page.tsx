@@ -8,17 +8,26 @@ import {
   CardHeader,
   Form,
   Divider,
+  Alert,
+  addToast,
 } from "@heroui/react";
-import { Alert, addToast, InputOtp } from "@heroui/react";
-import { Eye, EyeOff } from "lucide-react";
 
+import dynamic from "next/dynamic";
+import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { loginAction, loginVerifyOtpAction } from "@/actions/auth";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function LoginPage() {
+// 🚀 Fix: prevent SSR crash for OTP input
+const InputOtp = dynamic(
+  () => import("@heroui/react").then((m) => m.InputOtp),
+  { ssr: false }
+);
+
+function LoginContent() {
   const searchParams = useSearchParams();
+
   const [step, setStep] = useState<"credentials" | "otp">("credentials");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,15 +36,18 @@ export default function LoginPage() {
   const [resending, setResending] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  // Check for suspension error
+  // ✅ Safe param extraction
+  const errorParam = searchParams?.get("error");
+  const reasonParam = searchParams?.get("reason");
+
   useEffect(() => {
-    const errorParam = searchParams.get("error");
-    const reasonParam = searchParams.get("reason");
-    
     if (errorParam === "account_suspended") {
-      setError(reasonParam || "Your account has been suspended. Please contact support.");
+      setError(
+        reasonParam ||
+        "Your account has been suspended. Please contact support."
+      );
     }
-  }, [searchParams]);
+  }, [errorParam, reasonParam]);
 
   async function handleResendOtp() {
     setResending(true);
@@ -50,11 +62,7 @@ export default function LoginPage() {
 
       if (result?.error) {
         setError(result.error);
-        addToast({
-          title: "Error",
-          description: result.error,
-          color: "danger",
-        });
+        addToast({ title: "Error", description: result.error, color: "danger" });
       } else {
         addToast({
           title: "Success",
@@ -62,7 +70,7 @@ export default function LoginPage() {
           color: "success",
         });
       }
-    } catch (error) {
+    } catch {
       setError("Failed to resend OTP");
     } finally {
       setResending(false);
@@ -71,13 +79,13 @@ export default function LoginPage() {
 
   async function handleCredentialsSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
     setLoading(true);
     setError("");
 
     const formData = new FormData(e.currentTarget);
     const emailValue = formData.get("email") as string;
     const passwordValue = formData.get("password") as string;
+
     setEmail(emailValue);
     setPassword(passwordValue);
 
@@ -86,12 +94,7 @@ export default function LoginPage() {
 
       if (result?.error) {
         setError(result.error);
-        addToast({
-          title: "Error",
-          description: result.error,
-          color: "danger",
-        });
-        setLoading(false);
+        addToast({ title: "Error", description: result.error, color: "danger" });
       } else {
         addToast({
           title: "Success",
@@ -99,10 +102,10 @@ export default function LoginPage() {
           color: "success",
         });
         setStep("otp");
-        setLoading(false);
       }
-    } catch (error) {
+    } catch {
       setError("An error occurred");
+    } finally {
       setLoading(false);
     }
   }
@@ -120,162 +123,100 @@ export default function LoginPage() {
 
       if (result?.error) {
         setError(result.error);
-        addToast({
-          title: "Error",
-          description: result.error,
-          color: "danger",
-        });
-        setLoading(false);
+        addToast({ title: "Error", description: result.error, color: "danger" });
       }
-      // Success redirects automatically
-    } catch (error) {
+    } catch {
       setError("An error occurred");
+    } finally {
       setLoading(false);
     }
   }
 
+  // ================= OTP STEP =================
   if (step === "otp") {
     return (
-      <div className="min-h-full flex items-center justify-center py-7 relative">
-        <Card isBlurred shadow="none" className="w-full max-w-md">
-          <CardHeader className="flex flex-col gap-2 items-start pb-6">
+      <div className="min-h-screen flex items-center justify-center py-7">
+        <Card className="w-full max-w-md">
+          <CardHeader>
             <h1 className="text-2xl font-bold">Verify your login</h1>
-            <p className="text-sm text-default-600">
-              Enter the code sent to {email}
-            </p>
           </CardHeader>
+
           <CardBody className="gap-6">
-            <Alert
-              color="primary"
-              variant="faded"
-              className="text-xs"
-              title="Check your email"
-            >
-              We sent a 6-digit verification code to {email}
-            </Alert>
+            <Alert color="primary">Code sent to {email}</Alert>
 
-            <Form onSubmit={handleOtpSubmit} className="space-y-6">
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-medium">Verification Code</label>
-                <div key="otp-input">
-                  <InputOtp name="token" length={6} size="lg" isRequired />
-                </div>
-              </div>
+            <Form onSubmit={handleOtpSubmit}>
+              <InputOtp name="token" length={6} size="lg" />
 
-              <Button
-                type="submit"
-                color="primary"
-                className="w-full"
-                isLoading={loading}
-              >
-                Verify & Sign In
+              <Button type="submit" isLoading={loading} className="w-full mt-4">
+                Verify
               </Button>
             </Form>
 
             <Divider />
 
-            <div className="text-center  space-y-2">
-              <Button
-                variant="light"
-                size="sm"
-                onPress={handleResendOtp}
-                isLoading={resending}
-                isDisabled={loading}
-              >
-                Resend OTP
-              </Button>
-              <Button
-                variant="light"
-                size="sm"
-                onPress={() => setStep("credentials")}
-                isDisabled={loading || resending}
-              >
-                ← Back to login
-              </Button>
-            </div>
+            <Button onPress={handleResendOtp} isLoading={resending}>
+              Resend OTP
+            </Button>
           </CardBody>
         </Card>
       </div>
     );
   }
 
+  // ================= LOGIN STEP =================
   return (
-    <div className="min-h-full flex items-center justify-center py-7 relative">
-      <Card isBlurred shadow="none" className="w-full max-w-md">
-        <CardHeader className="flex flex-col gap-2 items-start pb-6">
+    <div className="min-h-screen flex items-center justify-center py-7">
+      <Card className="w-full max-w-md">
+        <CardHeader>
           <h1 className="text-2xl font-bold">Sign in</h1>
-          <p className="text-sm text-default-600">
-            Sign in to your SyncTrade account
-          </p>
         </CardHeader>
+
         <CardBody className="gap-6">
-          <Form onSubmit={handleCredentialsSubmit} className="space-y-6">
-            <Input
-              name="email"
-              type="email"
-              label="Email"
-              placeholder="you@example.com"
-              isRequired
-              errorMessage={({ validationDetails }) => {
-                if (validationDetails.valueMissing)
-                  return "Please enter your email";
-                if (validationDetails.typeMismatch)
-                  return "Please enter a valid email";
-              }}
-            />
+          {error && <Alert color="danger">{error}</Alert>}
+
+          <Form onSubmit={handleCredentialsSubmit}>
+            <Input name="email" type="email" label="Email" isRequired />
+
             <Input
               name="password"
               type={isPasswordVisible ? "text" : "password"}
               label="Password"
-              placeholder="Enter your password"
               isRequired
               endContent={
                 <button
                   type="button"
                   onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-                  className="focus:outline-none"
                 >
-                  {isPasswordVisible ? (
-                    <EyeOff className="text-default-400" size={20} />
-                  ) : (
-                    <Eye className="text-default-400" size={20} />
-                  )}
+                  {isPasswordVisible ? <EyeOff /> : <Eye />}
                 </button>
               }
-              errorMessage={({ validationDetails }) => {
-                if (validationDetails.valueMissing)
-                  return "Please enter your password";
-              }}
             />
 
-            <Button
-              type="submit"
-              color="primary"
-              className="w-full"
-              isLoading={loading}
-            >
+            <Button type="submit" isLoading={loading} className="w-full mt-4">
               Continue
             </Button>
           </Form>
 
           <Divider />
 
-          <div className="text-center space-y-2">
-            <Link
-              href="/forgot-password"
-              className="text-sm text-primary hover:underline block"
-            >
-              Forgot password?
-            </Link>
-            <p className="text-sm text-default-600">
-              Don't have an account?{" "}
-              <Link href="/register" className="text-primary hover:underline">
-                Sign up
-              </Link>
-            </p>
-          </div>
+          <Link href="/register">Create account</Link>
         </CardBody>
       </Card>
     </div>
+  );
+}
+
+// ✅ Suspense wrapper (important)
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          Loading...
+        </div>
+      }
+    >
+      <LoginContent />
+    </Suspense>
   );
 }
