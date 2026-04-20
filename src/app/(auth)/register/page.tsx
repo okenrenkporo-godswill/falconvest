@@ -21,6 +21,7 @@ import {
   addToast,
 } from "@heroui/react";
 
+import Image from "next/image";
 import dynamic from "next/dynamic";
 import {
   sendOtpAction,
@@ -159,88 +160,184 @@ export default function RegisterPage() {
   // ================= STEP 1 =================
   if (step === 1) {
     return (
-      <>
-        <div className="min-h-screen flex items-center justify-center py-7">
-          <Card className="w-full max-w-md">
-            <CardHeader>
-              <h1 className="text-2xl font-bold">Create your account</h1>
-            </CardHeader>
+      <div className="w-full">
+        <Card shadow="none" className="bg-transparent dark:bg-transparent border-none px-0">
+          <CardHeader className="flex flex-col items-center px-0 pt-0 pb-8 space-y-6 text-center">
+            <Link href="/" className="transition-transform hover:scale-105">
+              <Image
+                src="/images/logo1.png"
+                alt="SyncTrade"
+                width={64}
+                height={64}
+                className="w-16 h-16 shadow-2xl shadow-[#01C1D6]/20"
+              />
+            </Link>
+            <div className="space-y-1">
+              <h1 className="text-3xl font-bold text-black dark:text-white">
+                Create Account
+              </h1>
+              <p className="text-sm text-default-500 font-medium tracking-wide">
+                Join our institutional trading network
+              </p>
+            </div>
+          </CardHeader>
 
-            <CardBody>
-              <Form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handleStep1(new FormData(e.currentTarget));
+          <CardBody className="gap-8 p-0 mt-4">
+            <Form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleStep1(new FormData(e.currentTarget));
+              }}
+              className="space-y-6"
+            >
+              <Input 
+                name="email" 
+                type="email" 
+                label="Email" 
+                variant="flat"
+                isRequired 
+                labelPlacement="outside"
+                placeholder="name@example.com"
+                classNames={{
+                  label: "text-xs font-bold text-default-600 ml-1",
+                  inputWrapper: "h-14 bg-black/5 dark:bg-white/5 group-data-[focus=true]:bg-black/10 dark:group-data-[focus=true]:bg-white/10 hover:bg-black/10 dark:hover:bg-white/10 transition-colors rounded-xl border-none",
+                  input: "font-medium"
                 }}
+              />
+
+              <Button 
+                type="submit" 
+                isLoading={loading} 
+                className="w-full bg-[#01C1D6] text-white font-bold h-14 rounded-xl hover:scale-[1.01] transition-transform shadow-xl shadow-[#01C1D6]/20 mt-4"
               >
-                <Input name="email" type="email" label="Email" isRequired />
+                Continue
+              </Button>
+            </Form>
 
-                <Button type="submit" isLoading={loading} className="w-full mt-4">
-                  Continue
-                </Button>
-              </Form>
+            <Divider className="bg-black/5 dark:bg-white/5" />
 
-              <Divider className="my-4" />
+            <div className="text-center pb-4">
+              <span className="text-sm font-medium text-default-500 mr-2">
+                Already have an account?
+              </span>
+              <Link 
+                href="/login" 
+                className="text-sm font-bold text-[#01C1D6] hover:underline transition-colors"
+              >
+                Sign In
+              </Link>
+            </div>
+          </CardBody>
+        </Card>
 
-              <Link href="/login">Already have account?</Link>
-            </CardBody>
-          </Card>
-        </div>
-
-        {/* ✅ safer modal */}
+        {/* ✅ Professional Seamless Modal */}
         <Modal
           isOpen={isOpen}
           onOpenChange={onOpenChange}
           isDismissable={false}
           shouldBlockScroll
+          classNames={{
+            backdrop: "bg-black/50 backdrop-blur-sm",
+            base: "bg-white dark:bg-black border-none shadow-none max-w-sm mx-4",
+            header: "px-8 pt-8 pb-4",
+            body: "px-8 py-0",
+            footer: "px-8 pt-4 pb-8",
+          }}
         >
           <ModalContent>
             {(onClose) => (
               <>
-                <ModalHeader>Terms</ModalHeader>
-                <ModalBody>Accept to continue</ModalBody>
+                <ModalHeader>
+                   <h2 className="text-xl font-bold text-black dark:text-white">
+                      Terms of Service
+                   </h2>
+                </ModalHeader>
+                <ModalBody>
+                  <p className="text-xs text-default-500 leading-relaxed font-medium">
+                    By proceeding, you acknowledge the risk protocols of institutional trading. Performance data is historical and not guaranteed.
+                  </p>
+                </ModalBody>
                 <ModalFooter>
                   <Button
+                    className="w-full bg-[#01C1D6] text-white font-bold h-12 rounded-xl"
                     onPress={() => {
                       onClose();
                       acceptTermsAndContinue();
                     }}
                     isLoading={loading}
                   >
-                    Accept
+                    Accept & Continue
                   </Button>
                 </ModalFooter>
               </>
             )}
           </ModalContent>
         </Modal>
-      </>
+      </div>
     );
   }
 
   // ================= STEP 2 =================
   if (step === 2) {
     return (
-      <div className="min-h-screen flex items-center justify-center py-7">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <h1 className="text-xl font-bold">Verify Email</h1>
+      <div className="w-full">
+        <Card shadow="none" className="bg-transparent dark:bg-transparent border-none px-0">
+          <CardHeader className="flex flex-col items-center px-0 pt-0 pb-8 space-y-6 text-center">
+            <Link href="/" className="transition-transform hover:scale-105">
+              <Image
+                src="/images/logo1.png"
+                alt="SyncTrade"
+                width={64}
+                height={64}
+                className="w-16 h-16 shadow-2xl shadow-[#01C1D6]/20"
+              />
+            </Link>
+            <div className="space-y-1">
+              <h1 className="text-3xl font-bold text-black dark:text-white">
+                Verify Email
+              </h1>
+              <p className="text-sm text-default-500 font-medium tracking-wide">
+                Verification code sent to {email}
+              </p>
+            </div>
           </CardHeader>
 
-          <CardBody>
+          <CardBody className="gap-8 p-0 mt-4">
+            <Alert 
+              color="primary" 
+              variant="flat"
+              className="bg-[#01C1D6]/10 text-[#01C1D6] border-none font-semibold text-xs"
+            >
+              Please enter the 6-digit code to continue
+            </Alert>
+
             <Form
               onSubmit={(e) => {
                 e.preventDefault();
                 handleStep2(new FormData(e.currentTarget));
               }}
+              className="space-y-6"
             >
-              {/* ✅ hydration safe */}
-              {typeof window !== "undefined" && (
-                <InputOtp name="token" length={6} />
-              )}
+              <div key="otp-container" className="flex justify-center py-4">
+                {typeof window !== "undefined" && (
+                  <InputOtp 
+                    name="token" 
+                    length={6} 
+                    size="lg"
+                    variant="flat"
+                    classNames={{
+                        input: "bg-black/5 dark:bg-white/5 border-none focus:ring-2 ring-[#01C1D6]/50"
+                    }}
+                  />
+                )}
+              </div>
 
-              <Button type="submit" isLoading={loading} className="w-full mt-4">
-                Verify
+              <Button 
+                type="submit" 
+                isLoading={loading} 
+                className="w-full bg-[#01C1D6] text-white font-bold h-14 rounded-xl hover:scale-[1.01] transition-transform shadow-xl shadow-[#01C1D6]/20 mt-4"
+              >
+                Verify Code
               </Button>
             </Form>
           </CardBody>
@@ -251,36 +348,225 @@ export default function RegisterPage() {
 
   // ================= STEP 3 =================
   return (
-    <div className="min-h-screen flex items-center justify-center py-7">
-      <Card className="w-full max-w-2xl">
-        <CardHeader>
-          <h1 className="text-2xl font-bold">Complete Profile</h1>
+    <div className="w-full">
+      <Card shadow="none" className="bg-transparent dark:bg-transparent border-none px-0">
+        <CardHeader className="flex flex-col items-center px-0 pt-0 pb-8 space-y-6 text-center">
+          <Link href="/" className="transition-transform hover:scale-105">
+            <Image
+              src="/images/logo1.png"
+              alt="SyncTrade"
+              width={64}
+              height={64}
+              className="w-16 h-16 shadow-2xl shadow-[#01C1D6]/20"
+            />
+          </Link>
+          <div className="space-y-1">
+            <h1 className="text-3xl font-bold text-black dark:text-white">
+              Complete Profile
+            </h1>
+            <p className="text-sm text-default-500 font-medium tracking-wide">
+              Tell us a bit more about yourself
+            </p>
+          </div>
         </CardHeader>
 
-        <CardBody>
-          {error && <Alert color="danger">{error}</Alert>}
+        <CardBody className="gap-8 p-0 mt-4 pb-12">
+          {error && (
+            <Alert 
+              color="danger" 
+              variant="flat" 
+              className="font-semibold text-xs"
+            >
+              {error}
+            </Alert>
+          )}
 
-          <Form className="space-y-4" onSubmit={handleStep3}>
-            <Input name="firstName" label="First Name" isRequired />
-            <Input name="lastName" label="Last Name" isRequired />
-            <Input name="username" label="Username" isRequired />
+          <Form className="space-y-6" onSubmit={handleStep3}>
+            <div className="grid grid-cols-2 gap-4">
+              <Input 
+                name="firstName" 
+                label="First Name" 
+                variant="flat"
+                isRequired 
+                labelPlacement="outside"
+                placeholder="John"
+                classNames={{
+                  label: "text-xs font-bold text-default-600 ml-1",
+                  inputWrapper: "h-14 bg-black/5 dark:bg-white/5 group-data-[focus=true]:bg-black/10 dark:group-data-[focus=true]:bg-white/10 hover:bg-black/10 dark:hover:bg-white/10 transition-colors rounded-xl border-none",
+                }}
+              />
+              <Input 
+                name="lastName" 
+                label="Last Name" 
+                variant="flat"
+                isRequired 
+                labelPlacement="outside"
+                placeholder="Doe"
+                classNames={{
+                  label: "text-xs font-bold text-default-600 ml-1",
+                  inputWrapper: "h-14 bg-black/5 dark:bg-white/5 group-data-[focus=true]:bg-black/10 dark:group-data-[focus=true]:bg-white/10 hover:bg-black/10 dark:hover:bg-white/10 transition-colors rounded-xl border-none",
+                }}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <Input 
+                name="username" 
+                label="Username" 
+                variant="flat"
+                isRequired 
+                labelPlacement="outside"
+                placeholder="johndoe"
+                classNames={{
+                  label: "text-xs font-bold text-default-600 ml-1",
+                  inputWrapper: "h-14 bg-black/5 dark:bg-white/5 group-data-[focus=true]:bg-black/10 dark:group-data-[focus=true]:bg-white/10 hover:bg-black/10 dark:hover:bg-white/10 transition-colors rounded-xl border-none",
+                }}
+              />
+              <Input 
+                name="phone" 
+                label="Phone Number" 
+                variant="flat"
+                isRequired 
+                labelPlacement="outside"
+                placeholder="+1 (555) 000-0000"
+                classNames={{
+                  label: "text-xs font-bold text-default-600 ml-1",
+                  inputWrapper: "h-14 bg-black/5 dark:bg-white/5 group-data-[focus=true]:bg-black/10 dark:group-data-[focus=true]:bg-white/10 hover:bg-black/10 dark:hover:bg-white/10 transition-colors rounded-xl border-none",
+                }}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Autocomplete
+                label="Country"
+                name="country"
+                variant="flat"
+                isRequired
+                labelPlacement="outside"
+                placeholder="Select Country"
+                selectedKey={selectedCountry}
+                onSelectionChange={(key) => {
+                    setSelectedCountry(key as string);
+                    setSelectedState("");
+                }}
+                classNames={{
+                  listboxWrapper: "bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/5 rounded-xl",
+                }}
+                inputProps={{
+                  classNames: {
+                    label: "text-xs font-bold text-default-600 ml-1",
+                    inputWrapper: "h-14 bg-black/5 dark:bg-white/5 hover:bg-black/10 transition-colors rounded-xl border-none",
+                  }
+                }}
+              >
+                {countries.map((country) => (
+                  <AutocompleteItem key={country.isoCode} value={country.isoCode}>
+                    {country.name}
+                  </AutocompleteItem>
+                ))}
+              </Autocomplete>
+
+              <Autocomplete
+                label="State / Province"
+                name="state"
+                variant="flat"
+                isRequired
+                labelPlacement="outside"
+                placeholder="Select State"
+                selectedKey={selectedState}
+                onSelectionChange={(key) => setSelectedState(key as string)}
+                isDisabled={!selectedCountry}
+                classNames={{
+                    listboxWrapper: "bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/5 rounded-xl",
+                  }}
+                inputProps={{
+                  classNames: {
+                    label: "text-xs font-bold text-default-600 ml-1",
+                    inputWrapper: "h-14 bg-black/5 dark:bg-white/5 hover:bg-black/10 transition-colors rounded-xl border-none",
+                  }
+                }}
+              >
+                {states.map((state) => (
+                  <AutocompleteItem key={state.isoCode} value={state.isoCode}>
+                    {state.name}
+                  </AutocompleteItem>
+                ))}
+              </Autocomplete>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Autocomplete
+                label="City"
+                name="city"
+                variant="flat"
+                isRequired
+                labelPlacement="outside"
+                placeholder="Select City"
+                isDisabled={!selectedState}
+                classNames={{
+                    listboxWrapper: "bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/5 rounded-xl",
+                  }}
+                inputProps={{
+                  classNames: {
+                    label: "text-xs font-bold text-default-600 ml-1",
+                    inputWrapper: "h-14 bg-black/5 dark:bg-white/5 hover:bg-black/10 transition-colors rounded-xl border-none",
+                  }
+                }}
+              >
+                {cities.map((city) => (
+                  <AutocompleteItem key={city.name} value={city.name}>
+                    {city.name}
+                  </AutocompleteItem>
+                ))}
+              </Autocomplete>
+
+              <Input 
+                name="address" 
+                label="Physical Address" 
+                variant="flat"
+                isRequired 
+                labelPlacement="outside"
+                placeholder="123 Trading St."
+                classNames={{
+                  label: "text-xs font-bold text-default-600 ml-1",
+                  inputWrapper: "h-14 bg-black/5 dark:bg-white/5 group-data-[focus=true]:bg-black/10 dark:group-data-[focus=true]:bg-white/10 hover:bg-black/10 dark:hover:bg-white/10 transition-colors rounded-xl border-none",
+                }}
+              />
+            </div>
 
             <Input
               name="password"
               type={isPasswordVisible ? "text" : "password"}
               label="Password"
+              variant="flat"
+              isRequired
+              labelPlacement="outside"
+              placeholder="••••••••"
               value={password}
               onValueChange={setPassword}
               errorMessage={getPasswordError(password)}
+              classNames={{
+                label: "text-xs font-bold text-default-600 ml-1",
+                inputWrapper: "h-14 bg-black/5 dark:bg-white/5 group-data-[focus=true]:bg-black/10 dark:group-data-[focus=true]:bg-white/10 hover:bg-black/10 dark:hover:bg-white/10 transition-colors rounded-xl border-none",
+                input: "font-medium"
+              }}
               endContent={
-                <button onClick={() => setIsPasswordVisible(!isPasswordVisible)}>
-                  {isPasswordVisible ? <EyeSlashFilledIcon /> : <EyeFilledIcon />}
+                <button 
+                  type="button" 
+                  onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                  className="text-neutral-400 hover:text-[#01C1D6] transition-colors p-1"
+                >
+                  {isPasswordVisible ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               }
             />
 
-            <Button type="submit" className="w-full" isLoading={loading}>
-              Create Account
+            <Button 
+              type="submit" 
+              isLoading={loading} 
+              className="w-full bg-[#01C1D6] text-white font-bold h-14 rounded-xl hover:scale-[1.01] transition-transform shadow-xl shadow-[#01C1D6]/20 mt-4"
+            >
+              Complete Registration
             </Button>
           </Form>
         </CardBody>

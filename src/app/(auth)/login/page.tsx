@@ -12,6 +12,7 @@ import {
   addToast,
 } from "@heroui/react";
 
+import Image from "next/image";
 import dynamic from "next/dynamic";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
@@ -135,28 +136,78 @@ function LoginContent() {
   // ================= OTP STEP =================
   if (step === "otp") {
     return (
-      <div className="min-h-screen flex items-center justify-center py-7">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <h1 className="text-2xl font-bold">Verify your login</h1>
+      <div className="w-full">
+        <Card shadow="none" className="bg-transparent dark:bg-transparent border-none px-0">
+          <CardHeader className="flex flex-col items-center px-0 pt-0 pb-8 space-y-6 text-center">
+            <Link href="/" className="transition-transform hover:scale-105">
+              <Image
+                src="/images/logo1.png"
+                alt="SyncTrade"
+                width={64}
+                height={64}
+                className="w-16 h-16 shadow-2xl shadow-[#01C1D6]/20"
+              />
+            </Link>
+            <div className="space-y-1">
+              <h1 className="text-3xl font-bold text-black dark:text-white">
+                Verify Identity
+              </h1>
+              <p className="text-sm text-default-500 font-medium tracking-wide">
+                Please enter the code sent to your email
+              </p>
+            </div>
           </CardHeader>
 
-          <CardBody className="gap-6">
-            <Alert color="primary">Code sent to {email}</Alert>
+          <CardBody className="gap-8 p-0">
+            <Alert 
+              color="primary" 
+              variant="flat"
+              className="bg-[#01C1D6]/10 text-[#01C1D6] border-none font-semibold text-xs"
+            >
+              Verification code sent to {email}
+            </Alert>
 
-            <Form onSubmit={handleOtpSubmit}>
-              <InputOtp name="token" length={6} size="lg" />
+            <Form onSubmit={handleOtpSubmit} className="space-y-6">
+              <div key="otp-container" className="flex justify-center py-4">
+                <InputOtp 
+                  name="token" 
+                  length={6} 
+                  size="lg"
+                  variant="flat"
+                  classNames={{
+                    input: "bg-black/5 dark:bg-white/5 border-none focus:ring-2 ring-[#01C1D6]/50"
+                  }}
+                />
+              </div>
 
-              <Button type="submit" isLoading={loading} className="w-full mt-4">
-                Verify
+              <Button 
+                type="submit" 
+                isLoading={loading} 
+                className="w-full bg-[#01C1D6] text-white font-bold h-14 rounded-xl hover:scale-[1.01] transition-transform shadow-xl shadow-[#01C1D6]/20"
+              >
+                Verify & Login
               </Button>
             </Form>
 
-            <Divider />
+            <Divider className="bg-black/5 dark:bg-white/5" />
 
-            <Button onPress={handleResendOtp} isLoading={resending}>
-              Resend OTP
-            </Button>
+            <div className="flex flex-col gap-3">
+              <Button 
+                onPress={handleResendOtp} 
+                isLoading={resending}
+                variant="light"
+                className="text-sm font-semibold text-default-500 hover:text-[#01C1D6]"
+              >
+                Resend code
+              </Button>
+              <Button 
+                onPress={() => setStep("credentials")}
+                variant="light"
+                className="text-sm font-semibold text-default-400"
+              >
+                ← Back to sign in
+              </Button>
+            </div>
           </CardBody>
         </Card>
       </div>
@@ -165,41 +216,111 @@ function LoginContent() {
 
   // ================= LOGIN STEP =================
   return (
-    <div className="min-h-screen flex items-center justify-center py-7">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <h1 className="text-2xl font-bold">Sign in</h1>
+    <div className="w-full">
+      <Card shadow="none" className="bg-transparent dark:bg-transparent border-none px-0">
+        <CardHeader className="flex flex-col items-center px-0 pt-0 pb-8 space-y-6 text-center">
+          <Link href="/" className="transition-transform hover:scale-105">
+            <Image
+              src="/images/logo1.png"
+              alt="SyncTrade"
+              width={64}
+              height={64}
+              className="w-16 h-16 shadow-2xl shadow-[#01C1D6]/20"
+            />
+          </Link>
+          <div className="space-y-1">
+            <h1 className="text-3xl font-bold text-black dark:text-white">
+              Sign In
+            </h1>
+            <p className="text-sm text-default-500 font-medium tracking-wide">
+              Enter your details to access your account
+            </p>
+          </div>
         </CardHeader>
 
-        <CardBody className="gap-6">
-          {error && <Alert color="danger">{error}</Alert>}
+        <CardBody className="gap-8 p-0">
+          {error && (
+            <Alert 
+              color="danger" 
+              variant="flat" 
+              className="font-semibold text-xs"
+            >
+              {error}
+            </Alert>
+          )}
 
-          <Form onSubmit={handleCredentialsSubmit}>
-            <Input name="email" type="email" label="Email" isRequired />
-
-            <Input
-              name="password"
-              type={isPasswordVisible ? "text" : "password"}
-              label="Password"
-              isRequired
-              endContent={
-                <button
-                  type="button"
-                  onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-                >
-                  {isPasswordVisible ? <EyeOff /> : <Eye />}
-                </button>
-              }
+          <Form onSubmit={handleCredentialsSubmit} className="space-y-6">
+            <Input 
+              name="email" 
+              type="email" 
+              label="Email" 
+              variant="flat"
+              isRequired 
+              labelPlacement="outside"
+              placeholder="name@example.com"
+              classNames={{
+                label: "text-xs font-bold text-default-600 ml-1",
+                inputWrapper: "h-14 bg-black/5 dark:bg-white/5 group-data-[focus=true]:bg-black/10 dark:group-data-[focus=true]:bg-white/10 hover:bg-black/10 dark:hover:bg-white/10 transition-colors rounded-xl border-none",
+                input: "font-medium"
+              }}
             />
 
-            <Button type="submit" isLoading={loading} className="w-full mt-4">
-              Continue
+            <div className="space-y-2">
+              <Input
+                name="password"
+                type={isPasswordVisible ? "text" : "password"}
+                label="Password"
+                variant="flat"
+                isRequired
+                labelPlacement="outside"
+                placeholder="••••••••"
+                classNames={{
+                  label: "text-xs font-bold text-default-600 ml-1",
+                  inputWrapper: "h-14 bg-black/5 dark:bg-white/5 group-data-[focus=true]:bg-black/10 dark:group-data-[focus=true]:bg-white/10 hover:bg-black/10 dark:hover:bg-white/10 transition-colors rounded-xl border-none",
+                  input: "font-medium"
+                }}
+                endContent={
+                  <button
+                    type="button"
+                    onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                    className="text-neutral-400 hover:text-[#01C1D6] transition-colors p-1"
+                  >
+                    {isPasswordVisible ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
+                }
+              />
+              <div className="flex justify-end pr-1">
+                <Link 
+                  href="/forgot-password" 
+                  className="text-xs font-bold text-[#01C1D6] hover:underline transition-colors"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+            </div>
+
+            <Button 
+              type="submit" 
+              isLoading={loading} 
+              className="w-full bg-[#01C1D6] text-white font-bold h-14 rounded-xl hover:scale-[1.01] transition-transform shadow-xl shadow-[#01C1D6]/20 mt-4"
+            >
+              Sign In
             </Button>
           </Form>
 
-          <Divider />
+          <Divider className="bg-black/5 dark:bg-white/5" />
 
-          <Link href="/register">Create account</Link>
+          <div className="text-center pb-4">
+            <span className="text-sm font-medium text-default-500 mr-2">
+              Don&apos;t have an account?
+            </span>
+            <Link 
+              href="/register" 
+              className="text-sm font-bold text-[#01C1D6] hover:underline transition-colors"
+            >
+              Register now
+            </Link>
+          </div>
         </CardBody>
       </Card>
     </div>

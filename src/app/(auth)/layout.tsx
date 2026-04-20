@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Card, CardBody, Divider } from "@heroui/react";
 
 export default function AuthLayout({
   children,
@@ -10,67 +9,40 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Header */}
-      <header className="bg-background">
-        <div className="w-full max-w-md py-7 mx-auto">
-          <Card isBlurred shadow="none" className="w-full max-w-md">
-            <CardBody>
-              <Link href="/" className="flex items-center gap-2">
-                <Image
-                  src="/images/logo1.png"
-                  alt="SyncTrade"
-                  width={40}
-                  height={40}
-                  className="w-10 h-10"
-                />
-                <span className="text-xl font-bold">SyncTrade</span>
-              </Link>
-            </CardBody>
-          </Card>
-        </div>
-      </header>
+    <div className="min-h-screen flex flex-col bg-white dark:bg-black transition-colors duration-500 overflow-hidden relative">
+      {/* Background Ambience (Matching Hero) */}
+      <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none z-0" />
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#01C1D6]/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#01C1D6]/10 rounded-full blur-[100px] pointer-events-none" />
+
+      {/* Header removed to move logo into forms */}
 
       {/* Main Content */}
-      <main className="flex-1">{children}</main>
-
-      <Divider />
+      <main className="flex-1 flex flex-col items-center justify-center relative z-10 px-6 py-12">
+        <div className="w-full max-w-md">
+          {children}
+        </div>
+      </main>
 
       {/* Footer */}
-      <footer className="bg-background">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+      <footer className="relative z-10 border-t border-black/5 dark:border-white/5 bg-white/50 dark:bg-black/50 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2">
-              <Image
-                src="/images/logo1.png"
-                alt="SyncTrade"
-                width={24}
-                height={24}
-                className="w-6 h-6"
-              />
-              <span className="text-sm text-default-600">
-                © 2026 SyncTrade. All rights reserved.
+              <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest whitespace-nowrap">
+                © 2026 SyncTrade. Institutional Trading Platform.
               </span>
             </div>
-            <div className="flex items-center gap-6">
-              <Link
-                href="/terms"
-                className="text-sm text-default-600 hover:text-foreground"
-              >
-                Terms
-              </Link>
-              <Link
-                href="/privacy"
-                className="text-sm text-default-600 hover:text-foreground"
-              >
-                Privacy
-              </Link>
-              <Link
-                href="mailto:support@synctrade.live"
-                className="text-sm text-default-600 hover:text-foreground"
-              >
-                Support
-              </Link>
+            <div className="flex items-center gap-8">
+              {['Terms', 'Privacy', 'Support'].map((item) => (
+                <Link
+                  key={item}
+                  href={item === 'Support' ? "mailto:support@synctrade.live" : `/${item.toLowerCase()}`}
+                  className="text-[10px] font-black text-neutral-400 hover:text-[#01C1D6] transition-colors uppercase tracking-widest"
+                >
+                  {item}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
