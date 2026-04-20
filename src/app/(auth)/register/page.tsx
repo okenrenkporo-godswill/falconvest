@@ -460,7 +460,7 @@ export default function RegisterPage() {
                 }}
               >
                 {countries.map((country) => (
-                  <AutocompleteItem key={country.isoCode} value={country.isoCode}>
+                  <AutocompleteItem key={country.isoCode}>
                     {country.name}
                   </AutocompleteItem>
                 ))}
@@ -487,7 +487,7 @@ export default function RegisterPage() {
                 }}
               >
                 {states.map((state) => (
-                  <AutocompleteItem key={state.isoCode} value={state.isoCode}>
+                  <AutocompleteItem key={state.isoCode}>
                     {state.name}
                   </AutocompleteItem>
                 ))}
@@ -514,7 +514,7 @@ export default function RegisterPage() {
                 }}
               >
                 {cities.map((city) => (
-                  <AutocompleteItem key={city.name} value={city.name}>
+                  <AutocompleteItem key={city.name}>
                     {city.name}
                   </AutocompleteItem>
                 ))}
