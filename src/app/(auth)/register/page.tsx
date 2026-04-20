@@ -32,7 +32,7 @@ import {
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { Country, State, City } from "country-state-city";
-import { EyeFilledIcon, EyeSlashFilledIcon } from "@heroui/shared-icons";
+import { Eye, EyeOff } from "lucide-react";
 
 // ✅ Prevent SSR crash
 const InputOtp = dynamic(
