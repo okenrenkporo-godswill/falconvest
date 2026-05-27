@@ -59,7 +59,7 @@ export default function AutoPortfolio() {
                            <div className="w-6 h-6 relative">
                                <Image src="/images/logo1.png" alt="Logo" fill className="object-contain" />
                            </div>
-                           <span className="text-white font-bold text-sm">SyncTrade</span>
+                           <span className="text-white font-bold text-sm">FalconVest</span>
                        </div>
                        <div className="w-10 h-10 rounded-full bg-neutral-800 border-2 border-green-500 p-0.5 overflow-hidden shadow-lg shadow-green-500/20">
                            <div className="w-full h-full rounded-full bg-neutral-700 relative">

@@ -213,7 +213,7 @@ export default function PromoVideo() {
                              <div className="absolute inset-0 bg-[#01C1D6]/20 blur-2xl rounded-full"></div>
                              <Image 
                                 src="/images/logo1.png" 
-                                alt="SyncTrade Logo" 
+                                alt="FalconVest Logo" 
                                 fill 
                                 className="object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
                              />
@@ -225,7 +225,7 @@ export default function PromoVideo() {
                             transition={{ delay: 0.5 }}
                             className="text-4xl font-extrabold text-white tracking-tighter"
                          >
-                            SyncTrade
+                            FalconVest
                          </motion.h1>
                     </motion.div>
                 )}
@@ -257,7 +257,7 @@ export default function PromoVideo() {
                             className="bg-neutral-800/90 backdrop-blur border border-white/10 px-6 py-4 rounded-2xl rounded-tr-sm shadow-xl max-w-[80%]"
                         >
                             <p className="text-white text-lg font-medium">
-                                👋 Hey, Welcome to <span className="text-[#01C1D6] font-bold">SyncTrade</span>
+                                👋 Hey, Welcome to <span className="text-[#01C1D6] font-bold">FalconVest</span>
                             </p>
                         </motion.div>
                     </motion.div>

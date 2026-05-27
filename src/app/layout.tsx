@@ -8,7 +8,7 @@ import { getLocale, getMessages } from "next-intl/server";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "SyncTrade - Trading Platform",
+  title: "FalconVest - Trading Platform",
   description:
     "Your trades in stocks, crypto, and options are now safeguarded with the highest encryption standards. Copy top strategies effortlessly—trade smarter, safer.",
   icons: {

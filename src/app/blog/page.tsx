@@ -9,7 +9,7 @@ import { Calendar, Clock, User, ArrowRight } from "lucide-react";
 const POSTS = [
   {
     title: "The Institutional Shift: Why 2026 is the Year of Crypto Adoption",
-    excerpt: "Exploring the fundamental changes in global finance and how SyncTrade is leading the infrastructure revolution.",
+    excerpt: "Exploring the fundamental changes in global finance and how FalconVest is leading the infrastructure revolution.",
     date: "Feb 08, 2026",
     readTime: "6 min",
     category: "Insights"
@@ -23,7 +23,7 @@ const POSTS = [
   },
   {
     title: "Security Update: Advanced Cold Storage Protocols",
-    excerpt: "A deep dive into SyncTrade's industry-leading security architecture and our commitment to asset safety.",
+    excerpt: "A deep dive into FalconVest's industry-leading security architecture and our commitment to asset safety.",
     date: "Feb 01, 2026",
     readTime: "8 min",
     category: "News"
@@ -55,7 +55,7 @@ export default function Blog() {
                 Insights <span className="text-neutral-400">&</span> Updates.
               </motion.h1>
               <p className="text-xl md:text-2xl text-neutral-600 dark:text-neutral-400 font-light max-w-2xl leading-relaxed">
-                Stay updated with the latest market trends, technical deep-dives, and platform announcements from the SyncTrade team.
+                Stay updated with the latest market trends, technical deep-dives, and platform announcements from the FalconVest team.
               </p>
             </div>
             <div className="flex gap-4">

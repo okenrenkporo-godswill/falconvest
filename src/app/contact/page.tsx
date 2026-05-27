@@ -83,8 +83,8 @@ export default function ContactUs() {
               </div>
             </div>
             <div className="flex flex-col gap-2 text-center md:text-right">
-              <p className="text-sm text-blue-100 whitespace-nowrap">For client-related questions: <span className="font-bold text-white hover:underline cursor-pointer">support@synctrade.live</span></p>
-              <p className="text-sm text-blue-100 whitespace-nowrap">For legal or licensing matters: <span className="font-bold text-white hover:underline cursor-pointer">info@synctrade.live</span></p>
+              <p className="text-sm text-blue-100 whitespace-nowrap">For client-related questions: <span className="font-bold text-white hover:underline cursor-pointer">support@FalconVest.live</span></p>
+              <p className="text-sm text-blue-100 whitespace-nowrap">For legal or licensing matters: <span className="font-bold text-white hover:underline cursor-pointer">info@FalconVest.live</span></p>
             </div>
           </motion.div>
         </section>

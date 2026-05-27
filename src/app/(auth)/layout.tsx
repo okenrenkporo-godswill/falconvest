@@ -30,14 +30,14 @@ export default function AuthLayout({
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2">
               <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest whitespace-nowrap">
-                © 2026 SyncTrade. Institutional Trading Platform.
+                © 2026 FalconVest. Institutional Trading Platform.
               </span>
             </div>
             <div className="flex items-center gap-8">
               {['Terms', 'Privacy', 'Support'].map((item) => (
                 <Link
                   key={item}
-                  href={item === 'Support' ? "mailto:support@synctrade.live" : `/${item.toLowerCase()}`}
+                  href={item === 'Support' ? "mailto:support@FalconVest.live" : `/${item.toLowerCase()}`}
                   className="text-[10px] font-black text-neutral-400 hover:text-[#01C1D6] transition-colors uppercase tracking-widest"
                 >
                   {item}

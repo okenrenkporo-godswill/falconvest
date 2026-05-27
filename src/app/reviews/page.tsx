@@ -10,7 +10,7 @@ const REVIEWS = [
   {
     name: "Alex Thompson",
     role: "Institutional Trader",
-    content: "The latency on SyncTrade is genuinely impressive. I've switched my entire high-frequency operation here.",
+    content: "The latency on FalconVest is genuinely impressive. I've switched my entire high-frequency operation here.",
     rating: 5
   },
   {
@@ -40,7 +40,7 @@ const REVIEWS = [
   {
     name: "James Wilson",
     role: "Crypto Enthusiast",
-    content: "Security was my main concern. SyncTrade's transparent cold storage and 2FA give me peace of mind.",
+    content: "Security was my main concern. FalconVest's transparent cold storage and 2FA give me peace of mind.",
     rating: 5
   }
 ];
@@ -69,7 +69,7 @@ export default function Reviews() {
               Real <span className="text-[#01C1D6]">Feedback.</span>
             </motion.h1>
             <p className="text-xl md:text-2xl text-neutral-600 dark:text-neutral-400 font-light max-w-2xl">
-              Don't just take our word for it. Join 2 million+ traders worldwide who have found their home at SyncTrade.
+              Don't just take our word for it. Join 2 million+ traders worldwide who have found their home at FalconVest.
             </p>
           </div>
         </section>

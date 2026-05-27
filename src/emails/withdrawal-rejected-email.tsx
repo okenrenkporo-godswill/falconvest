@@ -57,7 +57,7 @@ export default function WithdrawalRejectedEmail({
         </Button>
       </Section>
 
-      <Text style={signature}>SyncTrade Team</Text>
+      <Text style={signature}>FalconVest Team</Text>
     </EmailTemplate>
   );
 }

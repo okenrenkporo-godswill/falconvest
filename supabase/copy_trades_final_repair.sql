@@ -1,5 +1,5 @@
 -- =========================================================
--- SYNCTRADE STOP TRADE & SCHEMA CACHE REPAIR (RESTORED)
+-- FalconVest STOP TRADE & SCHEMA CACHE REPAIR (RESTORED)
 -- Resolves: "Could not find 'stopped_by' column"
 -- Ensures: All system columns for copy-trading are present.
 -- =========================================================

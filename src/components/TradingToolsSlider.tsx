@@ -70,14 +70,14 @@ const ProtectionAnimation = ({ t }: { t: any }) => {
 
             </div>
 
-             {/* SyncTrade Branding */}
+             {/* FalconVest Branding */}
              <div className="absolute bottom-6 flex flex-col items-center gap-1 opacity-50">
                 <span className="text-[10px] text-neutral-500 uppercase tracking-widest">{t('protection.poweredBy')}</span>
                 <div className="flex items-center gap-1.5 grayscale">
                     <div className="w-4 h-4 relative">
                          <Image src="/images/logo1.png" alt="Logo" fill className="object-contain" />
                     </div>
-                    <span className="text-black dark:text-white font-bold text-xs">SyncTrade</span>
+                    <span className="text-black dark:text-white font-bold text-xs">FalconVest</span>
                 </div>
             </div>
         </div>
@@ -192,7 +192,7 @@ export default function TradingToolsSlider() {
                     <div className="w-5 h-5 relative">
                         <Image src="/images/logo1.png" alt="Logo" fill className="object-contain" />
                     </div>
-                    <span className="text-neutral-900 font-bold text-xs">SyncTrade</span>
+                    <span className="text-neutral-900 font-bold text-xs">FalconVest</span>
                  </div>
              )}
 

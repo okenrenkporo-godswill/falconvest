@@ -2,7 +2,7 @@
 
 -- Staking pools
 CREATE TABLE public.staking_pools (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   asset TEXT NOT NULL,
   name TEXT NOT NULL,
   apy DECIMAL(5, 2) NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE public.staking_pools (
 
 -- User stakes
 CREATE TABLE public.user_stakes (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL,
   pool_id UUID NOT NULL REFERENCES public.staking_pools(id) ON DELETE CASCADE,
   amount DECIMAL(20, 8) NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE public.user_stakes (
 
 -- Staking rewards history
 CREATE TABLE public.staking_rewards (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   stake_id UUID NOT NULL REFERENCES public.user_stakes(id) ON DELETE CASCADE,
   user_id UUID NOT NULL,
   amount DECIMAL(20, 8) NOT NULL,

@@ -89,7 +89,7 @@ export default function HeroBanner() {
                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#01C1D6]/20 border border-[#01C1D6]/30 backdrop-blur-md"
              >
                  <span className="w-2 h-2 rounded-full bg-[#01C1D6] animate-pulse"></span>
-                 <span className="text-white text-xs font-bold uppercase tracking-wider">SyncTrade Pro</span>
+                 <span className="text-white text-xs font-bold uppercase tracking-wider">FalconVest Pro</span>
              </motion.div>
 
              {/* Headline */}

@@ -1,4 +1,4 @@
-# SyncTrade - Crypto Trading Platform
+# FalconVest - Crypto Trading Platform
 
 A production-grade cryptocurrency broker and trading platform built with Next.js 15, TypeScript, and Supabase.
 
@@ -47,7 +47,7 @@ A production-grade cryptocurrency broker and trading platform built with Next.js
 
 ```bash
 git clone <repository-url>
-cd synctrade
+cd FalconVest
 pnpm install
 ```
 

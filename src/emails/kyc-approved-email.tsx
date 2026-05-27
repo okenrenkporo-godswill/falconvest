@@ -19,7 +19,7 @@ export default function KycApprovedEmail({ name }: KycApprovedEmailProps) {
       <Text style={text}>Hi {name},</Text>
       <Text style={text}>
         Great news! Your identity verification has been approved. You now have
-        full access to all SyncTrade features.
+        full access to all FalconVest features.
       </Text>
       <Section style={statusBox}>
         <Text style={statusText}>Status: Verified ✓</Text>
@@ -31,12 +31,12 @@ export default function KycApprovedEmail({ name }: KycApprovedEmailProps) {
       <Section style={buttonContainer}>
         <Button
           style={button}
-          href={process.env.NEXT_PUBLIC_APP_URL || "https://synctrade.live"}
+          href={process.env.NEXT_PUBLIC_APP_URL || "https://FalconVest.live"}
         >
           Go to Dashboard
         </Button>
       </Section>
-      <Text style={signature}>SyncTrade Team</Text>
+      <Text style={signature}>FalconVest Team</Text>
     </EmailTemplate>
   );
 }

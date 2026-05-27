@@ -46,7 +46,7 @@ Dynamic investment packages system that allows admins to create and manage depos
 
 ### Option 1: Using Supabase CLI
 ```bash
-cd /Users/omegauwedia/development/synctrade
+cd /Users/omegauwedia/development/FalconVest
 ./scripts/migrate-packages.sh
 ```
 

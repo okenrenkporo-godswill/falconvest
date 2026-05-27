@@ -12,14 +12,14 @@
         "socialHub": "Centro social",
         "socialHubDesc": "Conéctese con los mejores comerciantes institucionales",
         "copyTrading": "Copiar comercio",
-        "copyTradingDesc": "Automatiza tu éxito con SyncTrade",
+        "copyTradingDesc": "Automatiza tu éxito con FalconVest",
         "company": "Empresa",
         "aboutUs": "Sobre nosotros",
-        "whySynctrade": "Por qué SyncTrade",
-        "whySynctradeDesc": "Nuestra misión y raíces institucionales",
+        "whyFalconVest": "Por qué FalconVest",
+        "whyFalconVestDesc": "Nuestra misión y raíces institucionales",
         "reviews": "Reseñas",
         "reviewsDesc": "Lo que dicen nuestros comerciantes globales",
-        "blog": "SyncTrade Blog",
+        "blog": "FalconVest Blog",
         "blogDesc": "Últimas perspectivas y noticias del mercado",
         "careers": "Carreras",
         "careersDesc": "Únete a nuestra red global",
@@ -74,7 +74,7 @@
                 "part2": "REIMAGINADO"
             }
         },
-        "dashboardPlaceholder": "SyncTrade copy trading"
+        "dashboardPlaceholder": "FalconVest copy trading"
     },
     "AutoCopyTrading": {
         "masterBalance": "Balance Maestro",
@@ -95,7 +95,7 @@
             "autocopy": "Autocopia"
         },
         "description": "Aprenda, copie y opere con un solo clic. Aproveche la experiencia de otros y colabore con una creciente comunidad de traders.",
-        "cta": "Probar SyncTrade Autocopia"
+        "cta": "Probar FalconVest Autocopia"
     },
     "TradingToolsSlider": {
         "protection": {
@@ -119,7 +119,7 @@
             "2": {
                 "category": "Herramientas para cada estilo de trading",
                 "title": "Protege tus posiciones",
-                "description": "Los operadores pueden salvaguardar sus posiciones con órdenes de Stop Loss y Take Profit. Además, SyncTrade ofrece protección contra saldo negativo, asegurando que las pérdidas nunca excedan los fondos en su cuenta."
+                "description": "Los operadores pueden salvaguardar sus posiciones con órdenes de Stop Loss y Take Profit. Además, FalconVest ofrece protección contra saldo negativo, asegurando que las pérdidas nunca excedan los fondos en su cuenta."
             }
         }
     },
@@ -183,15 +183,15 @@
             "prefix": "¿TIENES",
             "suffix": "PREGUNTAS?"
         },
-        "description": "Todo lo que necesitas saber sobre el ecosistema SyncTrade.",
+        "description": "Todo lo que necesitas saber sobre el ecosistema FalconVest.",
         "contact": {
             "text": "¿Aún tienes preguntas?",
             "link": "Contacta a nuestro equipo de soporte 24/7."
         },
         "questions": {
             "0": {
-                "question": "¿Cómo empezar a operar con SyncTrade?",
-                "answer": "Comenzar su viaje es simple: \n1. Cree su cuenta segura de SyncTrade.\n2. Complete nuestra verificación de identidad simplificada (KYC).\n3. Financie su cuenta a través de su billetera digital preferida o transferencia bancaria.\n4. Inicie el panel de control y comience a ejecutar operaciones al instante."
+                "question": "¿Cómo empezar a operar con FalconVest?",
+                "answer": "Comenzar su viaje es simple: \n1. Cree su cuenta segura de FalconVest.\n2. Complete nuestra verificación de identidad simplificada (KYC).\n3. Financie su cuenta a través de su billetera digital preferida o transferencia bancaria.\n4. Inicie el panel de control y comience a ejecutar operaciones al instante."
             },
             "1": {
                 "question": "¿Cómo crear una cuenta y confirmar su dirección de correo electrónico?",
@@ -203,14 +203,14 @@
             },
             "3": {
                 "question": "¿Cómo deposito dinero y financio mi cuenta?",
-                "answer": "SyncTrade admite una amplia gama de métodos de financiación. Navegue a la sección 'Financiación' en su panel para elegir entre transferencias criptográficas instantáneas, tarjetas de crédito/débito o transferencias bancarias tradicionales. Todos los fondos se mantienen en cuentas segregadas de grado institucional."
+                "answer": "FalconVest admite una amplia gama de métodos de financiación. Navegue a la sección 'Financiación' en su panel para elegir entre transferencias criptográficas instantáneas, tarjetas de crédito/débito o transferencias bancarias tradicionales. Todos los fondos se mantienen en cuentas segregadas de grado institucional."
             },
             "4": {
-                "question": "¿Es SyncTrade un corredor regulado?",
-                "answer": "Sí, SyncTrade opera bajo estrictos marcos regulatorios para proporcionar un entorno comercial seguro y transparente. Mantenemos altos requisitos de capital y nos sometemos a auditorías independientes periódicas para garantizar la protección del cliente."
+                "question": "¿Es FalconVest un corredor regulado?",
+                "answer": "Sí, FalconVest opera bajo estrictos marcos regulatorios para proporcionar un entorno comercial seguro y transparente. Mantenemos altos requisitos de capital y nos sometemos a auditorías independientes periódicas para garantizar la protección del cliente."
             },
             "5": {
-                "question": "¿Cómo retirar dinero de SyncTrade?",
+                "question": "¿Cómo retirar dinero de FalconVest?",
                 "answer": "Los retiros se procesan rápidamente. Simplemente vaya a 'Mi billetera', seleccione 'Retirar' y elija su destino. La mayoría de los retiros de criptomonedas son instantáneos, mientras que las transferencias bancarias tradicionales suelen completarse en 1-2 días hábiles."
             }
         }
@@ -226,7 +226,7 @@
             "prefix": "Tus Activos Están",
             "suffix": "Garantizados Seguros."
         },
-        "description": "En SyncTrade, empleamos los protocolos de seguridad más avanzados de la industria para garantizar su tranquilidad.",
+        "description": "En FalconVest, empleamos los protocolos de seguridad más avanzados de la industria para garantizar su tranquilidad.",
         "features": {
             "dataEncryption": "Cifrado de Datos",
             "aes256": "AES-256",
@@ -273,7 +273,7 @@
             "trade": "Operar"
         },
         "liveFeeds": "Feeds en Vivo Activos",
-        "liquidity": "Liquidez por SyncTrade Institucional",
+        "liquidity": "Liquidez por FalconVest Institucional",
         "categories": {
             "Forex": "Forex",
             "Shares": "Acciones",
@@ -299,13 +299,13 @@
                 "desc": "Pagos Instantáneos 24/7"
             }
         },
-        "riskWarning": "Advertencia de Riesgo: Operar instrumentos financieros implica un riesgo significativo. El valor de las inversiones puede bajar tanto como subir y es posible que reciba menos de lo que invirtió originalmente. SyncTrade Limited está autorizada y regulada por la Autoridad de Servicios Financieros (FSA). Asegúrese de comprender completamente los riesgos involucrados leyendo nuestra divulgación completa de riesgos o consultando a un asesor financiero independiente.",
+        "riskWarning": "Advertencia de Riesgo: Operar instrumentos financieros implica un riesgo significativo. El valor de las inversiones puede bajar tanto como subir y es posible que reciba menos de lo que invirtió originalmente. FalconVest Limited está autorizada y regulada por la Autoridad de Servicios Financieros (FSA). Asegúrese de comprender completamente los riesgos involucrados leyendo nuestra divulgación completa de riesgos o consultando a un asesor financiero independiente.",
         "links": {
             "compliance": "Cumplimiento",
             "ethics": "Ética",
             "security": "Seguridad"
         },
-        "copyright": "© 2026 SyncTrade Global. Todos los derechos reservados.",
+        "copyright": "© 2026 FalconVest Global. Todos los derechos reservados.",
         "systemStatus": "Sistema en línea: LDN-01 Estable",
         "panelCommon": {
             "needMoreInfo": "¿Aún necesita más información?",
@@ -333,7 +333,7 @@
             "Commodities": "Materias Primas",
             "Futures": "Futuros",
             "ETFs": "ETFs",
-            "SyncTrade Web": "SyncTrade Web",
+            "FalconVest Web": "FalconVest Web",
             "Sync iOS": "Sync iOS",
             "Sync Android": "Sync Android",
             "MT5 Terminal": "Terminal MT5",
@@ -343,7 +343,7 @@
             "Deposit Methods": "Métodos de Depósito",
             "Execution Policy": "Política de Ejecución",
             "Spreads": "Spreads",
-            "Why SyncTrade": "Por qué SyncTrade",
+            "Why FalconVest": "Por qué FalconVest",
             "Sponsorship": "Patrocinio",
             "Contact Us": "Contáctenos",
             "Investors Relations": "Relaciones con Inversores",
@@ -424,7 +424,7 @@
                     },
                     "1": {
                         "title": "Términos de Servicio",
-                        "desc": "El acuerdo entre usted y SyncTrade."
+                        "desc": "El acuerdo entre usted y FalconVest."
                     },
                     "2": {
                         "title": "Divulgación de Riesgos",
@@ -433,7 +433,7 @@
                 }
             },
             "about": {
-                "title": "Sobre SyncTrade",
+                "title": "Sobre FalconVest",
                 "description": "Redefiniendo el estándar del trading.",
                 "items": {
                     "0": {
@@ -478,7 +478,7 @@
                     },
                     "1": {
                         "title": "Envíenos un Correo",
-                        "desc": "support@synctrade.live | info@synctrade.live"
+                        "desc": "support@FalconVest.live | info@FalconVest.live"
                     },
                     "2": {
                         "title": "Llamada Directa",

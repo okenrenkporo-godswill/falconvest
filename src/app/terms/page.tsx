@@ -11,13 +11,13 @@ export default function TermsPage() {
             
             <h2>1. Acceptance of Terms</h2>
             <p>
-              By accessing and using SyncTrade, you accept and agree to be bound by the terms
+              By accessing and using FalconVest, you accept and agree to be bound by the terms
               and provision of this agreement.
             </p>
 
             <h2>2. Use License</h2>
             <p>
-              Permission is granted to temporarily use SyncTrade for personal, non-commercial
+              Permission is granted to temporarily use FalconVest for personal, non-commercial
               transitory viewing only.
             </p>
 

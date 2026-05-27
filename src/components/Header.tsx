@@ -61,10 +61,10 @@ export default function Header() {
         <div className="flex items-center gap-4 md:gap-8">
             <Link href="/" className="flex items-center gap-1.5 md:gap-2 group">
                 <div className="relative w-6 h-6 md:w-8 md:h-8 transition-transform group-hover:scale-110 duration-300">
-                    <Image src="/images/logo1.png" alt="SyncTrade Logo" fill className="object-contain" />
+                    <Image src="/images/logo1.png" alt="FalconVest Logo" fill className="object-contain" />
                 </div>
                 <span className="text-lg md:text-2xl font-black text-black dark:text-white tracking-tighter uppercase italic">
-                    SyncTrade
+                    FalconVest
                 </span>
             </Link>
 
@@ -135,9 +135,9 @@ export default function Header() {
                                 <div>
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-900 dark:text-neutral-400 mb-6">{t('aboutUs')}</h3>
                                     <div className="flex flex-col gap-4">
-                                        <Link href="/why-synctrade" className="group/link flex flex-col gap-1">
-                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#01C1D6] transition-colors">{t('whySynctrade')}</span>
-                                            <span className="text-[10px] text-neutral-500 font-medium">{t('whySynctradeDesc')}</span>
+                                        <Link href="/why-FalconVest" className="group/link flex flex-col gap-1">
+                                            <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#01C1D6] transition-colors">{t('whyFalconVest')}</span>
+                                            <span className="text-[10px] text-neutral-500 font-medium">{t('whyFalconVestDesc')}</span>
                                         </Link>
                                         <Link href="/reviews" className="group/link flex flex-col gap-1">
                                             <span className="text-sm font-bold text-black dark:text-white group-hover/link:text-[#01C1D6] transition-colors">{t('reviews')}</span>
@@ -286,9 +286,9 @@ export default function Header() {
                     <div className="w-full px-6 flex items-center justify-between">
                         <Link href="/" className="flex items-center gap-2" onClick={() => setIsMenuOpen(false)}>
                             <div className="relative w-7 h-7">
-                                <Image src="/images/logo1.png" alt="SyncTrade Logo" fill className="object-contain" />
+                                <Image src="/images/logo1.png" alt="FalconVest Logo" fill className="object-contain" />
                             </div>
-                            <span className="text-xl font-black text-black dark:text-white uppercase italic tracking-tighter">SyncTrade</span>
+                            <span className="text-xl font-black text-black dark:text-white uppercase italic tracking-tighter">FalconVest</span>
                         </Link>
                         
                         <div className="flex items-center gap-4">
@@ -368,7 +368,7 @@ export default function Header() {
                             { 
                               label: t('company'), 
                               subItems: [
-                                  { label: t('whySynctrade'), href: "/why-synctrade" },
+                                  { label: t('whyFalconVest'), href: "/why-FalconVest" },
                                   { label: t('reviews'), href: "/reviews" },
                                   { label: t('blog'), href: "/blog" },
                                   { label: t('careers'), href: "/careers" },

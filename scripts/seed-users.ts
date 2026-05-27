@@ -26,7 +26,7 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey, {
 async function seedUsers() {
   const users = [
     {
-      email: "admin@synctrade.com",
+      email: "admin@FalconVest.com",
       password: "Admin123!",
       role: "admin",
       firstName: "System",
@@ -34,7 +34,7 @@ async function seedUsers() {
       username: "admin",
     },
     {
-      email: "user@synctrade.com",
+      email: "user@FalconVest.com",
       password: "User123!",
       role: "user",
       firstName: "Test",

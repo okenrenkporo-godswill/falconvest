@@ -142,7 +142,7 @@ function LoginContent() {
             <Link href="/" className="transition-transform hover:scale-105">
               <Image
                 src="/images/logo1.png"
-                alt="SyncTrade"
+                alt="FalconVest"
                 width={64}
                 height={64}
                 className="w-16 h-16 shadow-2xl shadow-[#01C1D6]/20"
@@ -222,7 +222,7 @@ function LoginContent() {
           <Link href="/" className="transition-transform hover:scale-105">
             <Image
               src="/images/logo1.png"
-              alt="SyncTrade"
+              alt="FalconVest"
               width={64}
               height={64}
               className="w-16 h-16 shadow-2xl shadow-[#01C1D6]/20"

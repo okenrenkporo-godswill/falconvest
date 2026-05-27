@@ -7,7 +7,7 @@ CREATE TYPE user_role AS ENUM ('user', 'admin');
 
 -- OTP codes table
 CREATE TABLE public.otp_codes (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   email TEXT NOT NULL,
   code TEXT NOT NULL,
   expires_at TIMESTAMPTZ NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE public.profiles (
 
 -- KYC submissions table
 CREATE TABLE public.kyc_submissions (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   document_type TEXT NOT NULL,
   file_path TEXT NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE public.kyc_submissions (
 
 -- Balances table (mock crypto balances)
 CREATE TABLE public.balances (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   asset TEXT NOT NULL,
   amount DECIMAL(20, 8) NOT NULL DEFAULT 0,
@@ -62,7 +62,7 @@ CREATE TABLE public.balances (
 
 -- Trades table (mock)
 CREATE TABLE public.trades (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   pair TEXT NOT NULL,
   side TEXT NOT NULL CHECK (side IN ('buy', 'sell')),
@@ -198,4 +198,4 @@ CREATE TRIGGER on_auth_user_created
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
 -- Seed default admin user (run after creating admin via Supabase Auth)
--- UPDATE public.profiles SET role = 'admin' WHERE email = 'admin@synctrade.com';
+-- UPDATE public.profiles SET role = 'admin' WHERE email = 'admin@FalconVest.com';

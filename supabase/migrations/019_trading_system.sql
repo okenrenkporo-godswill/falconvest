@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS public.trades CASCADE;
 
 -- Trades table (executed trades)
 CREATE TABLE public.trades (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL,
   pair TEXT NOT NULL,
   side TEXT NOT NULL CHECK (side IN ('buy', 'sell')),
@@ -22,7 +22,7 @@ CREATE TABLE public.trades (
 
 -- Open positions table
 CREATE TABLE public.positions (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL,
   pair TEXT NOT NULL,
   side TEXT NOT NULL CHECK (side IN ('long', 'short')),
@@ -42,7 +42,7 @@ CREATE TABLE public.positions (
 
 -- Pending orders table
 CREATE TABLE public.orders (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL,
   pair TEXT NOT NULL,
   side TEXT NOT NULL CHECK (side IN ('buy', 'sell')),

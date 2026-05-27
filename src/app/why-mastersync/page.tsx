@@ -39,7 +39,7 @@ const VALUES = [
   }
 ];
 
-export default function WhySyncTrade() {
+export default function WhyFalconVest() {
   return (
     <div className="min-h-screen bg-white dark:bg-black transition-colors duration-500">
       <Header />
@@ -68,7 +68,7 @@ export default function WhySyncTrade() {
               transition={{ delay: 0.1 }}
               className="text-xl md:text-2xl text-neutral-600 dark:text-neutral-400 font-light leading-relaxed"
             >
-              SyncTrade was born from a simple realization: that professional-grade tools shouldn't be reserved for elite institutions. We've built a platform that combines bank-level security with the accessibility of modern fintech.
+              FalconVest was born from a simple realization: that professional-grade tools shouldn't be reserved for elite institutions. We've built a platform that combines bank-level security with the accessibility of modern fintech.
             </motion.p>
           </div>
         </section>

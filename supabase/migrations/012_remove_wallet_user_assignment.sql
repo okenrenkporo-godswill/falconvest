@@ -1,4 +1,5 @@
 -- Remove user assignment columns from wallets table
+DROP POLICY IF EXISTS "Users can view assigned wallets" ON public.wallets;
 ALTER TABLE wallets DROP COLUMN IF EXISTS user_id;
 ALTER TABLE wallets DROP COLUMN IF EXISTS assigned_at;
 

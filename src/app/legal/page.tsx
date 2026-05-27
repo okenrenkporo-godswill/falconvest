@@ -127,7 +127,7 @@ export default function Legal() {
               <Lock size={200} className="absolute -left-20 -bottom-20 text-white/[0.02] -rotate-12" />
               <div className="relative z-10 max-w-2xl mx-auto space-y-8">
                  <h3 className="text-3xl font-black text-white uppercase tracking-tight">Security First. Always.</h3>
-                 <p className="text-neutral-500 italic">SyncTrade Limited is authorized and regulated by the Financial Services Authority (FSA). We maintain segregated client accounts and industry-standard security protocols for all assets.</p>
+                 <p className="text-neutral-500 italic">FalconVest Limited is authorized and regulated by the Financial Services Authority (FSA). We maintain segregated client accounts and industry-standard security protocols for all assets.</p>
                  <div className="flex flex-wrap justify-center gap-6">
                     <div className="px-6 py-3 rounded-xl border border-white/10 text-white text-xs font-bold uppercase tracking-widest flex items-center gap-2">
                        <CheckCircle size={14} className="text-blue-500" />

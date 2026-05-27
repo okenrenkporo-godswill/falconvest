@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS public.traders CASCADE;
 
 -- Traders table
 CREATE TABLE public.traders (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL,
   display_name TEXT NOT NULL,
   bio TEXT,
@@ -30,7 +30,7 @@ CREATE TABLE public.traders (
 
 -- Copy trades table
 CREATE TABLE public.copy_trades (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL,
   trader_id UUID NOT NULL REFERENCES public.traders(id) ON DELETE CASCADE,
   copy_amount DECIMAL(20, 2) NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE public.copy_trades (
 
 -- Copy trade positions table
 CREATE TABLE public.copy_trade_positions (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   copy_trade_id UUID NOT NULL REFERENCES public.copy_trades(id) ON DELETE CASCADE,
   trader_position_id UUID,
   user_id UUID NOT NULL,

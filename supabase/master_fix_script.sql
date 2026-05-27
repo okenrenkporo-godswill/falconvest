@@ -1,5 +1,5 @@
 -- =========================================================
--- SYNCTRADE ULTIMATE SCHEMA SYNC & FIX SCRIPT
+-- FalconVest ULTIMATE SCHEMA SYNC & FIX SCRIPT
 -- Resolves: Missing tables (copy_trades, traders), kyc_status constraints, and relational issues.
 -- This script is idempotent: it will create missing tables or fix existing ones.
 -- =========================================================
@@ -40,7 +40,7 @@ ALTER TABLE public.profiles ADD CONSTRAINT profiles_kyc_status_check
 
 -- Traders System
 CREATE TABLE IF NOT EXISTS public.traders (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL UNIQUE REFERENCES public.profiles(id) ON DELETE CASCADE,
   display_name TEXT NOT NULL,
   bio TEXT,
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS public.traders (
 
 -- Copy Trading System
 CREATE TABLE IF NOT EXISTS public.copy_trades (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   trader_id UUID NOT NULL REFERENCES public.traders(id) ON DELETE CASCADE,
   copy_amount DECIMAL(20, 2) NOT NULL,
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS public.copy_trades (
 );
 
 CREATE TABLE IF NOT EXISTS public.copy_trade_positions (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   copy_trade_id UUID NOT NULL REFERENCES public.copy_trades(id) ON DELETE CASCADE,
   user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   trader_id UUID NOT NULL REFERENCES public.traders(id) ON DELETE CASCADE,
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS public.copy_trade_positions (
 
 -- KYC System
 CREATE TABLE IF NOT EXISTS public.kyc_submissions (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   full_name TEXT,
   id_number TEXT,
@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS public.kyc_submissions (
 
 -- Staking System
 CREATE TABLE IF NOT EXISTS public.staking_pools (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   asset TEXT NOT NULL,
   name TEXT NOT NULL,
   apy DECIMAL(5, 2) NOT NULL,
@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS public.staking_pools (
 );
 
 CREATE TABLE IF NOT EXISTS public.user_stakes (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   pool_id UUID NOT NULL REFERENCES public.staking_pools(id) ON DELETE CASCADE,
   amount DECIMAL(20, 8) NOT NULL,

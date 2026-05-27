@@ -27,8 +27,8 @@ export function EmailTemplate({ preview, children }: EmailTemplateProps) {
           <Section>
             <div className="w-[45px] h-[45px] flex justify-center items-center overflow-hidden relative">
               <Img
-                src="https://synctrade.live/images/logo1.png"
-                alt="SyncTrade"
+                src="https://FalconVest.live/images/logo1.png"
+                alt="FalconVest"
                 style={logo}
               />
             </div>
@@ -36,11 +36,11 @@ export function EmailTemplate({ preview, children }: EmailTemplateProps) {
             {/* Footer */}
             <Text style={footer}>
               <Link
-                href="https://synctrade.live"
+                href="https://FalconVest.live"
                 target="_blank"
                 style={footerLink}
               >
-                SyncTrade
+                FalconVest
               </Link>
               , the all-in-one crypto trading platform
               <br />

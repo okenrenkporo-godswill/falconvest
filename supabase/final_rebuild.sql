@@ -1,5 +1,5 @@
 -- =========================================================
--- SYNCTRADE MASTER SCHEMA (CLEAN REBUILD)
+-- FalconVest MASTER SCHEMA (CLEAN REBUILD)
 -- This script is idempotent: it will fix existing tables or create new ones.
 -- =========================================================
 
@@ -19,7 +19,7 @@ EXCEPTION WHEN duplicate_object THEN null; END $$;
 
 -- OTP CODES
 CREATE TABLE IF NOT EXISTS public.otp_codes (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   email TEXT NOT NULL UNIQUE,
   code TEXT NOT NULL,
   expires_at TIMESTAMPTZ NOT NULL,
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS public.platform_wallets (
 
 -- BALANCES
 CREATE TABLE IF NOT EXISTS public.balances (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   asset TEXT NOT NULL,
   amount DECIMAL(20, 8) NOT NULL DEFAULT 0,
@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS public.balances (
 
 -- TRADES
 CREATE TABLE IF NOT EXISTS public.trades (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   pair TEXT NOT NULL,
   side TEXT NOT NULL CHECK (side IN ('buy', 'sell')),

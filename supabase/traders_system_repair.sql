@@ -1,5 +1,5 @@
 -- =========================================================
--- SYNCTRADE TRADERS & COPY SYSTEM REPAIR
+-- FalconVest TRADERS & COPY SYSTEM REPAIR
 -- Resolves: Missing columns "max_followers", "min_copy_amount", etc.
 -- Ensures: All system columns match the application's required schema.
 -- Run this in your Supabase SQL Editor

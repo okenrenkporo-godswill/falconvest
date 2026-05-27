@@ -114,7 +114,7 @@ export default function Footer() {
     },
     {
       title: t('linkGroups.platforms'),
-      links: ["SyncTrade Web", "Sync iOS", "Sync Android", "MT5 Terminal", "Telegram Mini App"]
+      links: ["FalconVest Web", "Sync iOS", "Sync Android", "MT5 Terminal", "Telegram Mini App"]
     },
     {
       title: t('linkGroups.pricing'),
@@ -123,7 +123,7 @@ export default function Footer() {
     {
       title: t('linkGroups.company'),
       links: [
-          { name: "Why SyncTrade", action: "about" },
+          { name: "Why FalconVest", action: "about" },
           "Sponsorship", 
           { name: "Contact Us", action: "contact" }, 
           "Investors Relations", 
@@ -182,7 +182,7 @@ export default function Footer() {
             
             // Map known labels to specific routes, default others to /register
             let href = "/register";
-            if (labelKey === "Why SyncTrade") href = "/why-synctrade";
+            if (labelKey === "Why FalconVest") href = "/why-FalconVest";
             if (labelKey === "Reviews") href = "/reviews";
             if (labelKey === "Careers") href = "/careers";
             if (labelKey === "Investors Relations") href = "/investor-relations";
@@ -236,10 +236,10 @@ export default function Footer() {
             <div className="space-y-6 max-w-sm">
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 relative">
-                        <Image src="/images/logo1.png" alt="SyncTrade" fill className="object-contain" />
+                        <Image src="/images/logo1.png" alt="FalconVest" fill className="object-contain" />
                     </div>
                     <span className="text-2xl font-black text-black dark:text-white tracking-tighter uppercase italic">
-                        SyncTrade
+                        FalconVest
                     </span>
                 </div>
                 <p className="text-neutral-500 text-sm leading-relaxed">

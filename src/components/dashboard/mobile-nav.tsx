@@ -39,7 +39,7 @@ export function MobileNav({
             <div className="flex h-7 w-7 items-center justify-center">
               <Image src="/images/logo1.png" alt="Logo" width={24} height={24} />
             </div>
-            <span className="font-bold">SyncTrade</span>
+            <span className="font-bold">FalconVest</span>
           </div>
           <button
             onClick={onClose}

@@ -1,5 +1,5 @@
 -- =========================================================
--- SYNCTRADE ATOMIC COPY-TRADE START RPC
+-- FalconVest ATOMIC COPY-TRADE START RPC
 -- Resolves: "Double-spending" of copy trading funds.
 -- Ensures: Funds are debited from the USDT balance before the trade starts.
 -- =========================================================
@@ -60,7 +60,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 
 -- =========================================================
--- SYNCTRADE ATOMIC COPY-TRADE STOP RPC
+-- FalconVest ATOMIC COPY-TRADE STOP RPC
 -- Resolves: Refund of funds after trade stop.
 -- Ensures: Atomic credit of (amount + profit) back to USDT balance.
 -- =========================================================
@@ -110,7 +110,7 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- =========================================================
--- SYNCTRADE ATOMIC INCREASE COPY AMOUNT RPC
+-- FalconVest ATOMIC INCREASE COPY AMOUNT RPC
 -- Ensures: Additional funds are debited from the USDT balance.
 -- =========================================================
 

@@ -36,7 +36,7 @@ export function Sidebar({ collapsed, onToggle, navItems }: SidebarProps) {
             <div className="flex h-7 w-7 items-center justify-center">
               <Image src="/images/logo1.png" alt="Logo" width={24} height={24} />
             </div>
-            <span className="font-semibold">SyncTrade</span>
+            <span className="font-semibold">FalconVest</span>
           </Link>
         )}
         {collapsed && (

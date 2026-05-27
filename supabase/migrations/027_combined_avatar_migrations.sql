@@ -18,7 +18,7 @@ VALUES ('avatars', 'avatars', true)
 ON CONFLICT (id) DO NOTHING;
 
 -- Allow authenticated users to upload their own avatars
-CREATE POLICY "Users can upload their own avatars"
+DROP POLICY IF EXISTS "Users can upload their own avatars" ON storage.objects; CREATE POLICY "Users can upload their own avatars"
 ON storage.objects FOR INSERT
 TO authenticated
 WITH CHECK (
@@ -28,7 +28,7 @@ WITH CHECK (
 );
 
 -- Allow authenticated users to update their own avatars
-CREATE POLICY "Users can update their own avatars"
+DROP POLICY IF EXISTS "Users can update their own avatars" ON storage.objects; CREATE POLICY "Users can update their own avatars"
 ON storage.objects FOR UPDATE
 TO authenticated
 USING (
@@ -38,7 +38,7 @@ USING (
 );
 
 -- Allow authenticated users to delete their own avatars
-CREATE POLICY "Users can delete their own avatars"
+DROP POLICY IF EXISTS "Users can delete their own avatars" ON storage.objects; CREATE POLICY "Users can delete their own avatars"
 ON storage.objects FOR DELETE
 TO authenticated
 USING (
@@ -48,12 +48,14 @@ USING (
 );
 
 -- Allow public read access to all avatars
+DROP POLICY IF EXISTS "Public can view avatars" ON storage.objects;
 CREATE POLICY "Public can view avatars"
 ON storage.objects FOR SELECT
 TO public
 USING (bucket_id = 'avatars');
 
 -- Allow admins to upload trader avatars
+DROP POLICY IF EXISTS "Admins can upload trader avatars" ON storage.objects;
 CREATE POLICY "Admins can upload trader avatars"
 ON storage.objects FOR INSERT
 TO authenticated
@@ -67,6 +69,7 @@ WITH CHECK (
 );
 
 -- Allow admins to update trader avatars
+DROP POLICY IF EXISTS "Admins can update trader avatars" ON storage.objects;
 CREATE POLICY "Admins can update trader avatars"
 ON storage.objects FOR UPDATE
 TO authenticated

@@ -1,5 +1,5 @@
 -- =========================================================
--- SYNCTRADE USER CREATION FIX (V2)
+-- FalconVest USER CREATION FIX (V2)
 -- Resolves: "Database error creating new user"
 -- Ensures: Profiles trigger is robust and all required columns have defaults.
 -- Run this in your Supabase SQL Editor

@@ -27,7 +27,7 @@ export default function PartnershipsPage() {
                    </div>
                    <h3 className="text-2xl font-black text-black dark:text-white uppercase tracking-tighter">Affiliate Program</h3>
                    <p className="text-neutral-500 dark:text-neutral-400 font-medium leading-relaxed">
-                      Earn industry-leading commissions by introducing clients to SyncTrade. Benefit from our high conversion rates and institutional brand reputation.
+                      Earn industry-leading commissions by introducing clients to FalconVest. Benefit from our high conversion rates and institutional brand reputation.
                    </p>
                    <ul className="space-y-3">
                       {["Up to 50% Revenue Share", "Real-time Tracking Dashboard", "Dedicated Account Manager"].map((item, i) => (

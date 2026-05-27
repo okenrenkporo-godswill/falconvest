@@ -63,7 +63,7 @@ export default function Careers() {
               transition={{ delay: 0.1 }}
               className="text-xl md:text-2xl text-neutral-600 dark:text-neutral-400 font-light leading-relaxed max-w-2xl"
             >
-              SyncTrade is looking for bold thinkers, fast learners, and obsessed builders who want to redefine global finance together.
+              FalconVest is looking for bold thinkers, fast learners, and obsessed builders who want to redefine global finance together.
             </motion.p>
           </div>
         </section>
@@ -101,7 +101,7 @@ export default function Careers() {
            <div className="flex flex-col md:flex-row items-end justify-between gap-8 mb-20">
               <div className="space-y-4">
                  <h2 className="text-4xl font-black text-black dark:text-white uppercase tracking-tight">Open Opportunities</h2>
-                 <p className="text-neutral-500">Find your place in the SyncTrade story.</p>
+                 <p className="text-neutral-500">Find your place in the FalconVest story.</p>
               </div>
               <div className="h-10 px-4 rounded-xl border border-black/5 dark:border-white/10 flex items-center gap-2 text-xs font-bold text-neutral-400">
                  <MapPin size={14} />

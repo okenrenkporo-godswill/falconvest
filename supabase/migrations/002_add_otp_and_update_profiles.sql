@@ -1,6 +1,6 @@
 -- Add OTP codes table
 CREATE TABLE IF NOT EXISTS public.otp_codes (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   email TEXT NOT NULL UNIQUE,
   code TEXT NOT NULL,
   expires_at TIMESTAMPTZ NOT NULL,
@@ -15,6 +15,7 @@ CREATE INDEX IF NOT EXISTS idx_otp_expires ON public.otp_codes(expires_at);
 ALTER TABLE public.otp_codes ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policy (no direct access, server-only)
+DROP POLICY IF EXISTS "No direct access to OTP codes" ON public.otp_codes;
 CREATE POLICY "No direct access to OTP codes"
   ON public.otp_codes FOR ALL
   USING (false);

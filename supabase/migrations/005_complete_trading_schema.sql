@@ -2,7 +2,7 @@
 
 -- 1. Wallets table
 CREATE TABLE IF NOT EXISTS public.wallets (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   symbol TEXT NOT NULL,
   fullname TEXT NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS public.wallets (
 
 -- 2. Traders table
 CREATE TABLE IF NOT EXISTS public.traders (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
   avatar TEXT,
   roi DECIMAL(10, 2) NOT NULL DEFAULT 0,
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS public.traders (
 
 -- 3. Copy trades table
 CREATE TABLE IF NOT EXISTS public.copy_trades (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   trader_id UUID NOT NULL REFERENCES public.traders(id) ON DELETE CASCADE,
   amount_per_trade DECIMAL(20, 2) NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS public.copy_trades (
 
 -- 4. Withdrawals table
 CREATE TABLE IF NOT EXISTS public.withdrawals (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   coin TEXT NOT NULL,
   amount DECIMAL(20, 8) NOT NULL,
@@ -83,7 +83,7 @@ ALTER TABLE public.trades ADD COLUMN IF NOT EXISTS account_type TEXT DEFAULT 'tr
 
 -- 6. Staking positions table
 CREATE TABLE IF NOT EXISTS public.staking_positions (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   coin TEXT NOT NULL,
   amount DECIMAL(20, 8) NOT NULL,
@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS public.staking_positions (
 
 -- 7. Referrals table
 CREATE TABLE IF NOT EXISTS public.referrals (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   referrer_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   referred_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   referral_code TEXT NOT NULL,
@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS public.referrals (
 
 -- 8. Notifications table
 CREATE TABLE IF NOT EXISTS public.notifications (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   title TEXT NOT NULL,
   message TEXT NOT NULL,

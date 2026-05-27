@@ -42,7 +42,7 @@ const PhoneDashboardContent = ({
                 <div className="w-6 h-6 relative">
                     <Image src="/images/logo1.png" alt="Logo" fill className="object-contain" />
                 </div>
-                <span className="text-white font-bold text-sm">SyncTrade</span>
+                <span className="text-white font-bold text-sm">FalconVest</span>
             </div>
             
             {isMaster ? (
