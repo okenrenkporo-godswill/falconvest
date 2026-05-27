@@ -95,26 +95,8 @@ export async function adminCreateCopyPosition(data: {
     })
     .eq("id", data.copyTradeId);
 
-  // Update user balance with P&L
-  if (data.profitLoss !== 0) {
-    if (data.profitLoss > 0) {
-      console.log("💰 Crediting user balance:", data.profitLoss);
-      await adminClient.rpc("credit_balance", {
-        p_user_id: copyTrade.user_id,
-        p_asset: "USDT",
-        p_amount: data.profitLoss,
-        p_account_type: "trading",
-      });
-    } else {
-      console.log("💸 Debiting user balance:", Math.abs(data.profitLoss));
-      await adminClient.rpc("debit_balance", {
-        p_user_id: copyTrade.user_id,
-        p_asset: "USDT",
-        p_amount: Math.abs(data.profitLoss),
-        p_account_type: "trading",
-      });
-    }
-  }
+  // Balance is not updated here. Copy trade uses isolated margin.
+  // Profit compounds inside the copy trade and is released when the user stops copying.
 
   console.log("✅ Trade simulation complete");
 

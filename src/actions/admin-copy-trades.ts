@@ -6,17 +6,23 @@ import { revalidatePath } from "next/cache";
 export async function adminStopCopyTrade(copyTradeId: string) {
     const adminClient = createAdminClient();
 
-    // Stop the copy trade
-    const { error } = await adminClient
+    // Fetch user_id for the copy trade
+    const { data: copyTrade, error: fetchError } = await adminClient
         .from("copy_trades")
-        .update({
-            status: "stopped",
-            stopped_at: new Date().toISOString(),
-            stopped_by: "admin",
-        })
-        .eq("id", copyTradeId);
+        .select("user_id")
+        .eq("id", copyTradeId)
+        .single();
+
+    if (fetchError || !copyTrade) return { error: "Copy trade not found" };
+
+    // Use the atomic RPC to properly refund the user
+    const { data: result, error } = await adminClient.rpc("stop_copy_trade_atomic", {
+        p_user_id: copyTrade.user_id,
+        p_copy_trade_id: copyTradeId
+    });
 
     if (error) return { error: error.message };
+    if (!result?.success) return { error: result?.error || "Failed to stop copy trade" };
 
     revalidatePath("/cpanel/users");
     return { success: true };
