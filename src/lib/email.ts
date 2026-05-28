@@ -11,7 +11,7 @@ import DepositRejectedEmail from "@/emails/deposit-rejected-email";
 import WithdrawalConfirmedEmail from "@/emails/withdrawal-confirmed-email";
 import WithdrawalRejectedEmail from "@/emails/withdrawal-rejected-email";
 
-const resend = new Resend(env.RESEND_API_KEY);
+const resend = new Resend(env.RESEND_API_KEY || "re_placeholder_for_build_purposes");
 
 const ADMIN_EMAIL = "admin@Falcon.live";
 

@@ -86,7 +86,7 @@ export default function RegisterPage() {
     onOpen();
   }
 
-  async function acceptTermsAndContinue() {
+  async function acceptTermsAndContinue(onClose: () => void) {
     setLoading(true);
     setError("");
 
@@ -102,6 +102,7 @@ export default function RegisterPage() {
       } else {
         setEmail(pendingEmail);
         setStep(2);
+        onClose();
         addToast({
           title: "Success",
           description: "OTP sent to your email",
@@ -278,8 +279,7 @@ export default function RegisterPage() {
                   <Button
                     className="w-full bg-[#33525c] text-white font-bold h-12 rounded-xl"
                     onPress={() => {
-                      onClose();
-                      acceptTermsAndContinue();
+                      acceptTermsAndContinue(onClose);
                     }}
                     isLoading={loading}
                   >

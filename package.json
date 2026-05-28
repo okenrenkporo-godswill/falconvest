@@ -10,6 +10,7 @@
     "seed:users": "npx tsx scripts/seed-users.ts"
   },
   "dependencies": {
+    "@emotion/is-prop-valid": "^1.4.0",
     "@heroui/react": "^2.8.8",
     "@internationalized/date": "^3.11.0",
     "@marsidev/react-turnstile": "^1.4.1",
