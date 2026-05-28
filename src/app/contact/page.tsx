@@ -52,7 +52,7 @@ export default function ContactUs() {
               animate={{ opacity: 1, y: 0 }}
               className="text-6xl md:text-8xl font-black text-black dark:text-white tracking-tighter uppercase mb-8"
             >
-              Contact <span className="text-[#01C1D6]">us</span>
+              Contact <span className="text-[#33525c]">us</span>
             </motion.h1>
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
@@ -60,7 +60,7 @@ export default function ContactUs() {
               transition={{ delay: 0.1 }}
               className="text-xl md:text-2xl text-neutral-600 dark:text-neutral-400 leading-relaxed font-light"
             >
-              If you have a question, but did not find an answer in our <span className="text-[#01C1D6] font-medium cursor-pointer hover:underline">Help Center</span>, please feel free to contact us directly. We are available Monday - Friday, 07:30 am - 02:00 am EEST.
+              If you have a question, but did not find an answer in our <span className="text-[#33525c] font-medium cursor-pointer hover:underline">Help Center</span>, please feel free to contact us directly. We are available Monday - Friday, 07:30 am - 02:00 am EEST.
             </motion.p>
           </div>
         </section>
@@ -71,10 +71,10 @@ export default function ContactUs() {
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="relative overflow-hidden rounded-[2rem] bg-gradient-to-r from-[#01C1D6] to-blue-600 p-8 md:p-12 text-white flex flex-col md:flex-row items-center justify-between gap-8"
+            className="relative overflow-hidden rounded-[2rem] bg-gradient-to-r from-[#33525c] to-blue-600 p-8 md:p-12 text-white flex flex-col md:flex-row items-center justify-between gap-8"
           >
             <div className="flex flex-col md:flex-row items-center gap-8 text-center md:text-left">
-              <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-[#01C1D6] shadow-xl">
+              <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-[#33525c] shadow-xl">
                 <Mail size={32} />
               </div>
               <div className="space-y-1">
@@ -83,8 +83,8 @@ export default function ContactUs() {
               </div>
             </div>
             <div className="flex flex-col gap-2 text-center md:text-right">
-              <p className="text-sm text-blue-100 whitespace-nowrap">For client-related questions: <span className="font-bold text-white hover:underline cursor-pointer">support@FalconVest.live</span></p>
-              <p className="text-sm text-blue-100 whitespace-nowrap">For legal or licensing matters: <span className="font-bold text-white hover:underline cursor-pointer">info@FalconVest.live</span></p>
+              <p className="text-sm text-blue-100 whitespace-nowrap">For client-related questions: <span className="font-bold text-white hover:underline cursor-pointer">support@Falcon.live</span></p>
+              <p className="text-sm text-blue-100 whitespace-nowrap">For legal or licensing matters: <span className="font-bold text-white hover:underline cursor-pointer">info@Falcon.live</span></p>
             </div>
           </motion.div>
         </section>
@@ -92,7 +92,7 @@ export default function ContactUs() {
         {/* PHONE NUMBERS SECTION */}
         <section className="container mx-auto px-6 mb-24">
           <div className="flex items-center gap-3 mb-12">
-             <div className="w-10 h-10 rounded-xl bg-[#01C1D6]/10 flex items-center justify-center text-[#01C1D6]">
+             <div className="w-10 h-10 rounded-xl bg-[#33525c]/10 flex items-center justify-center text-[#33525c]">
                 <Globe size={20} />
              </div>
              <h2 className="text-2xl font-black text-black dark:text-white uppercase tracking-tight">International Phone Numbers</h2>
@@ -107,7 +107,7 @@ export default function ContactUs() {
                 transition={{ delay: 0.3 + idx * 0.1 }}
                 className={`p-8 rounded-3xl border transition-all duration-300 group ${
                   method.isUS 
-                  ? "bg-neutral-50 dark:bg-neutral-900 border-[#01C1D6]/30 shadow-lg" 
+                  ? "bg-neutral-50 dark:bg-neutral-900 border-[#33525c]/30 shadow-lg" 
                   : "bg-white dark:bg-neutral-900/40 border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10"
                 }`}
               >
@@ -130,7 +130,7 @@ export default function ContactUs() {
           </div>
 
           <div className="mt-12 flex justify-center">
-             <button className="bg-[#01C1D6] text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-[#00ADC0] transition-all shadow-xl shadow-[#01C1D6]/20 active:scale-95">
+             <button className="bg-[#33525c] text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-[#2a4550] transition-all shadow-xl shadow-[#33525c]/20 active:scale-95">
                 <MessageSquare size={20} />
                 Live Chat Support
              </button>
@@ -150,7 +150,7 @@ export default function ContactUs() {
                <div className="absolute inset-x-0 bottom-0 h-1 bg-blue-500 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left z-20" />
                <div className="p-10 rounded-[2.5rem] bg-neutral-900 dark:bg-neutral-900/80 text-white flex items-center justify-between border border-white/5 shadow-2xl overflow-hidden relative">
                   <div className="relative z-10 flex items-center gap-6">
-                    <div className="w-20 h-20 rounded-3xl bg-[#01C1D6] flex items-center justify-center shadow-lg shadow-[#01C1D6]/30">
+                    <div className="w-20 h-20 rounded-3xl bg-[#33525c] flex items-center justify-center shadow-lg shadow-[#33525c]/30">
                        <HelpCircle size={40} className="text-white" />
                     </div>
                     <div className="space-y-1">
@@ -171,10 +171,10 @@ export default function ContactUs() {
                transition={{ delay: 0.7 }}
                className="relative overflow-hidden group cursor-pointer"
             >
-               <div className="absolute inset-x-0 bottom-0 h-1 bg-[#01C1D6] transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left z-20" />
+               <div className="absolute inset-x-0 bottom-0 h-1 bg-[#33525c] transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left z-20" />
                <div className="p-10 rounded-[2.5rem] bg-neutral-900 dark:bg-neutral-900/80 text-white flex items-center justify-between border border-white/5 shadow-2xl overflow-hidden relative">
                   <div className="relative z-10 flex items-center gap-6">
-                    <div className="w-20 h-20 rounded-3xl bg-[#01C1D6] flex items-center justify-center shadow-lg shadow-[#01C1D6]/30">
+                    <div className="w-20 h-20 rounded-3xl bg-[#33525c] flex items-center justify-center shadow-lg shadow-[#33525c]/30">
                        <MessageSquare size={40} className="text-white" />
                     </div>
                     <div className="space-y-2">

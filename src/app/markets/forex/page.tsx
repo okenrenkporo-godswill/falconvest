@@ -56,14 +56,14 @@ export default function ForexPage() {
                     <TableRow key={item.id} className="border-b border-black/5 dark:border-white/5 last:border-0 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
                       <TableCell className="py-6">
                         <div className="flex items-center gap-3">
-                           <div className="p-2 rounded-lg bg-[#01C1D6]/10 text-[#01C1D6]">
+                           <div className="p-2 rounded-lg bg-[#33525c]/10 text-[#33525c]">
                               <ArrowRightLeft size={16} />
                            </div>
                            <span className="font-black text-black dark:text-white uppercase tracking-tighter text-lg">{item.name}</span>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <span className={`font-mono font-bold transition-colors duration-500 ${lastUpdates[item.id] === true ? 'text-green-500' : lastUpdates[item.id] === false ? 'text-red-500' : 'text-[#01C1D6]'}`}>
+                        <span className={`font-mono font-bold transition-colors duration-500 ${lastUpdates[item.id] === true ? 'text-green-500' : lastUpdates[item.id] === false ? 'text-red-500' : 'text-[#33525c]'}`}>
                           {item.buy.toFixed(5)}
                         </span>
                       </TableCell>

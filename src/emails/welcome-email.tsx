@@ -14,13 +14,13 @@ interface WelcomeEmailProps {
 
 export default function WelcomeEmail({ name, email }: WelcomeEmailProps) {
   return (
-    <EmailTemplate preview="Welcome to FalconVest - Complete Your KYC Verification">
-      <Preview>Welcome to FalconVest - Complete Your KYC Verification</Preview>
+    <EmailTemplate preview="Welcome to Falcon - Complete Your KYC Verification">
+      <Preview>Welcome to Falcon - Complete Your KYC Verification</Preview>
 
       <Text style={paragraph}>Hi {name},</Text>
 
       <Text style={paragraph}>
-        Thank you for creating your FalconVest account. We're excited to have
+        Thank you for creating your Falcon account. We're excited to have
         you join our crypto trading platform!
       </Text>
 
@@ -61,7 +61,7 @@ export default function WelcomeEmail({ name, email }: WelcomeEmailProps) {
       <Text style={paragraph}>
         Best regards,
         <br />
-        The FalconVest Team
+        The Falcon Team
       </Text>
 
       <Text style={disclaimer}>

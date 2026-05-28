@@ -12,8 +12,8 @@ export default function AuthLayout({
     <div className="min-h-screen flex flex-col bg-white dark:bg-black transition-colors duration-500 overflow-hidden relative">
       {/* Background Ambience (Matching Hero) */}
       <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none z-0" />
-      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#01C1D6]/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#01C1D6]/10 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#33525c]/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#33525c]/10 rounded-full blur-[100px] pointer-events-none" />
 
       {/* Header removed to move logo into forms */}
 
@@ -30,15 +30,15 @@ export default function AuthLayout({
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2">
               <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest whitespace-nowrap">
-                © 2026 FalconVest. Institutional Trading Platform.
+                © 2026 Falcon. Institutional Trading Platform.
               </span>
             </div>
             <div className="flex items-center gap-8">
               {['Terms', 'Privacy', 'Support'].map((item) => (
                 <Link
                   key={item}
-                  href={item === 'Support' ? "mailto:support@FalconVest.live" : `/${item.toLowerCase()}`}
-                  className="text-[10px] font-black text-neutral-400 hover:text-[#01C1D6] transition-colors uppercase tracking-widest"
+                  href={item === 'Support' ? "mailto:support@Falcon.live" : `/${item.toLowerCase()}`}
+                  className="text-[10px] font-black text-neutral-400 hover:text-[#33525c] transition-colors uppercase tracking-widest"
                 >
                   {item}
                 </Link>

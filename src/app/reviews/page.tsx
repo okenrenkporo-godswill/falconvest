@@ -10,7 +10,7 @@ const REVIEWS = [
   {
     name: "Alex Thompson",
     role: "Institutional Trader",
-    content: "The latency on FalconVest is genuinely impressive. I've switched my entire high-frequency operation here.",
+    content: "The latency on Falcon is genuinely impressive. I've switched my entire high-frequency operation here.",
     rating: 5
   },
   {
@@ -40,7 +40,7 @@ const REVIEWS = [
   {
     name: "James Wilson",
     role: "Crypto Enthusiast",
-    content: "Security was my main concern. FalconVest's transparent cold storage and 2FA give me peace of mind.",
+    content: "Security was my main concern. Falcon's transparent cold storage and 2FA give me peace of mind.",
     rating: 5
   }
 ];
@@ -66,10 +66,10 @@ export default function Reviews() {
               animate={{ opacity: 1, y: 0 }}
               className="text-6xl md:text-8xl font-black text-black dark:text-white tracking-tighter uppercase mb-6"
             >
-              Real <span className="text-[#01C1D6]">Feedback.</span>
+              Real <span className="text-[#33525c]">Feedback.</span>
             </motion.h1>
             <p className="text-xl md:text-2xl text-neutral-600 dark:text-neutral-400 font-light max-w-2xl">
-              Don't just take our word for it. Join 2 million+ traders worldwide who have found their home at FalconVest.
+              Don't just take our word for it. Join 2 million+ traders worldwide who have found their home at Falcon.
             </p>
           </div>
         </section>
@@ -121,7 +121,7 @@ export default function Reviews() {
                   <div className="flex justify-between items-start mb-8">
                     <div className="flex gap-0.5">
                       {[...Array(review.rating)].map((_, r) => (
-                        <Star key={r} size={14} fill="#01C1D6" className="text-[#01C1D6]" />
+                        <Star key={r} size={14} fill="#33525c" className="text-[#33525c]" />
                       ))}
                     </div>
                     <Quote size={28} className="text-neutral-100 dark:text-neutral-800" />
@@ -131,7 +131,7 @@ export default function Reviews() {
                   </p>
                 </div>
                 <div className="flex items-center gap-4 pt-8 border-t border-black/5 dark:border-white/5">
-                   <div className="w-12 h-12 rounded-full bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center font-black text-[#01C1D6]">
+                   <div className="w-12 h-12 rounded-full bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center font-black text-[#33525c]">
                       {review.name[0]}
                    </div>
                    <div>

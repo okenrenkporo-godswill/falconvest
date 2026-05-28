@@ -152,7 +152,7 @@ export default async function DashboardPage() {
             <Link href="/dashboard/deposit" passHref>
               <Button
                 size="sm"
-                className="bg-[#01C1D6] text-white hover:bg-[#00ADC0] font-medium"
+                className="bg-[#33525c] text-white hover:bg-[#2a4550] font-medium"
                 startContent={<ArrowDownCircle className="w-4 h-4" />}
               >
                 Deposit
@@ -198,7 +198,7 @@ export default async function DashboardPage() {
           <div className="flex flex-col items-center gap-1.5">
             <Link
               href="/dashboard/deposit"
-              className="w-12 h-12 rounded-full bg-[#01C1D6] hover:bg-[#00ADC0] transition-colors flex items-center justify-center"
+              className="w-12 h-12 rounded-full bg-[#33525c] hover:bg-[#2a4550] transition-colors flex items-center justify-center"
             >
               <ArrowDownCircle className="w-5 h-5 text-white" />
             </Link>

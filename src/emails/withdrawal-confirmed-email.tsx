@@ -53,7 +53,7 @@ export default function WithdrawalConfirmedEmail({
         </Button>
       </Section>
 
-      <Text style={signature}>FalconVest Team</Text>
+      <Text style={signature}>Falcon Team</Text>
     </EmailTemplate>
   );
 }
@@ -66,7 +66,7 @@ const text = {
 };
 
 const statusBox = {
-  backgroundColor: "#f0fdf4",
+  backgroundColor: "#eef4f5",
   border: "1px solid #22c55e",
   borderRadius: "8px",
   margin: "24px 40px",

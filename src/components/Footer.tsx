@@ -59,7 +59,7 @@ const QuickViewPanel = ({ type, onClose }: { type: PanelType; onClose: () => voi
         >
             <div className="flex items-center justify-between mb-12">
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-[#01C1D6]/10 flex items-center justify-center text-[#01C1D6]">
+                    <div className="w-10 h-10 rounded-xl bg-[#33525c]/10 flex items-center justify-center text-[#33525c]">
                         <MessageSquare size={20} />
                     </div>
                     <div>
@@ -82,10 +82,10 @@ const QuickViewPanel = ({ type, onClose }: { type: PanelType; onClose: () => voi
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 * i }}
-                        className="group p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-[#01C1D6]/30 transition-all cursor-pointer"
+                        className="group p-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-[#33525c]/30 transition-all cursor-pointer"
                     >
                         <div className="flex items-center justify-between mb-2">
-                            <h3 className="font-bold text-black dark:text-white group-hover:text-[#01C1D6] transition-colors">{item.title}</h3>
+                            <h3 className="font-bold text-black dark:text-white group-hover:text-[#33525c] transition-colors">{item.title}</h3>
                             <ChevronRight size={16} className="text-neutral-400 dark:text-neutral-600 transition-transform group-hover:translate-x-1" />
                         </div>
                         <p className="text-sm text-neutral-600 dark:text-neutral-500 leading-relaxed">{item.desc}</p>
@@ -93,9 +93,9 @@ const QuickViewPanel = ({ type, onClose }: { type: PanelType; onClose: () => voi
                 ))}
             </div>
 
-            <div className="mt-12 p-6 rounded-2xl bg-gradient-to-br from-[#01C1D6]/10 to-transparent border border-[#01C1D6]/10 text-center">
+            <div className="mt-12 p-6 rounded-2xl bg-gradient-to-br from-[#33525c]/10 to-transparent border border-[#33525c]/10 text-center">
                 <p className="text-sm text-neutral-400 mb-4">{t('panelCommon.needMoreInfo')}</p>
-                <Button as={Link} href="/help-center" className="bg-[#01C1D6] text-white font-bold w-full rounded-xl">
+                <Button as={Link} href="/help-center" className="bg-[#33525c] text-white font-bold w-full rounded-xl">
                     {t('panelCommon.fullHelpCenter')}
                 </Button>
             </div>
@@ -114,7 +114,7 @@ export default function Footer() {
     },
     {
       title: t('linkGroups.platforms'),
-      links: ["FalconVest Web", "Sync iOS", "Sync Android", "MT5 Terminal", "Telegram Mini App"]
+      links: ["Falcon Web", "Sync iOS", "Sync Android", "MT5 Terminal", "Telegram Mini App"]
     },
     {
       title: t('linkGroups.pricing'),
@@ -123,7 +123,7 @@ export default function Footer() {
     {
       title: t('linkGroups.company'),
       links: [
-          { name: "Why FalconVest", action: "about" },
+          { name: "Why Falcon", action: "about" },
           "Sponsorship", 
           { name: "Contact Us", action: "contact" }, 
           "Investors Relations", 
@@ -182,7 +182,7 @@ export default function Footer() {
             
             // Map known labels to specific routes, default others to /register
             let href = "/register";
-            if (labelKey === "Why FalconVest") href = "/why-FalconVest";
+            if (labelKey === "Why Falcon") href = "/why-Falcon";
             if (labelKey === "Reviews") href = "/reviews";
             if (labelKey === "Careers") href = "/careers";
             if (labelKey === "Investors Relations") href = "/investor-relations";
@@ -197,7 +197,7 @@ export default function Footer() {
                     <button 
                       key={i} 
                       onClick={() => setActivePanel(action as PanelType)}
-                      className="text-neutral-600 dark:text-neutral-500 text-xs font-medium hover:text-[#01C1D6] transition-colors text-left w-fit flex items-center gap-1 group"
+                      className="text-neutral-600 dark:text-neutral-500 text-xs font-medium hover:text-[#33525c] transition-colors text-left w-fit flex items-center gap-1 group"
                     >
                       {label}
                       {label.includes("→") || isObj ? null : (
@@ -214,7 +214,7 @@ export default function Footer() {
                 <Link 
                   key={i} 
                   href={href}
-                  className="text-neutral-600 dark:text-neutral-500 text-xs font-medium hover:text-[#01C1D6] transition-colors text-left w-fit flex items-center gap-1 group"
+                  className="text-neutral-600 dark:text-neutral-500 text-xs font-medium hover:text-[#33525c] transition-colors text-left w-fit flex items-center gap-1 group"
                 >
                   {label}
                   <span className="opacity-0 group-hover:opacity-100 transition-opacity">
@@ -238,8 +238,8 @@ export default function Footer() {
                     <div className="w-10 h-10 relative">
                         <Image src="/images/logo1.png" alt="FalconVest" fill className="object-contain" />
                     </div>
-                    <span className="text-2xl font-black text-black dark:text-white tracking-tighter uppercase italic">
-                        FalconVest
+                    <span className="text-xl font-black text-black dark:text-white tracking-tighter uppercase italic">
+                        Falcon<span className="text-[#33525c] dark:text-[#7eb2bd]">Vest</span>
                     </span>
                 </div>
                 <p className="text-neutral-500 text-sm leading-relaxed">
@@ -247,14 +247,14 @@ export default function Footer() {
                 </p>
                 <div className="flex items-center gap-4">
                     {[Twitter, Instagram, Facebook, Linkedin].map((Icon, i) => (
-                        <button key={i} className="w-10 h-10 rounded-xl bg-black/5 dark:bg-white/5 flex items-center justify-center text-neutral-600 dark:text-neutral-500 hover:text-white hover:bg-[#01C1D6] transition-all">
+                        <button key={i} className="w-10 h-10 rounded-xl bg-black/5 dark:bg-white/5 flex items-center justify-center text-neutral-600 dark:text-neutral-500 hover:text-white hover:bg-[#33525c] transition-all">
                             <Icon size={18} />
                         </button>
                     ))}
                 </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-8 lg:gap-12 p-8 rounded-3xl bg-black/5 dark:bg-white/[0.02] border border-black/5 dark:border-white/5">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-12 p-8 rounded-3xl bg-black/5 dark:bg-white/[0.02] border border-black/5 dark:border-white/5">
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full border border-black/10 dark:border-white/10 flex items-center justify-center text-black dark:text-white">
                         <ShieldCheck size={20} />

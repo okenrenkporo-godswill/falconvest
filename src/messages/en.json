@@ -12,14 +12,14 @@
         "socialHub": "Social Hub",
         "socialHubDesc": "Connect with top institutional traders",
         "copyTrading": "Copy Trading",
-        "copyTradingDesc": "Automate your success with FalconVest",
+        "copyTradingDesc": "Automate your success with Falcon",
         "company": "Company",
         "aboutUs": "About Us",
-        "whyFalconVest": "Why FalconVest",
-        "whyFalconVestDesc": "Our mission and institutional roots",
+        "whyFalcon": "Why Falcon",
+        "whyFalconDesc": "Our mission and institutional roots",
         "reviews": "Reviews",
         "reviewsDesc": "What our global traders say",
-        "blog": "FalconVest Blog",
+        "blog": "Falcon Blog",
         "blogDesc": "Latest market insights and news",
         "careers": "Careers",
         "careersDesc": "Join our global network",
@@ -74,7 +74,7 @@
                 "part2": "REIMAGINED"
             }
         },
-        "dashboardPlaceholder": "FalconVest copy trading"
+        "dashboardPlaceholder": "Falcon copy trading"
     },
     "AutoCopyTrading": {
         "masterBalance": "Master Balance",
@@ -95,7 +95,7 @@
             "autocopy": "Autocopy"
         },
         "description": "Learn, copy, and trade in one click. Tap into the experience of others and collaborate with a growing community of traders.",
-        "cta": "Try FalconVest Autocopy"
+        "cta": "Try Falcon Autocopy"
     },
     "TradingToolsSlider": {
         "protection": {
@@ -119,7 +119,7 @@
             "2": {
                 "category": "Tools for every trading style",
                 "title": "Protect your positions",
-                "description": "Traders can safeguard their positions with Stop Loss and Take Profit orders. Additionally, FalconVest offers negative balance protection, ensuring that losses will never exceed the funds in your account."
+                "description": "Traders can safeguard their positions with Stop Loss and Take Profit orders. Additionally, Falcon offers negative balance protection, ensuring that losses will never exceed the funds in your account."
             }
         }
     },
@@ -183,15 +183,15 @@
             "prefix": "GOT",
             "suffix": "QUESTIONS?"
         },
-        "description": "Everything you need to know about the FalconVest ecosystem.",
+        "description": "Everything you need to know about the Falcon ecosystem.",
         "contact": {
             "text": "Still have questions?",
             "link": "Contact our 24/7 support team."
         },
         "questions": {
             "0": {
-                "question": "How to start trading with FalconVest?",
-                "answer": "Starting your journey is simple: \n1. Create your secure FalconVest account.\n2. Complete our streamlined identity verification (KYC).\n3. Fund your account via your preferred digital wallet or bank transfer.\n4. Launch the dashboard and start executing trades instantly."
+                "question": "How to start trading with Falcon?",
+                "answer": "Starting your journey is simple: \n1. Create your secure Falcon account.\n2. Complete our streamlined identity verification (KYC).\n3. Fund your account via your preferred digital wallet or bank transfer.\n4. Launch the dashboard and start executing trades instantly."
             },
             "1": {
                 "question": "How to create an account and confirm your email address?",
@@ -203,14 +203,14 @@
             },
             "3": {
                 "question": "How do I deposit money and fund my account?",
-                "answer": "FalconVest supports a wide range of funding methods. Navigate to the 'Funding' section in your dashboard to choose between instant crypto transfers, credit/debit cards, or traditional wire transfers. All funds are held in segregated, institutional-grade accounts."
+                "answer": "Falcon supports a wide range of funding methods. Navigate to the 'Funding' section in your dashboard to choose between instant crypto transfers, credit/debit cards, or traditional wire transfers. All funds are held in segregated, institutional-grade accounts."
             },
             "4": {
-                "question": "Is FalconVest a regulated broker?",
-                "answer": "Yes, FalconVest operates under strict regulatory frameworks to provide a secure and transparent trading environment. We maintain high capital requirements and undergo regular independent audits to ensure client protection."
+                "question": "Is Falcon a regulated broker?",
+                "answer": "Yes, Falcon operates under strict regulatory frameworks to provide a secure and transparent trading environment. We maintain high capital requirements and undergo regular independent audits to ensure client protection."
             },
             "5": {
-                "question": "How to withdraw money from FalconVest?",
+                "question": "How to withdraw money from Falcon?",
                 "answer": "Withdrawals are processed swiftly. Simply go to 'My Wallet', select 'Withdraw', and choose your destination. Most crypto withdrawals are instant, while traditional bank transfers typically complete within 1-2 business days."
             }
         }
@@ -226,7 +226,7 @@
             "prefix": "Your Assets Are",
             "suffix": "Guaranteed Secure."
         },
-        "description": "At FalconVest, we employ the most advanced security protocols in the industry to ensure your peace of mind.",
+        "description": "At Falcon, we employ the most advanced security protocols in the industry to ensure your peace of mind.",
         "features": {
             "dataEncryption": "Data Encryption",
             "aes256": "AES-256",
@@ -273,7 +273,7 @@
             "trade": "Trade"
         },
         "liveFeeds": "Live Feeds Active",
-        "liquidity": "Liquidity by FalconVest Institutional",
+        "liquidity": "Liquidity by Falcon Institutional",
         "categories": {
             "Forex": "Forex",
             "Shares": "Shares",
@@ -299,13 +299,13 @@
                 "desc": "Instant Payouts 24/7"
             }
         },
-        "riskWarning": "Risk Warning: Trading financial instruments involves significant risk. The value of investments can go down as well as up and you may receive back less than you originally invested. FalconVest Limited is authorized and regulated by the Financial Services Authority (FSA). Please ensure you fully understand the risks involved by reading our full risk disclosure or consulting an independent financial advisor.",
+        "riskWarning": "Risk Warning: Trading financial instruments involves significant risk. The value of investments can go down as well as up and you may receive back less than you originally invested. Falcon Limited is authorized and regulated by the Financial Services Authority (FSA). Please ensure you fully understand the risks involved by reading our full risk disclosure or consulting an independent financial advisor.",
         "links": {
             "compliance": "Compliance",
             "ethics": "Ethics",
             "security": "Security"
         },
-        "copyright": "© 2026 FalconVest Global. All Rights Reserved.",
+        "copyright": "© 2026 Falcon Global. All Rights Reserved.",
         "systemStatus": "System Online: LDN-01 Stable",
         "panelCommon": {
             "needMoreInfo": "Still need more information?",
@@ -333,7 +333,7 @@
             "Commodities": "Commodities",
             "Futures": "Futures",
             "ETFs": "ETFs",
-            "FalconVest Web": "FalconVest Web",
+            "Falcon Web": "Falcon Web",
             "Sync iOS": "Sync iOS",
             "Sync Android": "Sync Android",
             "MT5 Terminal": "MT5 Terminal",
@@ -343,7 +343,7 @@
             "Deposit Methods": "Deposit Methods",
             "Execution Policy": "Execution Policy",
             "Spreads": "Spreads",
-            "Why FalconVest": "Why FalconVest",
+            "Why Falcon": "Why Falcon",
             "Sponsorship": "Sponsorship",
             "Contact Us": "Contact Us",
             "Investors Relations": "Investors Relations",
@@ -424,7 +424,7 @@
                     },
                     "1": {
                         "title": "Terms of Service",
-                        "desc": "The agreement between you and FalconVest."
+                        "desc": "The agreement between you and Falcon."
                     },
                     "2": {
                         "title": "Risk Disclosure",
@@ -433,7 +433,7 @@
                 }
             },
             "about": {
-                "title": "About FalconVest",
+                "title": "About Falcon",
                 "description": "Redefining the standard of trading.",
                 "items": {
                     "0": {
@@ -478,7 +478,7 @@
                     },
                     "1": {
                         "title": "Email Us",
-                        "desc": "support@FalconVest.live | info@FalconVest.live"
+                        "desc": "support@Falcon.live | info@Falcon.live"
                     },
                     "2": {
                         "title": "Call Direct",

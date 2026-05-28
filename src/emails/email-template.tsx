@@ -27,8 +27,8 @@ export function EmailTemplate({ preview, children }: EmailTemplateProps) {
           <Section>
             <div className="w-[45px] h-[45px] flex justify-center items-center overflow-hidden relative">
               <Img
-                src="https://FalconVest.live/images/logo1.png"
-                alt="FalconVest"
+                src="https://Falcon.live/images/logo1.png"
+                alt="Falcon"
                 style={logo}
               />
             </div>
@@ -36,11 +36,11 @@ export function EmailTemplate({ preview, children }: EmailTemplateProps) {
             {/* Footer */}
             <Text style={footer}>
               <Link
-                href="https://FalconVest.live"
+                href="https://Falcon.live"
                 target="_blank"
                 style={footerLink}
               >
-                FalconVest
+                Falcon
               </Link>
               , the all-in-one crypto trading platform
               <br />

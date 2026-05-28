@@ -57,7 +57,7 @@ export default function DepositRejectedEmail({
         </Button>
       </Section>
 
-      <Text style={signature}>FalconVest Team</Text>
+      <Text style={signature}>Falcon Team</Text>
     </EmailTemplate>
   );
 }

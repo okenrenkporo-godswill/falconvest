@@ -139,14 +139,31 @@ function LoginContent() {
       <div className="w-full">
         <Card shadow="none" className="bg-transparent dark:bg-transparent border-none px-0">
           <CardHeader className="flex flex-col items-center px-0 pt-0 pb-8 space-y-6 text-center">
-            <Link href="/" className="transition-transform hover:scale-105">
-              <Image
-                src="/images/logo1.png"
-                alt="FalconVest"
-                width={64}
-                height={64}
-                className="w-16 h-16 shadow-2xl shadow-[#01C1D6]/20"
-              />
+            <Link href="/" className="transition-transform hover:scale-105 flex flex-col items-center gap-2">
+              {/* New Dynamic Logo */}
+              <div className="relative w-16 h-16 flex items-center justify-center shrink-0">
+                <div className="absolute inset-0 bg-[#7eb2bd]/20 dark:bg-[#33525c]/20 blur-md rounded-full scale-110" />
+                <svg viewBox="0 0 100 100" className="w-12 h-12 relative z-10 drop-shadow-[0_2px_8px_rgba(51,82,92,0.3)]">
+                  <path 
+                      d="M 50 10 L 85 45 L 70 50 L 50 25 L 30 50 L 15 45 Z" 
+                      fill="url(#login-otp-grad-1)" 
+                  />
+                  <path 
+                      d="M 50 30 L 90 70 L 65 75 L 50 55 L 35 75 L 10 70 Z" 
+                      fill="url(#login-otp-grad-2)" 
+                  />
+                  <defs>
+                      <linearGradient id="login-otp-grad-1" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#7eb2bd" />
+                          <stop offset="100%" stopColor="#33525c" />
+                      </linearGradient>
+                      <linearGradient id="login-otp-grad-2" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#a9ccd3" />
+                          <stop offset="100%" stopColor="#5399a7" />
+                      </linearGradient>
+                  </defs>
+                </svg>
+              </div>
             </Link>
             <div className="space-y-1">
               <h1 className="text-3xl font-bold text-black dark:text-white">
@@ -162,7 +179,7 @@ function LoginContent() {
             <Alert 
               color="primary" 
               variant="flat"
-              className="bg-[#01C1D6]/10 text-[#01C1D6] border-none font-semibold text-xs"
+              className="bg-[#33525c]/10 text-[#33525c] border-none font-semibold text-xs"
             >
               Verification code sent to {email}
             </Alert>
@@ -175,7 +192,7 @@ function LoginContent() {
                   size="lg"
                   variant="flat"
                   classNames={{
-                    input: "bg-black/5 dark:bg-white/5 border-none focus:ring-2 ring-[#01C1D6]/50"
+                    input: "bg-black/5 dark:bg-white/5 border-none focus:ring-2 ring-[#33525c]/50"
                   }}
                 />
               </div>
@@ -183,7 +200,7 @@ function LoginContent() {
               <Button 
                 type="submit" 
                 isLoading={loading} 
-                className="w-full bg-[#01C1D6] text-white font-bold h-14 rounded-xl hover:scale-[1.01] transition-transform shadow-xl shadow-[#01C1D6]/20"
+                className="w-full bg-[#33525c] text-white font-bold h-14 rounded-xl hover:scale-[1.01] transition-transform shadow-xl shadow-[#33525c]/20"
               >
                 Verify & Login
               </Button>
@@ -196,7 +213,7 @@ function LoginContent() {
                 onPress={handleResendOtp} 
                 isLoading={resending}
                 variant="light"
-                className="text-sm font-semibold text-default-500 hover:text-[#01C1D6]"
+                className="text-sm font-semibold text-default-500 hover:text-[#33525c]"
               >
                 Resend code
               </Button>
@@ -219,14 +236,31 @@ function LoginContent() {
     <div className="w-full">
       <Card shadow="none" className="bg-transparent dark:bg-transparent border-none px-0">
         <CardHeader className="flex flex-col items-center px-0 pt-0 pb-8 space-y-6 text-center">
-          <Link href="/" className="transition-transform hover:scale-105">
-            <Image
-              src="/images/logo1.png"
-              alt="FalconVest"
-              width={64}
-              height={64}
-              className="w-16 h-16 shadow-2xl shadow-[#01C1D6]/20"
-            />
+          <Link href="/" className="transition-transform hover:scale-105 flex flex-col items-center gap-2">
+            {/* New Dynamic Logo */}
+            <div className="relative w-16 h-16 flex items-center justify-center shrink-0">
+              <div className="absolute inset-0 bg-[#7eb2bd]/20 dark:bg-[#33525c]/20 blur-md rounded-full scale-110" />
+              <svg viewBox="0 0 100 100" className="w-12 h-12 relative z-10 drop-shadow-[0_2px_8px_rgba(51,82,92,0.3)]">
+                <path 
+                    d="M 50 10 L 85 45 L 70 50 L 50 25 L 30 50 L 15 45 Z" 
+                    fill="url(#login-cred-grad-1)" 
+                />
+                <path 
+                    d="M 50 30 L 90 70 L 65 75 L 50 55 L 35 75 L 10 70 Z" 
+                    fill="url(#login-cred-grad-2)" 
+                />
+                <defs>
+                    <linearGradient id="login-cred-grad-1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#7eb2bd" />
+                        <stop offset="100%" stopColor="#33525c" />
+                    </linearGradient>
+                    <linearGradient id="login-cred-grad-2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#a9ccd3" />
+                        <stop offset="100%" stopColor="#5399a7" />
+                    </linearGradient>
+                </defs>
+              </svg>
+            </div>
           </Link>
           <div className="space-y-1">
             <h1 className="text-3xl font-bold text-black dark:text-white">
@@ -261,7 +295,7 @@ function LoginContent() {
               classNames={{
                 label: "text-xs font-bold text-default-600 ml-1",
                 inputWrapper: "h-14 bg-black/5 dark:bg-white/5 group-data-[focus=true]:bg-black/10 dark:group-data-[focus=true]:bg-white/10 hover:bg-black/10 dark:hover:bg-white/10 transition-colors rounded-xl border-none",
-                input: "font-medium"
+                input: "font-medium placeholder:text-neutral-400 dark:placeholder:text-neutral-500 placeholder:opacity-100"
               }}
             />
 
@@ -277,13 +311,13 @@ function LoginContent() {
                 classNames={{
                   label: "text-xs font-bold text-default-600 ml-1",
                   inputWrapper: "h-14 bg-black/5 dark:bg-white/5 group-data-[focus=true]:bg-black/10 dark:group-data-[focus=true]:bg-white/10 hover:bg-black/10 dark:hover:bg-white/10 transition-colors rounded-xl border-none",
-                  input: "font-medium"
+                  input: "font-medium placeholder:text-neutral-400 dark:placeholder:text-neutral-500 placeholder:opacity-100"
                 }}
                 endContent={
                   <button
                     type="button"
                     onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-                    className="text-neutral-400 hover:text-[#01C1D6] transition-colors p-1"
+                    className="text-neutral-400 hover:text-[#33525c] transition-colors p-1"
                   >
                     {isPasswordVisible ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
@@ -292,7 +326,7 @@ function LoginContent() {
               <div className="flex justify-end pr-1">
                 <Link 
                   href="/forgot-password" 
-                  className="text-xs font-bold text-[#01C1D6] hover:underline transition-colors"
+                  className="text-xs font-bold text-[#33525c] hover:underline transition-colors"
                 >
                   Forgot password?
                 </Link>
@@ -302,7 +336,7 @@ function LoginContent() {
             <Button 
               type="submit" 
               isLoading={loading} 
-              className="w-full bg-[#01C1D6] text-white font-bold h-14 rounded-xl hover:scale-[1.01] transition-transform shadow-xl shadow-[#01C1D6]/20 mt-4"
+              className="w-full bg-[#33525c] text-white font-bold h-14 rounded-xl hover:scale-[1.01] transition-transform shadow-xl shadow-[#33525c]/20 mt-4"
             >
               Sign In
             </Button>
@@ -316,7 +350,7 @@ function LoginContent() {
             </span>
             <Link 
               href="/register" 
-              className="text-sm font-bold text-[#01C1D6] hover:underline transition-colors"
+              className="text-sm font-bold text-[#33525c] hover:underline transition-colors"
             >
               Register now
             </Link>

@@ -55,7 +55,7 @@ export function Header({ onMenu }: HeaderProps) {
                     <div className="flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center relative">
                         <Image src="/images/logo1.png" alt="Logo" fill className="object-contain" />
                     </div>
-                    <span className="font-semibold text-sm sm:text-base">FalconVest</span>
+                    <span className="font-semibold text-sm sm:text-base">Falcon</span>
                 </Link>
 
                 {/* Desktop: Spacer */}

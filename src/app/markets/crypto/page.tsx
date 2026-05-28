@@ -84,13 +84,13 @@ export default function CryptoPage() {
                               {item.image ? (
                                 <img src={item.image} alt={item.name} className="w-6 h-6 object-contain" />
                               ) : (
-                                <div className="p-2 rounded-lg bg-[#01C1D6]/10 text-[#01C1D6]">
+                                <div className="p-2 rounded-lg bg-[#33525c]/10 text-[#33525c]">
                                   <TrendingUp size={16} />
                                 </div>
                               )}
                            </div>
                            <div>
-                              <p className="font-black text-black dark:text-white uppercase tracking-tighter text-lg group-hover:text-[#01C1D6] transition-colors">{item.name}</p>
+                              <p className="font-black text-black dark:text-white uppercase tracking-tighter text-lg group-hover:text-[#33525c] transition-colors">{item.name}</p>
                               <p className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">{item.symbol}</p>
                            </div>
                         </div>
@@ -108,7 +108,7 @@ export default function CryptoPage() {
                          <Sparkline trend={item.trend} color={item.change24h >= 0 ? "#22c55e" : "#ef4444"} />
                       </TableCell>
                       <TableCell className="text-right px-8">
-                        <button className="bg-black dark:bg-white text-white dark:text-black text-[10px] font-black uppercase tracking-widest px-8 py-3 rounded-full hover:bg-[#01C1D6] dark:hover:bg-[#01C1D6] hover:text-white transition-all">
+                        <button className="bg-black dark:bg-white text-white dark:text-black text-[10px] font-black uppercase tracking-widest px-8 py-3 rounded-full hover:bg-[#33525c] dark:hover:bg-[#33525c] hover:text-white transition-all">
                           Trade
                         </button>
                       </TableCell>

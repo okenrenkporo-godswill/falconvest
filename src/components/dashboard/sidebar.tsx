@@ -36,7 +36,7 @@ export function Sidebar({ collapsed, onToggle, navItems }: SidebarProps) {
             <div className="flex h-7 w-7 items-center justify-center">
               <Image src="/images/logo1.png" alt="Logo" width={24} height={24} />
             </div>
-            <span className="font-semibold">FalconVest</span>
+            <span className="font-semibold">Falcon</span>
           </Link>
         )}
         {collapsed && (
@@ -80,7 +80,7 @@ export function Sidebar({ collapsed, onToggle, navItems }: SidebarProps) {
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                   isActive
-                    ? "bg-[#01C1D6]/10 text-[#01C1D6] dark:bg-[#01C1D6]/20 dark:text-[#01C1D6]"
+                    ? "bg-[#33525c]/10 text-[#33525c] dark:bg-[#33525c]/20 dark:text-[#33525c]"
                     : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
                   collapsed && "justify-center",
                 )}

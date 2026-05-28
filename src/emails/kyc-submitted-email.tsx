@@ -27,7 +27,7 @@ export default function KycSubmittedEmail({ name }: KycSubmittedEmailProps) {
       <Text style={text}>
         If we need any additional information, we'll reach out to you.
       </Text>
-      <Text style={signature}>FalconVest Team</Text>
+      <Text style={signature}>Falcon Team</Text>
     </EmailTemplate>
   );
 }

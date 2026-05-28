@@ -126,7 +126,7 @@ export default function MarketStats() {
               <div className="flex items-center justify-between border-b border-black/5 dark:border-white/5 pb-4">
                 <h2 className="text-xl font-bold text-black dark:text-white relative">
                   Most traded coins
-                  <span className="absolute bottom-[-17px] left-0 w-full h-[2px] bg-[#01C1D6]" />
+                  <span className="absolute bottom-[-17px] left-0 w-full h-[2px] bg-[#33525c]" />
                 </h2>
               </div>
               
@@ -168,7 +168,7 @@ export default function MarketStats() {
                         <td className="py-5 text-right pr-4">
                           <Button 
                             variant="bordered" 
-                            className="border-[#01C1D6] text-[#01C1D6] hover:bg-[#01C1D6] hover:text-white font-bold rounded-lg px-8 transition-all h-9"
+                            className="border-[#33525c] text-[#33525c] hover:bg-[#33525c] hover:text-white font-bold rounded-lg px-8 transition-all h-9"
                           >
                             Trade
                           </Button>

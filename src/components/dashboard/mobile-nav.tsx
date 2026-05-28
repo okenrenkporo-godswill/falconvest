@@ -39,7 +39,7 @@ export function MobileNav({
             <div className="flex h-7 w-7 items-center justify-center">
               <Image src="/images/logo1.png" alt="Logo" width={24} height={24} />
             </div>
-            <span className="font-bold">FalconVest</span>
+            <span className="font-bold">Falcon</span>
           </div>
           <button
             onClick={onClose}
@@ -58,7 +58,7 @@ export function MobileNav({
               className={cn(
                 "block rounded-md px-3 py-2.5 text-sm font-medium transition-colors",
                 pathname === item.href
-                  ? "bg-[#01C1D6]/10 text-[#01C1D6] dark:bg-[#01C1D6]/20 dark:text-[#01C1D6]"
+                  ? "bg-[#33525c]/10 text-[#33525c] dark:bg-[#33525c]/20 dark:text-[#33525c]"
                   : "hover:bg-accent",
               )}
             >

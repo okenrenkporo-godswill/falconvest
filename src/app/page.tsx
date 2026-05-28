@@ -1,66 +1,72 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import AutoCopyTrading from "@/components/AutoCopyTrading";
-import TradingToolsSlider from "@/components/TradingToolsSlider";
+import UserFriendlyPlatform from "@/components/UserFriendlyPlatform";
+import AboutUsCopy from "@/components/AboutUsCopy";
+import StatsSection from "@/components/StatsSection";
+import TrustedLicensing from "@/components/TrustedLicensing";
+import FeatureHighlights from "@/components/FeatureHighlights";
 import AssetExplorer from "@/components/AssetExplorer";
+import StockDerivatives from "@/components/StockDerivatives";
+import TradingToolsSlider from "@/components/TradingToolsSlider";
 import TradingPlans from "@/components/TradingPlans";
 import SecurityCard from "@/components/SecurityCard";
+import EducationSection from "@/components/EducationSection";
 import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
-import { Button } from "@heroui/react";
-import Link from "next/link";
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white dark:bg-black transition-colors duration-500">
       <Header />
       <Hero />
 
-      <main className="mx-auto px-4">
-        <div className=" mx-auto text-center space-y-8">
-          <h2 className="text-5xl font-bold">
-            Professional Crypto Trading Platform
-          </h2>
-          <p className="text-xl text-default-600">
-            Trade spot & futures, stake your assets, and copy top traders all in
-            one secure platform
-          </p>
+      <main>
+        {/* Section 2: User-Friendly Trading Platform Options */}
+        <UserFriendlyPlatform />
 
-          <div className="flex gap-4 justify-center pt-8">
-            <Button as={Link} href="/register" color="primary" size="lg">
-              Get Started
-            </Button>
-            <Button as={Link} href="/login" variant="bordered" size="lg">
-              Sign In
-            </Button>
-          </div>
+        {/* Section 3: About Us with Professional Copy Cards */}
+        <AboutUsCopy />
 
-          {/* ACT 2: SOCIAL & TOOLS (THEME-RESPONSIVE LIGHTER) */}
-          <div className="bg-white dark:bg-neutral-950 transition-colors duration-500">
-            <section className="space-y-0">
-              <AutoCopyTrading />
-            </section>
-            <section className="relative z-10">
-              <TradingToolsSlider />
-            </section>
-          </div>
+        {/* Section 4: Live Global Stats Indicators */}
+        <StatsSection />
 
-          {/* ACT 3: INSTITUTIONAL (THEME-RESPONSIVE DARK/LIGHT) */}
-          <div className="bg-neutral-50 dark:bg-black transition-colors duration-500">
-            <section className="relative z-10">
-              <TradingPlans />
-            </section>
-            <section className="relative z-10">
-              <SecurityCard />
-            </section>
-            <section className="relative z-10">
-              <FAQ />
-            </section>
-          </div>
+        {/* Section 5: User Trust & Regulatory Licensing */}
+        <TrustedLicensing />
 
-          <Footer />
+        {/* Section 6: Feature Highlights 2x2 Grid */}
+        <FeatureHighlights />
+
+        {/* Interactive Live Price Terminal */}
+        <section className="relative z-10 border-t border-black/5 dark:border-white/5">
+          <AssetExplorer />
+        </section>
+
+        {/* Section 8: Large derivatives box */}
+        <StockDerivatives />
+
+        {/* Premium charting sliders and protection tools */}
+        <section className="relative z-10">
+          <TradingToolsSlider />
+        </section>
+
+        {/* ACT 3: INSTITUTIONAL */}
+        <div className="bg-neutral-50 dark:bg-black transition-colors duration-500">
+          <section className="relative z-10">
+            <TradingPlans />
+          </section>
+          <section className="relative z-10">
+            <SecurityCard />
+          </section>
+          <section className="relative z-10">
+            <EducationSection />
+          </section>
+          <section className="relative z-10">
+            <FAQ />
+          </section>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 }

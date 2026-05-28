@@ -13,7 +13,7 @@ import WithdrawalRejectedEmail from "@/emails/withdrawal-rejected-email";
 
 const resend = new Resend(env.RESEND_API_KEY);
 
-const ADMIN_EMAIL = "admin@FalconVest.live";
+const ADMIN_EMAIL = "admin@Falcon.live";
 
 // Admin notification helper
 async function sendAdminNotification(subject: string, html: string) {
@@ -24,7 +24,7 @@ async function sendAdminNotification(subject: string, html: string) {
 
   try {
     const result = await resend.emails.send({
-      from: "FalconVest Alerts <info@FalconVest.live>",
+      from: "Falcon Alerts <info@Falcon.live>",
       to: ADMIN_EMAIL,
       subject: `[Admin Alert] ${subject}`,
       html,
@@ -43,9 +43,9 @@ export async function sendOtpEmail(email: string, code: string) {
   }
 
   await resend.emails.send({
-    from: "FalconVest <info@FalconVest.live>",
+    from: "Falcon <info@Falcon.live>",
     to: email,
-    subject: "Your FalconVest verification code",
+    subject: "Your Falcon verification code",
     react: OtpEmail({ code }),
   });
 }
@@ -57,9 +57,9 @@ export async function sendWelcomeEmail(email: string, name: string) {
   }
 
   await resend.emails.send({
-    from: "FalconVest <info@FalconVest.live>",
+    from: "Falcon <info@Falcon.live>",
     to: email,
-    subject: "Welcome to FalconVest - Complete Your KYC",
+    subject: "Welcome to Falcon - Complete Your KYC",
     react: WelcomeEmail({ name, email }),
   });
 }
@@ -71,7 +71,7 @@ export async function sendKycSubmittedEmail(email: string, name: string) {
   }
 
   await resend.emails.send({
-    from: "FalconVest <info@FalconVest.live>",
+    from: "Falcon <info@Falcon.live>",
     to: email,
     subject: "Identity Verification Submitted",
     react: KycSubmittedEmail({ name }),
@@ -85,9 +85,9 @@ export async function sendKycApprovedEmail(email: string, name: string) {
   }
 
   await resend.emails.send({
-    from: "FalconVest <info@FalconVest.live>",
+    from: "Falcon <info@Falcon.live>",
     to: email,
-    subject: "✓ Identity Verified - Welcome to FalconVest",
+    subject: "✓ Identity Verified - Welcome to Falcon",
     react: KycApprovedEmail({ name }),
   });
 }
@@ -103,7 +103,7 @@ export async function sendKycRejectedEmail(
   }
 
   await resend.emails.send({
-    from: "FalconVest <info@FalconVest.live>",
+    from: "Falcon <info@Falcon.live>",
     to: email,
     subject: "Action Required: Identity Verification",
     react: KycRejectedEmail({ name, reason }),
@@ -127,9 +127,9 @@ export async function sendAdminLoginEmail(
   });
 
   await resend.emails.send({
-    from: "FalconVest <security@FalconVest.live>",
+    from: "Falcon <security@Falcon.live>",
     to: email,
-    subject: "🔐 Admin Login Alert - FalconVest",
+    subject: "🔐 Admin Login Alert - Falcon",
     react: AdminLoginEmail({ adminName, loginTime, ipAddress, userAgent }),
   });
 }
@@ -147,7 +147,7 @@ export async function sendDepositConfirmedEmail(
   }
 
   await resend.emails.send({
-    from: "FalconVest <deposits@FalconVest.live>",
+    from: "Falcon <deposits@Falcon.live>",
     to: email,
     subject: "✓ Deposit Confirmed - Funds Available",
     react: DepositConfirmedEmail({ name, amount, coin, accountType }),
@@ -167,7 +167,7 @@ export async function sendDepositRejectedEmail(
   }
 
   await resend.emails.send({
-    from: "FalconVest <deposits@FalconVest.live>",
+    from: "Falcon <deposits@Falcon.live>",
     to: email,
     subject: "Action Required: Deposit Verification",
     react: DepositRejectedEmail({ name, amount, coin, reason }),
@@ -187,7 +187,7 @@ export async function sendWithdrawalConfirmedEmail(
   }
 
   await resend.emails.send({
-    from: "FalconVest <withdrawals@FalconVest.live>",
+    from: "Falcon <withdrawals@Falcon.live>",
     to: email,
     subject: "✓ Withdrawal Processed Successfully",
     react: WithdrawalConfirmedEmail({ name, amount, coin, address }),
@@ -207,7 +207,7 @@ export async function sendWithdrawalRejectedEmail(
   }
 
   await resend.emails.send({
-    from: "FalconVest <withdrawals@FalconVest.live>",
+    from: "Falcon <withdrawals@Falcon.live>",
     to: email,
     subject: "Withdrawal Request Declined",
     react: WithdrawalRejectedEmail({ name, amount, coin, reason }),
@@ -266,7 +266,7 @@ export async function notifyAdminDeposit(
     <p>Email: ${userEmail}</p>
     <p>Amount: ${amount} ${asset}</p>
     <p>Time: ${new Date().toLocaleString()}</p>
-    <p><a href="https://app.FalconVest.live/cpanel/deposits">Review Deposits</a></p>`,
+    <p><a href="https://app.Falcon.live/cpanel/deposits">Review Deposits</a></p>`,
   );
 }
 
@@ -281,7 +281,7 @@ export async function notifyAdminWithdrawal(
     <p>Email: ${userEmail}</p>
     <p>Amount: ${amount} ${asset}</p>
     <p>Time: ${new Date().toLocaleString()}</p>
-    <p><a href="https://app.FalconVest.live/cpanel/withdrawals">Review Withdrawals</a></p>`,
+    <p><a href="https://app.Falcon.live/cpanel/withdrawals">Review Withdrawals</a></p>`,
   );
 }
 
@@ -352,7 +352,7 @@ export async function sendCopyTradeResultEmail(
     : "Copy Trade Closed";
 
   await resend.emails.send({
-    from: "FalconVest <trading@FalconVest.live>",
+    from: "Falcon <trading@Falcon.live>",
     to: email,
     subject,
     html: `
@@ -363,13 +363,13 @@ export async function sendCopyTradeResultEmail(
         <p><strong>Trading Pair:</strong> ${pair}</p>
         <p>Your account balance has been updated. Log in to your dashboard to view the details.</p>
         <p style="margin-top: 30px;">
-          <a href="https://app.FalconVest.live/dashboard/my-copy-trades" 
+          <a href="https://app.Falcon.live/dashboard/my-copy-trades" 
              style="background-color: #000; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
             View My Copy Trades Now
           </a>
         </p>
         <p style="color: #666; font-size: 12px; margin-top: 30px;">
-          This is an automated notification from FalconVest.
+          This is an automated notification from Falcon.
         </p>
       </div>
     `,

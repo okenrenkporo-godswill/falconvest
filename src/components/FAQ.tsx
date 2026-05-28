@@ -16,14 +16,14 @@ const FAQItem = ({ item, isExpanded, onToggle }: { item: { question: string; ans
         className="w-full py-8 px-6 flex items-center justify-between text-left gap-4"
       >
         <div className="flex items-center gap-4">
-          <div className={`p-2 rounded-lg transition-colors duration-300 ${isExpanded ? "bg-[#01C1D6] text-white" : "bg-neutral-100 dark:bg-neutral-900 text-neutral-500 group-hover:text-black dark:group-hover:text-white"}`}>
+          <div className={`p-2 rounded-lg transition-colors duration-300 ${isExpanded ? "bg-[#33525c] text-white" : "bg-neutral-100 dark:bg-neutral-900 text-neutral-500 group-hover:text-black dark:group-hover:text-white"}`}>
             <HelpCircle size={20} />
           </div>
           <span className={`text-lg md:text-xl font-medium tracking-tight transition-colors duration-300 ${isExpanded ? "text-white dark:text-white" : "text-neutral-900 dark:text-neutral-400 group-hover:text-black dark:group-hover:text-neutral-200"}`}>
             {item.question}
           </span>
         </div>
-        <div className={`shrink-0 w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-500 ${isExpanded ? "bg-[#01C1D6] border-[#01C1D6] text-white rotate-180" : "border-white/10 text-neutral-500 group-hover:border-white/20"}`}>
+        <div className={`shrink-0 w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-500 ${isExpanded ? "bg-[#33525c] border-[#33525c] text-white rotate-180" : "border-white/10 text-neutral-500 group-hover:border-white/20"}`}>
           {isExpanded ? <Minus size={16} /> : <Plus size={16} />}
         </div>
       </button>
@@ -38,7 +38,7 @@ const FAQItem = ({ item, isExpanded, onToggle }: { item: { question: string; ans
             className="overflow-hidden"
           >
             <div className="px-6 pb-8 ml-14">
-              <p className="text-neutral-600 dark:text-neutral-500 text-lg leading-relaxed max-w-3xl whitespace-pre-line border-l-2 border-[#01C1D6]/20 pl-6">
+              <p className="text-neutral-600 dark:text-neutral-500 text-lg leading-relaxed max-w-3xl whitespace-pre-line border-l-2 border-[#33525c]/20 pl-6">
                 {item.answer}
               </p>
             </div>
@@ -83,7 +83,7 @@ export default function FAQ() {
   return (
     <section className="relative w-full py-32 px-4 bg-transparent overflow-hidden transition-colors duration-500">
       {/* Background radial effects */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#01C1D6]/5 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#33525c]/5 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="container mx-auto max-w-4xl">
         <div className="text-center mb-20 space-y-4">
@@ -93,7 +93,7 @@ export default function FAQ() {
             viewport={{ once: true }}
             className="text-4xl md:text-6xl font-black text-black dark:text-white tracking-tighter uppercase"
           >
-            {t('headline.prefix')} <span className="text-[#01C1D6]">{t('headline.suffix')}</span>
+            {t('headline.prefix')} <span className="text-[#33525c]">{t('headline.suffix')}</span>
           </motion.h2>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -121,10 +121,10 @@ export default function FAQ() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="mt-16 text-center"
+          className="mt-16 text-center py-2"
         >
-          <p className="text-neutral-900 dark:text-neutral-500 font-medium">
-            {t('contact.text')} <Link href="/contact" className="text-[#01C1D6] cursor-pointer hover:underline">{t('contact.link')}</Link>
+          <p className="text-neutral-900 dark:text-neutral-500 font-medium leading-relaxed">
+            {t('contact.text')} <Link href="/contact" className="text-[#33525c] cursor-pointer hover:underline">{t('contact.link')}</Link>
           </p>
         </motion.div>
       </div>

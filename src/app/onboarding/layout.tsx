@@ -50,12 +50,12 @@ export default function OnboardingLayout({
           <Link href="/dashboard" className="flex items-center gap-2">
             <Image
               src="/images/logo1.png"
-              alt="FalconVest"
+              alt="Falcon"
               width={40}
               height={40}
               className="w-10 h-10"
             />
-            <span className="text-xl font-bold">FalconVest</span>
+            <span className="text-xl font-bold">Falcon</span>
           </Link>
 
           <Dropdown placement="bottom-end">

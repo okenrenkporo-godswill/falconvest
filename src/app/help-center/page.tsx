@@ -27,7 +27,7 @@ export default function HelpCenter() {
               animate={{ opacity: 1, scale: 1 }}
               className="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter"
             >
-              How can we <span className="text-[#01C1D6]">help?</span>
+              How can we <span className="text-[#33525c]">help?</span>
             </motion.h1>
             
             <div className="max-w-2xl mx-auto relative group">
@@ -35,18 +35,18 @@ export default function HelpCenter() {
               <input 
                  type="text" 
                  placeholder="Search for articles, guides, and more..."
-                 className="w-full bg-white/5 border border-white/10 rounded-2xl py-6 pl-16 pr-6 text-white text-lg focus:outline-none focus:border-[#01C1D6]/50 transition-all placeholder:text-neutral-600"
+                 className="w-full bg-white/5 border border-white/10 rounded-2xl py-6 pl-16 pr-6 text-white text-lg focus:outline-none focus:border-[#33525c]/50 transition-all placeholder:text-neutral-600"
               />
             </div>
 
             <div className="flex flex-wrap justify-center gap-4 text-xs font-bold text-neutral-500 uppercase tracking-widest">
                <span>Popular:</span>
-               <button className="text-white hover:text-[#01C1D6] transition-colors underline decoration-[#01C1D6]">KYC Verification</button>
-               <button className="text-white hover:text-[#01C1D6] transition-colors underline decoration-[#01C1D6]">API Integration</button>
-               <button className="text-white hover:text-[#01C1D6] transition-colors underline decoration-[#01C1D6]">Withdrawal Limits</button>
+               <button className="text-white hover:text-[#33525c] transition-colors underline decoration-[#33525c]">KYC Verification</button>
+               <button className="text-white hover:text-[#33525c] transition-colors underline decoration-[#33525c]">API Integration</button>
+               <button className="text-white hover:text-[#33525c] transition-colors underline decoration-[#33525c]">Withdrawal Limits</button>
             </div>
           </div>
-          <div className="absolute top-0 left-0 w-full h-full bg-[#01C1D6]/5 blur-[120px]" />
+          <div className="absolute top-0 left-0 w-full h-full bg-[#33525c]/5 blur-[120px]" />
         </section>
 
         {/* TOPICS GRID */}
@@ -59,9 +59,9 @@ export default function HelpCenter() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
-                  className="p-10 rounded-[2.5rem] bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/5 hover:border-[#01C1D6] transition-all group cursor-pointer"
+                  className="p-10 rounded-[2.5rem] bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/5 hover:border-[#33525c] transition-all group cursor-pointer"
                 >
-                  <div className="w-14 h-14 rounded-2xl bg-[#01C1D6]/10 flex items-center justify-center text-[#01C1D6] mb-8 group-hover:scale-110 transition-transform">
+                  <div className="w-14 h-14 rounded-2xl bg-[#33525c]/10 flex items-center justify-center text-[#33525c] mb-8 group-hover:scale-110 transition-transform">
                      <topic.icon size={28} />
                   </div>
                   <h3 className="text-xl font-bold text-black dark:text-white mb-2 uppercase tracking-tight">{topic.title}</h3>
@@ -75,7 +75,7 @@ export default function HelpCenter() {
         <section className="container mx-auto px-6">
            <div className="flex items-center justify-between mb-12">
               <h2 className="text-3xl font-black text-black dark:text-white uppercase tracking-tight">Featured Articles</h2>
-              <button className="text-[#01C1D6] text-xs font-black uppercase tracking-widest flex items-center gap-2 hover:gap-3 transition-all">
+              <button className="text-[#33525c] text-xs font-black uppercase tracking-widest flex items-center gap-2 hover:gap-3 transition-all">
                 All Articles <ArrowUpRight size={14} />
               </button>
            </div>
@@ -88,8 +88,8 @@ export default function HelpCenter() {
                 "Withdrawal processing times and regional banks"
               ].map((art, i) => (
                 <div key={i} className="group p-8 rounded-3xl bg-neutral-50 dark:bg-neutral-900/50 border border-black/5 dark:border-white/5 flex items-center justify-between hover:bg-white dark:hover:bg-neutral-900 transition-all cursor-pointer">
-                   <h4 className="font-bold text-black dark:text-white group-hover:text-[#01C1D6] transition-colors">{art}</h4>
-                   <ArrowUpRight size={20} className="text-neutral-400 group-hover:text-[#01C1D6] transition-colors" />
+                   <h4 className="font-bold text-black dark:text-white group-hover:text-[#33525c] transition-colors">{art}</h4>
+                   <ArrowUpRight size={20} className="text-neutral-400 group-hover:text-[#33525c] transition-colors" />
                 </div>
               ))}
            </div>

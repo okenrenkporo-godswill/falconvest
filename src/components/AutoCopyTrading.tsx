@@ -42,7 +42,7 @@ const PhoneDashboardContent = ({
                 <div className="w-6 h-6 relative">
                     <Image src="/images/logo1.png" alt="Logo" fill className="object-contain" />
                 </div>
-                <span className="text-white font-bold text-sm">FalconVest</span>
+                <span className="text-white font-bold text-sm">Falcon</span>
             </div>
             
             {isMaster ? (
@@ -80,7 +80,7 @@ const PhoneDashboardContent = ({
         <div className="flex-1 overflow-y-auto no-scrollbar mask-gradient-b">
             <div className="flex items-center justify-between mb-4 sticky top-0 bg-neutral-950/95 backdrop-blur z-10 py-2">
                 <h4 className="text-white font-bold text-sm">{t('activePositions')}</h4>
-                <span className="text-[10px] text-[#01C1D6] bg-[#01C1D6]/5 border border-[#01C1D6]/10 px-2 py-0.5 rounded-full animate-pulse font-bold">● {t('liveSync')}</span>
+                <span className="text-[10px] text-[#33525c] bg-[#33525c]/5 border border-[#33525c]/10 px-2 py-0.5 rounded-full animate-pulse font-bold">● {t('liveSync')}</span>
             </div>
 
             <div className="space-y-3 pb-4">
@@ -117,7 +117,7 @@ const PhoneDashboardContent = ({
                            </div>
                        </div>
                        <div className="text-right">
-                           <p className="text-[#01C1D6] text-xs font-bold">{item.profit}</p>
+                           <p className="text-[#33525c] text-xs font-bold">{item.profit}</p>
                            <p className="text-neutral-500 text-[10px]">{item.amt}</p>
                        </div>
                    </motion.div>
@@ -128,7 +128,7 @@ const PhoneDashboardContent = ({
         {/* Footer Nav Simulation */}
         <div className="mt-4 pt-4 border-t border-neutral-100 flex justify-around opacity-50 relative z-20 bg-white p-2 rounded-2xl mb-2">
            <div className="w-6 h-6 rounded-full bg-neutral-100"></div>
-           <div className="w-6 h-6 rounded-full bg-[#01C1D6] scale-110 shadow-md"></div>
+           <div className="w-6 h-6 rounded-full bg-[#33525c] scale-110 shadow-md"></div>
            <div className="w-6 h-6 rounded-full bg-neutral-100"></div>
            <div className="w-6 h-6 rounded-full bg-neutral-100"></div>
        </div>
@@ -183,7 +183,7 @@ export default function AutoCopyTrading() {
                             ease: "easeInOut",
                             repeatDelay: 0.5
                         }}
-                        className="absolute w-10 h-10 rounded-full bg-[#01C1D6] border-2 border-white shadow-lg shadow-[#01C1D6]/40 z-30 flex items-center justify-center text-white font-bold text-lg"
+                        className="absolute w-10 h-10 rounded-full bg-[#33525c] border-2 border-white shadow-lg shadow-[#33525c]/40 z-30 flex items-center justify-center text-white font-bold text-lg"
                     >
                         ₿
                     </motion.div>
@@ -205,7 +205,7 @@ export default function AutoCopyTrading() {
                             ease: "easeInOut",
                             repeatDelay: 0.5
                         }}
-                        className="absolute w-10 h-10 rounded-full bg-[#01C1D6] border-2 border-white shadow-lg shadow-[#01C1D6]/40 z-30 flex items-center justify-center text-white font-bold text-[10px]"
+                        className="absolute w-10 h-10 rounded-full bg-[#33525c] border-2 border-white shadow-lg shadow-[#33525c]/40 z-30 flex items-center justify-center text-white font-bold text-[10px]"
                     >
                         TRX
                     </motion.div>
@@ -236,7 +236,7 @@ export default function AutoCopyTrading() {
                     transition={{ duration: 0.6 }}
                     className="text-5xl md:text-7xl font-bold text-black dark:text-white tracking-tight leading-[1.1]"
                 >
-                    {t('headline.introducing')} <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#01C1D6] to-blue-600">{t('headline.autocopy')}</span>
+                    {t('headline.introducing')} <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#33525c] to-blue-600">{t('headline.autocopy')}</span>
                 </motion.h2>
 
                 <motion.p 
@@ -256,7 +256,7 @@ export default function AutoCopyTrading() {
                     transition={{ duration: 0.6, delay: 0.4 }}
                 >
                     <Link href="/register">
-                        <button className="bg-[#01C1D6] hover:bg-[#00ADC0] text-white text-lg font-bold px-8 py-4 rounded-xl shadow-lg shadow-[#01C1D6]/20 transition-all transform hover:-translate-y-1">
+                        <button className="bg-[#33525c] hover:bg-[#2a4550] text-white text-lg font-bold px-8 py-4 rounded-xl shadow-lg shadow-[#33525c]/20 transition-all transform hover:-translate-y-1">
                             {t('cta')}
                         </button>
                     </Link>

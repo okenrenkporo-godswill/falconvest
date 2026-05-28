@@ -22,22 +22,22 @@ export default function PartnershipsPage() {
            <div className="grid md:grid-cols-2 gap-8 mb-16">
               <Card className="bg-neutral-50 dark:bg-neutral-900/40 border-none shadow-xl rounded-[2.5rem] overflow-hidden">
                 <CardBody className="p-10 flex flex-col items-start gap-6">
-                   <div className="p-4 rounded-2xl bg-[#01C1D6]/10 text-[#01C1D6]">
+                   <div className="p-4 rounded-2xl bg-[#33525c]/10 text-[#33525c]">
                       <Users size={32} />
                    </div>
                    <h3 className="text-2xl font-black text-black dark:text-white uppercase tracking-tighter">Affiliate Program</h3>
                    <p className="text-neutral-500 dark:text-neutral-400 font-medium leading-relaxed">
-                      Earn industry-leading commissions by introducing clients to FalconVest. Benefit from our high conversion rates and institutional brand reputation.
+                      Earn industry-leading commissions by introducing clients to Falcon. Benefit from our high conversion rates and institutional brand reputation.
                    </p>
                    <ul className="space-y-3">
                       {["Up to 50% Revenue Share", "Real-time Tracking Dashboard", "Dedicated Account Manager"].map((item, i) => (
                         <li key={i} className="flex items-center gap-3 text-sm font-bold text-black dark:text-white">
-                           <div className="w-1.5 h-1.5 rounded-full bg-[#01C1D6]" />
+                           <div className="w-1.5 h-1.5 rounded-full bg-[#33525c]" />
                            {item}
                         </li>
                       ))}
                    </ul>
-                   <Button className="mt-4 bg-[#01C1D6] text-white font-black uppercase tracking-widest rounded-2xl h-14 px-8 shadow-lg shadow-[#01C1D6]/20">
+                   <Button className="mt-4 bg-[#33525c] text-white font-black uppercase tracking-widest rounded-2xl h-14 px-8 shadow-lg shadow-[#33525c]/20">
                       Become an Affiliate
                    </Button>
                 </CardBody>
@@ -55,7 +55,7 @@ export default function PartnershipsPage() {
                    <ul className="space-y-3">
                       {["Custom Branding & UI", "Deep Institutional Liquidity", "Robust Risk Management Tools"].map((item, i) => (
                         <li key={i} className="flex items-center gap-3 text-sm font-bold opacity-80">
-                           <div className="w-1.5 h-1.5 rounded-full bg-[#01C1D6]" />
+                           <div className="w-1.5 h-1.5 rounded-full bg-[#33525c]" />
                            {item}
                         </li>
                       ))}
@@ -69,22 +69,22 @@ export default function PartnershipsPage() {
 
            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-12 border-t border-black/5 dark:border-white/5">
                <div className="text-center">
-                  <Globe2 className="mx-auto mb-4 text-[#01C1D6]" size={32} />
+                  <Globe2 className="mx-auto mb-4 text-[#33525c]" size={32} />
                   <h4 className="text-2xl font-black text-black dark:text-white">120+</h4>
                   <p className="text-xs font-bold text-neutral-500 uppercase tracking-widest">Countries</p>
                </div>
                <div className="text-center">
-                  <BarChart className="mx-auto mb-4 text-[#01C1D6]" size={32} />
+                  <BarChart className="mx-auto mb-4 text-[#33525c]" size={32} />
                   <h4 className="text-2xl font-black text-black dark:text-white">$500M+</h4>
                   <p className="text-xs font-bold text-neutral-500 uppercase tracking-widest">Volume Processed</p>
                </div>
                <div className="text-center">
-                  <Users className="mx-auto mb-4 text-[#01C1D6]" size={32} />
+                  <Users className="mx-auto mb-4 text-[#33525c]" size={32} />
                   <h4 className="text-2xl font-black text-black dark:text-white">10K+</h4>
                   <p className="text-xs font-bold text-neutral-500 uppercase tracking-widest">Active Partners</p>
                </div>
                <div className="text-center">
-                  <Handshake className="mx-auto mb-4 text-[#01C1D6]" size={32} />
+                  <Handshake className="mx-auto mb-4 text-[#33525c]" size={32} />
                   <h4 className="text-2xl font-black text-black dark:text-white">24/7</h4>
                   <p className="text-xs font-bold text-neutral-500 uppercase tracking-widest">Global Support</p>
                </div>

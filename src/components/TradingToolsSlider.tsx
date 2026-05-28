@@ -18,7 +18,7 @@ const ProtectionAnimation = ({ t }: { t: any }) => {
                 {/* Header */}
                 <div className="flex justify-between items-center mb-4 border-b border-black/5 dark:border-white/5 pb-2">
                     <div className="flex items-center gap-2">
-                         <div className="w-2 h-2 rounded-full bg-[#01C1D6] animate-pulse"></div>
+                         <div className="w-2 h-2 rounded-full bg-[#33525c] animate-pulse"></div>
                          <span className="text-black dark:text-white text-xs font-bold">BTC/USD</span>
                     </div>
                     <span className="text-neutral-500 dark:text-neutral-400 text-xs text-[10px]">{t('protection.liveProtection')}</span>
@@ -70,14 +70,14 @@ const ProtectionAnimation = ({ t }: { t: any }) => {
 
             </div>
 
-             {/* FalconVest Branding */}
+             {/* Falcon Branding */}
              <div className="absolute bottom-6 flex flex-col items-center gap-1 opacity-50">
                 <span className="text-[10px] text-neutral-500 uppercase tracking-widest">{t('protection.poweredBy')}</span>
                 <div className="flex items-center gap-1.5 grayscale">
                     <div className="w-4 h-4 relative">
                          <Image src="/images/logo1.png" alt="Logo" fill className="object-contain" />
                     </div>
-                    <span className="text-black dark:text-white font-bold text-xs">FalconVest</span>
+                    <span className="text-black dark:text-white font-bold text-xs">Falcon</span>
                 </div>
             </div>
         </div>
@@ -131,7 +131,7 @@ export default function TradingToolsSlider() {
   };
 
   return (
-    <section className="bg-transparent py-24 relative overflow-hidden transition-colors duration-500">
+    <section className="bg-transparent pt-8 pb-24 relative overflow-hidden transition-colors duration-500">
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
           
@@ -147,8 +147,8 @@ export default function TradingToolsSlider() {
                 className="space-y-6"
               >
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-[1px] bg-[#01C1D6]"></div>
-                    <span className="text-[#01C1D6] font-bold uppercase tracking-wider text-sm">
+                    <div className="w-10 h-[1px] bg-[#33525c]"></div>
+                    <span className="text-[#33525c] font-bold uppercase tracking-wider text-sm">
                         {t(`slides.${currentSlide}.category`)}
                     </span>
                 </div>
@@ -174,7 +174,7 @@ export default function TradingToolsSlider() {
                     >
                         {currentSlide === index && (
                              <motion.div 
-                                className="absolute top-0 left-0 h-full bg-[#01C1D6]"
+                                className="absolute top-0 left-0 h-full bg-[#33525c]"
                                 style={{ width: `${progress}%` }}
                              />
                         )}
@@ -192,7 +192,7 @@ export default function TradingToolsSlider() {
                     <div className="w-5 h-5 relative">
                         <Image src="/images/logo1.png" alt="Logo" fill className="object-contain" />
                     </div>
-                    <span className="text-neutral-900 font-bold text-xs">FalconVest</span>
+                    <span className="text-neutral-900 font-bold text-xs">Falcon</span>
                  </div>
              )}
 

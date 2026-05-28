@@ -86,10 +86,10 @@ export default function HeroBanner() {
                initial={{ opacity: 0, y: 20 }}
                animate={{ opacity: 1, y: 0 }}
                transition={{ delay: 0.3 }}
-               className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#01C1D6]/20 border border-[#01C1D6]/30 backdrop-blur-md"
+               className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#33525c]/20 border border-[#33525c]/30 backdrop-blur-md"
              >
-                 <span className="w-2 h-2 rounded-full bg-[#01C1D6] animate-pulse"></span>
-                 <span className="text-white text-xs font-bold uppercase tracking-wider">FalconVest Pro</span>
+                 <span className="w-2 h-2 rounded-full bg-[#33525c] animate-pulse"></span>
+                 <span className="text-white text-xs font-bold uppercase tracking-wider">Falcon Pro</span>
              </motion.div>
 
              {/* Headline */}
@@ -110,7 +110,7 @@ export default function HeroBanner() {
                     as={Link} 
                     href={slides[currentSlide].ctaLink} 
                     size="lg"
-                    className="bg-[#01C1D6] text-white font-bold px-8 py-6 rounded-full shadow-lg shadow-[#01C1D6]/30 border border-[#01C1D6]/50 hover:scale-105 transition-transform"
+                    className="bg-[#33525c] text-white font-bold px-8 py-6 rounded-full shadow-lg shadow-[#33525c]/30 border border-[#33525c]/50 hover:scale-105 transition-transform"
                  >
                     {slides[currentSlide].cta}
                  </Button>

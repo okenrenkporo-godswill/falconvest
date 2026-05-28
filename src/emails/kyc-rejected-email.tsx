@@ -41,12 +41,12 @@ export default function KycRejectedEmail({
       <Section style={buttonContainer}>
         <Button
           style={button}
-          href={`${process.env.NEXT_PUBLIC_APP_URL || "https://FalconVest.live"}/onboarding/kyc`}
+          href={`${process.env.NEXT_PUBLIC_APP_URL || "https://Falcon.live"}/onboarding/kyc`}
         >
           Resubmit Documents
         </Button>
       </Section>
-      <Text style={signature}>FalconVest Team</Text>
+      <Text style={signature}>Falcon Team</Text>
     </EmailTemplate>
   );
 }

@@ -28,7 +28,7 @@ export default function CpanelLoginPage() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <Card shadow="none" isBlurred className="w-full max-w-md">
         <CardHeader className="flex flex-col gap-3 items-center">
-          <img src="/images/logo1.png" alt="FalconVest" className="w-16 h-16" />
+          <img src="/images/logo1.png" alt="Falcon" className="w-16 h-16" />
           <div className="text-center">
             <h1 className="text-2xl font-bold">cPanel Login</h1>
             <p className="text-sm text-default-600">Sign in to control panel</p>
@@ -40,7 +40,7 @@ export default function CpanelLoginPage() {
               name="email"
               type="email"
               label="Email"
-              placeholder="admin@FalconVest.com"
+              placeholder="admin@Falcon.com"
               isRequired
               errorMessage={({ validationDetails }) => {
                 if (validationDetails.valueMissing) return "Please enter your email";

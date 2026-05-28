@@ -1,7 +1,6 @@
 "use client";
 
-import { Button, Input, Card, CardBody, CardHeader, Form } from "@heroui/react";
-import { Alert } from "@heroui/alert";
+import { Button, Input, Card, CardBody, CardHeader, Form, Alert } from "@heroui/react";
 import { forgotPasswordAction } from "@/actions/auth";
 import { useState } from "react";
 

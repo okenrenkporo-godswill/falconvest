@@ -1,3 +1,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ==========================================================================
+   GOOGLE TRANSLATE SILENT & GENTLE OVERRIDES (ELITEWAVE PATTERN)
+   ========================================================================== */
+
+/* Aggressively hide Google Translate top banner iframe entirely */
+.goog-te-banner-frame,
+.goog-te-banner,
+.goog-te-banner-frame.skiptranslate,
+iframe.goog-te-banner-frame,
+.goog-te-balloon-frame,
+#goog-gt-tt,
+.goog-te-tooltip,
+.goog-te-tooltip2 {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* Prevent Google Translate from adding margin/padding to the top of body */
+body {
+  top: 0 !important;
+}
+.goog-text-highlight {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
