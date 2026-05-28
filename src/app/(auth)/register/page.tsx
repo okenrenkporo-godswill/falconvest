@@ -54,8 +54,7 @@ export default function RegisterPage() {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [pendingEmail, setPendingEmail] = useState("");
+
 
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedState, setSelectedState] = useState("");
@@ -82,16 +81,8 @@ export default function RegisterPage() {
 
   async function handleStep1(formData: FormData) {
     const emailValue = formData.get("email") as string;
-    setPendingEmail(emailValue);
-    onOpen();
-  }
-
-  async function acceptTermsAndContinue(onClose: () => void) {
     setLoading(true);
     setError("");
-
-    const formData = new FormData();
-    formData.append("email", pendingEmail);
 
     try {
       const result = await sendOtpAction(formData);
@@ -100,9 +91,8 @@ export default function RegisterPage() {
         setError(result.error);
         addToast({ title: "Error", description: result.error, color: "danger" });
       } else {
-        setEmail(pendingEmail);
+        setEmail(emailValue);
         setStep(2);
-        onClose();
         addToast({
           title: "Success",
           description: "OTP sent to your email",
@@ -248,48 +238,7 @@ export default function RegisterPage() {
           </CardBody>
         </Card>
 
-        {/* ✅ Professional Seamless Modal */}
-        <Modal
-          isOpen={isOpen}
-          onOpenChange={onOpenChange}
-          isDismissable={false}
-          shouldBlockScroll
-          classNames={{
-            backdrop: "bg-black/50 backdrop-blur-sm",
-            base: "bg-white dark:bg-black border-none shadow-none max-w-sm mx-4",
-            header: "px-8 pt-8 pb-4",
-            body: "px-8 py-0",
-            footer: "px-8 pt-4 pb-8",
-          }}
-        >
-          <ModalContent>
-            {(onClose) => (
-              <>
-                <ModalHeader>
-                   <h2 className="text-xl font-bold text-black dark:text-white">
-                      Terms of Service
-                   </h2>
-                </ModalHeader>
-                <ModalBody>
-                  <p className="text-xs text-default-500 leading-relaxed font-medium">
-                    By proceeding, you acknowledge the risk protocols of institutional trading. Performance data is historical and not guaranteed.
-                  </p>
-                </ModalBody>
-                <ModalFooter>
-                  <Button
-                    className="w-full bg-[#33525c] text-white font-bold h-12 rounded-xl"
-                    onPress={() => {
-                      acceptTermsAndContinue(onClose);
-                    }}
-                    isLoading={loading}
-                  >
-                    Accept & Continue
-                  </Button>
-                </ModalFooter>
-              </>
-            )}
-          </ModalContent>
-        </Modal>
+
       </div>
     );
   }
