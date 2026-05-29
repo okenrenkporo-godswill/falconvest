@@ -1,9 +1,9 @@
 "use client";
 
-import { Card, CardBody, Skeleton, Chip, Input } from "@heroui/react";
+import { Card, CardBody, Skeleton, Chip, Input, Button, addToast } from "@heroui/react";
 import { useEffect, useState } from "react";
-import { getAllUsers } from "@/actions/admin";
-import { Search } from "lucide-react";
+import { getAllUsers, deleteUserAction } from "@/actions/admin";
+import { Search, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { Pagination } from "@/components/shared/pagination";
 
@@ -30,6 +30,20 @@ export function UsersContent() {
     setTotalCount(result.totalCount);
     setStats(result.stats);
     setIsLoading(false);
+  };
+
+  const handleDeleteUser = async (userId: string, email: string) => {
+    if (!confirm(`Are you sure you want to delete user ${email} permanently? This action cannot be undone.`)) return;
+    
+    setIsLoading(true);
+    const result = await deleteUserAction(userId);
+    if (result.error) {
+      addToast({ title: "Error", description: result.error, color: "danger" });
+      setIsLoading(false);
+    } else {
+      addToast({ title: "Success", description: "User deleted successfully", color: "success" });
+      loadUsers(currentPage);
+    }
   };
 
   useEffect(() => {
@@ -167,6 +181,16 @@ export function UsersContent() {
                       >
                         {user.kyc_status || "unverified"}
                       </Chip>
+                      <Button
+                        isIconOnly
+                        color="danger"
+                        variant="light"
+                        size="sm"
+                        aria-label="Delete User"
+                        onPress={() => handleDeleteUser(user.id, user.email)}
+                      >
+                        <Trash2 size={16} />
+                      </Button>
                     </div>
                   </div>
                 </Link>

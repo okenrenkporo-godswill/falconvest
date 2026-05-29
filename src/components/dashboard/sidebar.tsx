@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { LogOut, ChevronLeft } from "lucide-react";
 import { logoutAction } from "@/actions/auth";
 import Image from "next/image";
+import { FalconLogo } from "@/components/ui/logo-loader";
 
 export type NavItem = {
   href: string;
@@ -33,15 +34,15 @@ export function Sidebar({ collapsed, onToggle, navItems }: SidebarProps) {
       <div className="flex h-14 items-center border-b border-divider px-4">
         {!collapsed && (
           <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center">
-              <Image src="/images/logo1.png" alt="Logo" width={24} height={24} />
-            </div>
-            <span className="font-semibold">Falcon</span>
+            <FalconLogo className="w-6 h-6" />
+            <span className="font-semibold text-sm">
+              Falcon<span className="text-[#33525c] dark:text-[#7eb2bd]">Vest</span>
+            </span>
           </Link>
         )}
         {collapsed && (
-          <div className="mx-auto flex h-7 w-7 items-center justify-center">
-            <Image src="/images/logo1.png" alt="Logo" width={24} height={24} />
+          <div className="mx-auto">
+            <FalconLogo className="w-6 h-6" />
           </div>
         )}
         {!collapsed && (

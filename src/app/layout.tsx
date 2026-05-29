@@ -8,12 +8,12 @@ import { getLocale, getMessages } from "next-intl/server";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Falcon - Trading Platform",
+  title: "FalconVest - Advanced Social Copy-Trading & Investment Platform",
   description:
-    "Your trades in stocks, crypto, and options are now safeguarded with the highest encryption standards. Copy top strategies effortlessly—trade smarter, safer.",
+    "Safeguard your trades in stocks, crypto, and forex with FalconVest's secure social copy-trading platform. Mirror institutional-grade strategies, trade smarter with bank-grade encryption, and maximize your returns effortlessly.",
   icons: {
-    icon: [{ url: "/images/logo1.png" }, { url: "/favicon.ico" }],
-    apple: "/images/logo1.png",
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    apple: "/favicon.svg",
   },
 };
 

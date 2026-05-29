@@ -3,16 +3,18 @@
 import { Card, CardBody, Skeleton, Chip, Tabs, Tab, Button, addToast, Avatar, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input } from "@heroui/react";
 import { useEffect, useState } from "react";
 import { getUserDetails } from "@/actions/admin-user-details";
-import { approveKycAction, rejectKycAction, suspendUserAccount, reactivateUserAccount } from "@/actions/admin";
+import { approveKycAction, rejectKycAction, suspendUserAccount, reactivateUserAccount, deleteUserAction } from "@/actions/admin";
 import { CopyTradesContent } from "./copy-trades-content";
-import { ArrowLeft, User, Wallet, TrendingUp, ArrowDownCircle, ArrowUpCircle, Lock, ShieldCheck, Plus, CheckCircle, XCircle, Ban, Eye } from "lucide-react";
+import { ArrowLeft, User, Wallet, TrendingUp, ArrowDownCircle, ArrowUpCircle, Lock, ShieldCheck, Plus, CheckCircle, XCircle, Ban, Eye, Trash2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { AddCopyTradeResultModal } from "./add-copy-trade-result-modal";
 import { UpdateBalanceModal } from "./update-balance-modal";
 import { getCryptoPrices } from "@/lib/crypto-prices";
 
 export function UserDetailsContent({ userId }: { userId: string }) {
+  const router = useRouter();
   const [data, setData] = useState<any>(null);
   const [prices, setPrices] = useState<Record<string, number>>({});
   const [isLoading, setIsLoading] = useState(true);
@@ -103,6 +105,20 @@ export function UserDetailsContent({ userId }: { userId: string }) {
     } else {
       addToast({ title: "Success", description: "User reactivated", color: "success" });
       loadData();
+    }
+  };
+
+  const handleDeleteUser = async () => {
+    if (!confirm("Are you sure you want to delete this user account permanently? This action cannot be undone and will delete all user data.")) return;
+    setActionLoading(true);
+    const result = await deleteUserAction(userId);
+    setActionLoading(false);
+    
+    if (result.error) {
+      addToast({ title: "Error", description: result.error, color: "danger" });
+    } else {
+      addToast({ title: "Success", description: "User deleted successfully", color: "success" });
+      router.push("/cpanel/users");
     }
   };
 
@@ -347,6 +363,17 @@ export function UserDetailsContent({ userId }: { userId: string }) {
                 View KYC Documents
               </Button>
             )}
+
+            {/* Delete User */}
+            <Button
+              color="danger"
+              variant="solid"
+              startContent={<Trash2 size={16} />}
+              onPress={handleDeleteUser}
+              isLoading={actionLoading}
+            >
+              Delete User
+            </Button>
           </div>
         </CardBody>
       </Card>
