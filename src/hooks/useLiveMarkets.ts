@@ -72,43 +72,45 @@ export function useLiveMarkets() {
     // ... (fetchForex remains the same)
 
     const fetchForex = async () => {
-            const response = await fetch("https://api.exchangerate.host/latest?base=USD");
-            if (!response.ok) throw new Error("Forex API error");
-            const json = await response.json();
-            const rates = json.rates;
+    try {
+        const response = await fetch("https://api.exchangerate.host/latest?base=USD");
+        if (!response.ok) throw new Error("Forex API error");
+        const json = await response.json();
+        const rates = json.rates;
 
-            const pairs = [
-                { id: "eurusd", name: "EUR/USD", symbol: "EURUSD", price: 1 / rates.EUR },
-                { id: "gbpusd", name: "GBP/USD", symbol: "GBPUSD", price: 1 / rates.GBP },
-                { id: "usdjpy", name: "USD/JPY", symbol: "USDJPY", price: rates.JPY },
-                { id: "audusd", name: "AUD/USD", symbol: "AUDUSD", price: 1 / rates.AUD },
-                { id: "usdchf", name: "USD/CHF", symbol: "USDCHF", price: rates.CHF },
-                { id: "usdcad", name: "USD/CAD", symbol: "USDCAD", price: rates.CAD },
-            ];
+        const pairs = [
+            { id: "eurusd", name: "EUR/USD", symbol: "EURUSD", price: 1 / rates.EUR },
+            { id: "gbpusd", name: "GBP/USD", symbol: "GBPUSD", price: 1 / rates.GBP },
+            { id: "usdjpy", name: "USD/JPY", symbol: "USDJPY", price: rates.JPY },
+            { id: "audusd", name: "AUD/USD", symbol: "AUDUSD", price: 1 / rates.AUD },
+            { id: "usdchf", name: "USD/CHF", symbol: "USDCHF", price: rates.CHF },
+            { id: "usdcad", name: "USD/CAD", symbol: "USDCAD", price: rates.CAD },
+        ];
 
-            const mapped: MarketAsset[] = pairs.map(item => ({
-                ...item,
-                buy: item.price,
-                sell: item.price * 0.9995,
-                change24h: Number((Math.random() * 0.4 - 0.2).toFixed(4)),
-                trend: Array.from({ length: 15 }, () => Math.random() * 0.01 + item.price),
-                category: "Forex"
-            }));
+        const mapped: MarketAsset[] = pairs.map(item => ({
+            ...item,
+            buy: item.price,
+            sell: item.price * 0.9995,
+            change24h: Number((Math.random() * 0.4 - 0.2).toFixed(4)),
+            trend: Array.from({ length: 15 }, () => Math.random() * 0.01 + item.price),
+            category: "Forex",
+        }));
 
-            updateMarketSlice("Forex", mapped);
-        } catch (e) {
-            console.error("Forex fetch failed", e);
-            // Fallback for Forex
-            const fallbackForex: MarketAsset[] = [
-                { id: "eurusd", name: "EUR/USD", symbol: "EURUSD", price: 1.0824, buy: 1.0824, sell: 1.0820, change24h: 0.15, trend: [1.081, 1.082, 1.0815, 1.0824], category: "Forex" },
-                { id: "gbpusd", name: "GBP/USD", symbol: "GBPUSD", price: 1.2652, buy: 1.2652, sell: 1.2647, change24h: -0.22, trend: [1.267, 1.266, 1.265, 1.2652], category: "Forex" },
-                { id: "usdjpy", name: "USD/JPY", symbol: "USDJPY", price: 150.45, buy: 150.45, sell: 150.38, change24h: 0.42, trend: [150.1, 150.2, 150.3, 150.45], category: "Forex" },
-                { id: "audusd", name: "AUD/USD", symbol: "AUDUSD", price: 0.6542, buy: 0.6542, sell: 0.6538, change24h: 0.08, trend: [0.653, 0.654, 0.6538, 0.6542], category: "Forex" },
-                { id: "usdchf", name: "USD/CHF", symbol: "USDCHF", price: 0.8812, buy: 0.8812, sell: 0.8808, change24h: -0.12, trend: [0.882, 0.8815, 0.881, 0.8812], category: "Forex" },
-            ];
-            updateMarketSlice("Forex", fallbackForex);
-        }
-    };
+        updateMarketSlice("Forex", mapped);
+    } catch (e) {
+        console.error("Forex fetch failed", e);
+        // Fallback for Forex
+        const fallbackForex: MarketAsset[] = [
+            { id: "eurusd", name: "EUR/USD", symbol: "EURUSD", price: 1.0824, buy: 1.0824, sell: 1.0820, change24h: 0.15, trend: [1.081, 1.082, 1.0815, 1.0824], category: "Forex" },
+            { id: "gbpusd", name: "GBP/USD", symbol: "GBPUSD", price: 1.2652, buy: 1.2652, sell: 1.2647, change24h: -0.22, trend: [1.267, 1.266, 1.265, 1.2652], category: "Forex" },
+            { id: "usdjpy", name: "USD/JPY", symbol: "USDJPY", price: 150.45, buy: 150.45, sell: 150.38, change24h: 0.42, trend: [150.1, 150.2, 150.3, 150.45], category: "Forex" },
+            { id: "audusd", name: "AUD/USD", symbol: "AUDUSD", price: 0.6542, buy: 0.6542, sell: 0.6538, change24h: 0.08, trend: [0.653, 0.654, 0.6538, 0.6542], category: "Forex" },
+            { id: "usdchf", name: "USD/CHF", symbol: "USDCHF", price: 0.8812, buy: 0.8812, sell: 0.8808, change24h: -0.12, trend: [0.882, 0.8815, 0.881, 0.8812], category: "Forex" },
+        ];
+        updateMarketSlice("Forex", fallbackForex);
+    }
+};
+
 
     const simulateOthers = () => {
         const baseData: Partial<Record<MarketCategory, any[]>> = {
