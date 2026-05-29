@@ -31,7 +31,7 @@ export default function KycApprovedEmail({ name }: KycApprovedEmailProps) {
       <Section style={buttonContainer}>
         <Button
           style={button}
-          href={process.env.NEXT_PUBLIC_APP_URL || "https://Falcon.live"}
+          href={process.env.NEXT_PUBLIC_APP_URL || "https://falconvest.live"}
         >
           Go to Dashboard
         </Button>

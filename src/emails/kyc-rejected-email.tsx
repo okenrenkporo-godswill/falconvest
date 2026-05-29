@@ -41,7 +41,7 @@ export default function KycRejectedEmail({
       <Section style={buttonContainer}>
         <Button
           style={button}
-          href={`${process.env.NEXT_PUBLIC_APP_URL || "https://Falcon.live"}/onboarding/kyc`}
+          href={`${process.env.NEXT_PUBLIC_APP_URL || "https://falconvest.live"}/onboarding/kyc`}
         >
           Resubmit Documents
         </Button>

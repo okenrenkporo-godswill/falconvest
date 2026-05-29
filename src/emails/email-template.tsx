@@ -27,7 +27,7 @@ export function EmailTemplate({ preview, children }: EmailTemplateProps) {
           <Section>
             <div className="w-[45px] h-[45px] flex justify-center items-center overflow-hidden relative">
               <Img
-                src="https://Falcon.live/images/logo1.png"
+                src="https://falconvest.live/images/logo1.png"
                 alt="Falcon"
                 style={logo}
               />
@@ -36,7 +36,7 @@ export function EmailTemplate({ preview, children }: EmailTemplateProps) {
             {/* Footer */}
             <Text style={footer}>
               <Link
-                href="https://Falcon.live"
+                href="https://falconvest.live"
                 target="_blank"
                 style={footerLink}
               >

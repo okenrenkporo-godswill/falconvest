@@ -37,7 +37,7 @@ export default function AuthLayout({
               {['Terms', 'Privacy', 'Support'].map((item) => (
                 <Link
                   key={item}
-                  href={item === 'Support' ? "mailto:support@Falcon.live" : `/${item.toLowerCase()}`}
+                  href={item === 'Support' ? "mailto:support@falconvest.live" : `/${item.toLowerCase()}`}
                   className="text-[10px] font-black text-neutral-400 hover:text-[#33525c] transition-colors uppercase tracking-widest"
                 >
                   {item}
