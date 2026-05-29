@@ -176,7 +176,7 @@ export async function loginVerifyOtpAction(formData: FormData) {
     }
 
     revalidatePath("/", "layout");
-    redirect("/cpanel/admin");
+    return { success: true, redirect: "/cpanel/admin" };
   }
 
   // Notify admin of user login
@@ -195,7 +195,7 @@ export async function loginVerifyOtpAction(formData: FormData) {
   }
 
   revalidatePath("/", "layout");
-  redirect("/dashboard");
+  return { success: true, redirect: "/dashboard" };
 }
 
 const sendOtpSchema = z.object({
@@ -376,8 +376,7 @@ export async function completeProfileAction(formData: FormData) {
       return { error: signInError.message };
     }
 
-    redirect("/dashboard");
-    return { success: true };
+    return { success: true, redirect: "/dashboard" };
   }
 
   // Create user account with Supabase Auth
@@ -435,7 +434,7 @@ export async function completeProfileAction(formData: FormData) {
     console.error("Failed to send emails:", emailError);
   }
 
-  redirect("/dashboard");
+  return { success: true, redirect: "/dashboard" };
 }
 
 export async function logoutAction() {

@@ -34,6 +34,7 @@ import Link from "next/link";
 import { Country, State, City } from "country-state-city";
 import { Eye, EyeOff } from "lucide-react";
 import { FalconLogo } from "@/components/ui/logo-loader";
+import { useRouter } from "next/navigation";
 
 
 // ✅ Prevent SSR crash
@@ -55,6 +56,7 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const router = useRouter();
 
 
 
@@ -140,8 +142,11 @@ export default function RegisterPage() {
       if (result?.error) {
         setError(result.error);
         addToast({ title: "Error", description: result.error, color: "danger" });
-      } else {
+      } else if (result?.success) {
         addToast({ title: "Account Created", color: "success" });
+        if (result.redirect) {
+          router.push(result.redirect);
+        }
       }
     } catch {
       setError("Unexpected error occurred");

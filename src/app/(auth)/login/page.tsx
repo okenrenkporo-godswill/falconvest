@@ -18,7 +18,7 @@ import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { loginAction, loginVerifyOtpAction } from "@/actions/auth";
 import { useState, useEffect, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { FalconLogo } from "@/components/ui/logo-loader";
 
 
@@ -30,6 +30,7 @@ const InputOtp = dynamic(
 
 function LoginContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   const [step, setStep] = useState<"credentials" | "otp">("credentials");
   const [email, setEmail] = useState("");
@@ -127,6 +128,11 @@ function LoginContent() {
       if (result?.error) {
         setError(result.error);
         addToast({ title: "Error", description: result.error, color: "danger" });
+      } else if (result?.success) {
+        addToast({ title: "Success", description: "Logged in successfully", color: "success" });
+        if (result.redirect) {
+          router.push(result.redirect);
+        }
       }
     } catch {
       setError("An error occurred");
