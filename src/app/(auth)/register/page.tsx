@@ -33,6 +33,8 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import { Country, State, City } from "country-state-city";
 import { Eye, EyeOff } from "lucide-react";
+import { FalconLogo } from "@/components/ui/logo-loader";
+
 
 // ✅ Prevent SSR crash
 const InputOtp = dynamic(
@@ -147,7 +149,6 @@ export default function RegisterPage() {
       setLoading(false);
     }
   }
-
   // ================= STEP 1 =================
   if (step === 1) {
     return (
@@ -155,30 +156,7 @@ export default function RegisterPage() {
         <Card shadow="none" className="bg-transparent dark:bg-transparent border-none px-0">
           <CardHeader className="flex flex-col items-center px-0 pt-0 pb-8 space-y-6 text-center">
             <Link href="/" className="transition-transform hover:scale-105 flex flex-col items-center gap-2">
-              {/* New Dynamic Logo */}
-              <div className="relative w-16 h-16 flex items-center justify-center shrink-0">
-                <div className="absolute inset-0 bg-[#7eb2bd]/20 dark:bg-[#33525c]/20 blur-md rounded-full scale-110" />
-                <svg viewBox="0 0 100 100" className="w-12 h-12 relative z-10 drop-shadow-[0_2px_8px_rgba(51,82,92,0.3)]">
-                  <path 
-                      d="M 50 10 L 85 45 L 70 50 L 50 25 L 30 50 L 15 45 Z" 
-                      fill="url(#reg-logo-1)" 
-                  />
-                  <path 
-                      d="M 50 30 L 90 70 L 65 75 L 50 55 L 35 75 L 10 70 Z" 
-                      fill="url(#reg-logo-2)" 
-                  />
-                  <defs>
-                      <linearGradient id="reg-logo-1" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#7eb2bd" />
-                          <stop offset="100%" stopColor="#33525c" />
-                      </linearGradient>
-                      <linearGradient id="reg-logo-2" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#a9ccd3" />
-                          <stop offset="100%" stopColor="#5399a7" />
-                      </linearGradient>
-                  </defs>
-                </svg>
-              </div>
+              <FalconLogo className="w-12 h-12" />
             </Link>
             <div className="space-y-1">
               <h1 className="text-3xl font-bold text-black dark:text-white">
@@ -205,7 +183,7 @@ export default function RegisterPage() {
                 variant="flat"
                 isRequired 
                 labelPlacement="outside"
-                placeholder="name@example.com"
+                placeholder="Enter your email address"
                 classNames={{
                   label: "text-xs font-bold text-default-600 ml-1",
                   inputWrapper: "h-14 bg-black/5 dark:bg-white/5 group-data-[focus=true]:bg-black/10 dark:group-data-[focus=true]:bg-white/10 hover:bg-black/10 dark:hover:bg-white/10 transition-colors rounded-xl border-none",
@@ -216,9 +194,10 @@ export default function RegisterPage() {
               <Button 
                 type="submit" 
                 isLoading={loading} 
+                disabled={loading}
                 className="w-full bg-[#33525c] text-white font-bold h-14 rounded-xl hover:scale-[1.01] transition-transform shadow-xl shadow-[#33525c]/20 mt-4"
               >
-                Continue
+                {loading ? "Sending Code..." : "Continue"}
               </Button>
             </Form>
 
@@ -237,8 +216,6 @@ export default function RegisterPage() {
             </div>
           </CardBody>
         </Card>
-
-
       </div>
     );
   }
@@ -250,30 +227,7 @@ export default function RegisterPage() {
         <Card shadow="none" className="bg-transparent dark:bg-transparent border-none px-0">
           <CardHeader className="flex flex-col items-center px-0 pt-0 pb-8 space-y-6 text-center">
             <Link href="/" className="transition-transform hover:scale-105 flex flex-col items-center gap-2">
-              {/* New Dynamic Logo */}
-              <div className="relative w-16 h-16 flex items-center justify-center shrink-0">
-                <div className="absolute inset-0 bg-[#7eb2bd]/20 dark:bg-[#33525c]/20 blur-md rounded-full scale-110" />
-                <svg viewBox="0 0 100 100" className="w-12 h-12 relative z-10 drop-shadow-[0_2px_8px_rgba(51,82,92,0.3)]">
-                  <path 
-                      d="M 50 10 L 85 45 L 70 50 L 50 25 L 30 50 L 15 45 Z" 
-                      fill="url(#reg-logo-3)" 
-                  />
-                  <path 
-                      d="M 50 30 L 90 70 L 65 75 L 50 55 L 35 75 L 10 70 Z" 
-                      fill="url(#reg-logo-4)" 
-                  />
-                  <defs>
-                      <linearGradient id="reg-logo-3" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#7eb2bd" />
-                          <stop offset="100%" stopColor="#33525c" />
-                      </linearGradient>
-                      <linearGradient id="reg-logo-4" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#a9ccd3" />
-                          <stop offset="100%" stopColor="#5399a7" />
-                      </linearGradient>
-                  </defs>
-                </svg>
-              </div>
+              <FalconLogo className="w-12 h-12" />
             </Link>
             <div className="space-y-1">
               <h1 className="text-3xl font-bold text-black dark:text-white">
@@ -289,7 +243,7 @@ export default function RegisterPage() {
             <Alert 
               color="primary" 
               variant="flat"
-              className="bg-[#33525c]/10 text-[#33525c] border-none font-semibold text-xs"
+              className="bg-[#33525c]/10 text-[#33525c] border-none font-semibold text-xs animate-fade-in"
             >
               Please enter the 6-digit code to continue
             </Alert>
@@ -308,8 +262,10 @@ export default function RegisterPage() {
                     length={6} 
                     size="lg"
                     variant="flat"
+                    placeholder="•"
                     classNames={{
-                        input: "bg-black/5 dark:bg-white/5 border-none focus:ring-2 ring-[#33525c]/50"
+                      segment: "w-12 h-14 text-2xl font-black bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl focus-within:border-[#33525c] focus-within:ring-2 focus-within:ring-[#33525c]/20 transition-all",
+                      input: "font-black text-center text-neutral-800 dark:text-neutral-200"
                     }}
                   />
                 )}
@@ -318,9 +274,10 @@ export default function RegisterPage() {
               <Button 
                 type="submit" 
                 isLoading={loading} 
+                disabled={loading}
                 className="w-full bg-[#33525c] text-white font-bold h-14 rounded-xl hover:scale-[1.01] transition-transform shadow-xl shadow-[#33525c]/20 mt-4"
               >
-                Verify Code
+                {loading ? "Verifying Code..." : "Verify Code"}
               </Button>
             </Form>
           </CardBody>
@@ -335,30 +292,7 @@ export default function RegisterPage() {
       <Card shadow="none" className="bg-transparent dark:bg-transparent border-none px-0">
         <CardHeader className="flex flex-col items-center px-0 pt-0 pb-8 space-y-6 text-center">
           <Link href="/" className="transition-transform hover:scale-105 flex flex-col items-center gap-2">
-            {/* New Dynamic Logo */}
-            <div className="relative w-16 h-16 flex items-center justify-center shrink-0">
-              <div className="absolute inset-0 bg-[#7eb2bd]/20 dark:bg-[#33525c]/20 blur-md rounded-full scale-110" />
-              <svg viewBox="0 0 100 100" className="w-12 h-12 relative z-10 drop-shadow-[0_2px_8px_rgba(51,82,92,0.3)]">
-                <path 
-                    d="M 50 10 L 85 45 L 70 50 L 50 25 L 30 50 L 15 45 Z" 
-                    fill="url(#reg-logo-5)" 
-                />
-                <path 
-                    d="M 50 30 L 90 70 L 65 75 L 50 55 L 35 75 L 10 70 Z" 
-                    fill="url(#reg-logo-6)" 
-                />
-                <defs>
-                    <linearGradient id="reg-logo-5" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#7eb2bd" />
-                        <stop offset="100%" stopColor="#33525c" />
-                    </linearGradient>
-                    <linearGradient id="reg-logo-6" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#a9ccd3" />
-                        <stop offset="100%" stopColor="#5399a7" />
-                    </linearGradient>
-                </defs>
-              </svg>
-            </div>
+            <FalconLogo className="w-12 h-12" />
           </Link>
           <div className="space-y-1">
             <h1 className="text-3xl font-bold text-black dark:text-white">
@@ -389,7 +323,7 @@ export default function RegisterPage() {
                 variant="flat"
                 isRequired 
                 labelPlacement="outside"
-                placeholder="John"
+                placeholder="Enter your first name"
                 classNames={{
                   label: "text-xs font-bold text-default-600 ml-1",
                   inputWrapper: "h-14 bg-black/5 dark:bg-white/5 group-data-[focus=true]:bg-black/10 dark:group-data-[focus=true]:bg-white/10 hover:bg-black/10 dark:hover:bg-white/10 transition-colors rounded-xl border-none",
@@ -402,7 +336,7 @@ export default function RegisterPage() {
                 variant="flat"
                 isRequired 
                 labelPlacement="outside"
-                placeholder="Doe"
+                placeholder="Enter your last name"
                 classNames={{
                   label: "text-xs font-bold text-default-600 ml-1",
                   inputWrapper: "h-14 bg-black/5 dark:bg-white/5 group-data-[focus=true]:bg-black/10 dark:group-data-[focus=true]:bg-white/10 hover:bg-black/10 dark:hover:bg-white/10 transition-colors rounded-xl border-none",
@@ -418,7 +352,7 @@ export default function RegisterPage() {
                 variant="flat"
                 isRequired 
                 labelPlacement="outside"
-                placeholder="johndoe"
+                placeholder="Choose a username"
                 classNames={{
                   label: "text-xs font-bold text-default-600 ml-1",
                   inputWrapper: "h-14 bg-black/5 dark:bg-white/5 group-data-[focus=true]:bg-black/10 dark:group-data-[focus=true]:bg-white/10 hover:bg-black/10 dark:hover:bg-white/10 transition-colors rounded-xl border-none",
@@ -431,7 +365,7 @@ export default function RegisterPage() {
                 variant="flat"
                 isRequired 
                 labelPlacement="outside"
-                placeholder="+1 (555) 000-0000"
+                placeholder="Enter your phone number"
                 classNames={{
                   label: "text-xs font-bold text-default-600 ml-1",
                   inputWrapper: "h-14 bg-black/5 dark:bg-white/5 group-data-[focus=true]:bg-black/10 dark:group-data-[focus=true]:bg-white/10 hover:bg-black/10 dark:hover:bg-white/10 transition-colors rounded-xl border-none",
@@ -481,7 +415,7 @@ export default function RegisterPage() {
                 onSelectionChange={(key) => setSelectedState(key as string)}
                 isDisabled={!selectedCountry}
                 classNames={{
-                    listboxWrapper: "bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/5 rounded-xl",
+                    listboxWrapper: "bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 rounded-xl",
                   }}
                 inputProps={{
                   classNames: {
@@ -530,7 +464,7 @@ export default function RegisterPage() {
                 variant="flat"
                 isRequired 
                 labelPlacement="outside"
-                placeholder="123 Trading St."
+                placeholder="Enter your physical address"
                 classNames={{
                   label: "text-xs font-bold text-default-600 ml-1",
                   inputWrapper: "h-14 bg-black/5 dark:bg-white/5 group-data-[focus=true]:bg-black/10 dark:group-data-[focus=true]:bg-white/10 hover:bg-black/10 dark:hover:bg-white/10 transition-colors rounded-xl border-none",
@@ -546,7 +480,7 @@ export default function RegisterPage() {
               variant="flat"
               isRequired
               labelPlacement="outside"
-              placeholder="••••••••"
+              placeholder="Create a strong password"
               value={password}
               onValueChange={setPassword}
               errorMessage={getPasswordError(password)}
@@ -569,9 +503,10 @@ export default function RegisterPage() {
             <Button 
               type="submit" 
               isLoading={loading} 
+              disabled={loading}
               className="w-full bg-[#33525c] text-white font-bold h-14 rounded-xl hover:scale-[1.01] transition-transform shadow-xl shadow-[#33525c]/20 mt-4"
             >
-              Complete Registration
+              {loading ? "Completing Registration..." : "Complete Registration"}
             </Button>
           </Form>
         </CardBody>
@@ -579,3 +514,4 @@ export default function RegisterPage() {
     </div>
   );
 }
+

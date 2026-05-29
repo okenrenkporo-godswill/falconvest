@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+
 const symbolMap: Record<string, string> = {
   'BTCUSDT': 'bitcoin',
   'ETHUSDT': 'ethereum',

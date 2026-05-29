@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@heroui/react";
+import { FalconLogo } from "@/components/ui/logo-loader";
 import { 
   X, 
   ChevronRight, 
@@ -235,9 +236,7 @@ export default function Footer() {
         <div className="flex flex-col lg:flex-row items-start justify-between gap-12 mb-20">
             <div className="space-y-6 max-w-sm">
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 relative">
-                        <Image src="/images/logo1.png" alt="FalconVest" fill className="object-contain" />
-                    </div>
+                    <FalconLogo className="w-10 h-10" />
                     <span className="text-xl font-black text-black dark:text-white tracking-tighter uppercase italic">
                         Falcon<span className="text-[#33525c] dark:text-[#7eb2bd]">Vest</span>
                     </span>

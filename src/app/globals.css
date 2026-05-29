@@ -21,9 +21,21 @@ iframe.goog-te-banner-frame,
 
 /* Prevent Google Translate from adding margin/padding to the top of body */
 body {
-  top: 0 !important;
+  top: 0px !important;
+  position: static !important;
 }
 .goog-text-highlight {
   background-color: transparent !important;
   box-shadow: none !important;
 }
+iframe[class*="goog"],
+.goog-te-banner-frame,
+#goog-gt-tt,
+.goog-te-balloon-frame {
+  display: none !important;
+  visibility: hidden !important;
+}
+.skiptranslate {
+  display: none !important;
+}
+

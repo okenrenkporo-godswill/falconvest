@@ -8,6 +8,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { logoutAction } from "@/actions/auth";
+import { FalconLogo } from "@/components/ui/logo-loader";
 
 interface HeaderProps {
     onMenu?: () => void;

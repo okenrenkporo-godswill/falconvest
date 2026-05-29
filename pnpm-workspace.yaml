@@ -1,0 +1,9 @@
+onlyBuiltDependencies:
+  - '@heroui/shared-utils'
+  - '@parcel/watcher'
+  - '@swc/core'
+  - esbuild
+  - sharp
+  - supabase
+  - tesseract.js
+  - unrs-resolver
