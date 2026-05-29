@@ -38,7 +38,8 @@ async function sendAdminNotification(subject: string, html: string) {
 
 export async function sendOtpEmail(email: string, code: string) {
   if (!env.RESEND_API_KEY) {
-    console.warn("RESEND_API_KEY not configured, skipping email");
+    console.warn("⚠️ RESEND_API_KEY not configured, skipping email.");
+    console.log(`🔑 [DEVELOPMENT ONLY] Verification code for ${email} is: ${code}`);
     return;
   }
 

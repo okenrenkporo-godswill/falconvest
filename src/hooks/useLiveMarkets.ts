@@ -100,10 +100,13 @@ export function useLiveMarkets() {
             console.error("Forex fetch failed", e);
             // Fallback for Forex
             const fallbackForex: MarketAsset[] = [
-                { id: "eurusd", name: "EUR/USD", symbol: "EURUSD", price: 1.08, buy: 1.08, sell: 1.0795, change24h: 0.1, trend: [], category: "Forex" },
-                // ... minimally populate if needed, but error logging is fine for now
+                { id: "eurusd", name: "EUR/USD", symbol: "EURUSD", price: 1.0824, buy: 1.0824, sell: 1.0820, change24h: 0.15, trend: [1.081, 1.082, 1.0815, 1.0824], category: "Forex" },
+                { id: "gbpusd", name: "GBP/USD", symbol: "GBPUSD", price: 1.2652, buy: 1.2652, sell: 1.2647, change24h: -0.22, trend: [1.267, 1.266, 1.265, 1.2652], category: "Forex" },
+                { id: "usdjpy", name: "USD/JPY", symbol: "USDJPY", price: 150.45, buy: 150.45, sell: 150.38, change24h: 0.42, trend: [150.1, 150.2, 150.3, 150.45], category: "Forex" },
+                { id: "audusd", name: "AUD/USD", symbol: "AUDUSD", price: 0.6542, buy: 0.6542, sell: 0.6538, change24h: 0.08, trend: [0.653, 0.654, 0.6538, 0.6542], category: "Forex" },
+                { id: "usdchf", name: "USD/CHF", symbol: "USDCHF", price: 0.8812, buy: 0.8812, sell: 0.8808, change24h: -0.12, trend: [0.882, 0.8815, 0.881, 0.8812], category: "Forex" },
             ];
-            // updateMarketSlice("Forex", fallbackForex);
+            updateMarketSlice("Forex", fallbackForex);
         }
     };
 
@@ -119,6 +122,12 @@ export function useLiveMarkets() {
                 { id: "us30", name: "Wall Street 30", symbol: "US30", price: 38624.5 },
                 { id: "nas100", name: "US Tech 100", symbol: "NAS100", price: 17856.4 },
                 { id: "spx500", name: "US SPX 500", symbol: "SPX500", price: 5026.8 },
+            ],
+            ETFs: [
+                { id: "spy", name: "SPDR S&P 500 ETF", symbol: "SPY", price: 501.24 },
+                { id: "qqq", name: "Invesco QQQ Trust", symbol: "QQQ", price: 435.56 },
+                { id: "vti", name: "Vanguard Total Stock Market", symbol: "VTI", price: 252.12 },
+                { id: "gld", name: "SPDR Gold Shares", symbol: "GLD", price: 186.21 },
             ],
             Commodities: [
                 { id: "gold", name: "Gold", symbol: "XAUUSD", price: 2018.45 },
@@ -169,18 +178,44 @@ export function useLiveMarkets() {
     };
 
     useEffect(() => {
-        const init = async () => {
-            await Promise.all([fetchCrypto(), fetchForex()]);
+        const loadInitialFallbacks = () => {
+            const fallbackCrypto: MarketAsset[] = [
+                { id: "bitcoin", name: "Bitcoin", symbol: "BTC", price: 67400, buy: 67400, sell: 67360, change24h: 2.4, trend: [66000, 66500, 66200, 67000, 67400], category: "Cryptocurrencies" },
+                { id: "ethereum", name: "Ethereum", symbol: "ETH", price: 3580, buy: 3580, sell: 3575, change24h: 1.8, trend: [3500, 3520, 3550, 3570, 3580], category: "Cryptocurrencies" },
+                { id: "binancecoin", name: "BNB", symbol: "BNB", price: 610, buy: 610, sell: 609, change24h: 0.5, trend: [600, 605, 608, 609, 610], category: "Cryptocurrencies" },
+                { id: "solana", name: "Solana", symbol: "SOL", price: 172, buy: 172, sell: 171.5, change24h: -0.9, trend: [175, 174, 173, 171.5, 172], category: "Cryptocurrencies" },
+                { id: "ripple", name: "XRP", symbol: "XRP", price: 0.52, buy: 0.52, sell: 0.519, change24h: -1.2, trend: [0.53, 0.525, 0.522, 0.518, 0.52], category: "Cryptocurrencies" },
+            ];
+            updateMarketSlice("Cryptocurrencies", fallbackCrypto);
+
+            const fallbackForex: MarketAsset[] = [
+                { id: "eurusd", name: "EUR/USD", symbol: "EURUSD", price: 1.0824, buy: 1.0824, sell: 1.0820, change24h: 0.15, trend: [1.081, 1.082, 1.0815, 1.0824], category: "Forex" },
+                { id: "gbpusd", name: "GBP/USD", symbol: "GBPUSD", price: 1.2652, buy: 1.2652, sell: 1.2647, change24h: -0.22, trend: [1.267, 1.266, 1.265, 1.2652], category: "Forex" },
+                { id: "usdjpy", name: "USD/JPY", symbol: "USDJPY", price: 150.45, buy: 150.45, sell: 150.38, change24h: 0.42, trend: [150.1, 150.2, 150.3, 150.45], category: "Forex" },
+                { id: "audusd", name: "AUD/USD", symbol: "AUDUSD", price: 0.6542, buy: 0.6542, sell: 0.6538, change24h: 0.08, trend: [0.653, 0.654, 0.6538, 0.6542], category: "Forex" },
+                { id: "usdchf", name: "USD/CHF", symbol: "USDCHF", price: 0.8812, buy: 0.8812, sell: 0.8808, change24h: -0.12, trend: [0.882, 0.8815, 0.881, 0.8812], category: "Forex" },
+            ];
+            updateMarketSlice("Forex", fallbackForex);
+
             simulateOthers();
             setLoading(false);
         };
-        init();
+
+        loadInitialFallbacks();
+
+        const fetchLiveBackground = async () => {
+            try {
+                await Promise.allSettled([fetchCrypto(), fetchForex()]);
+            } catch (err) {
+                console.warn("Background fetch failed", err);
+            }
+        };
+        fetchLiveBackground();
 
         const interval = setInterval(() => {
-            fetchCrypto();
-            fetchForex();
+            fetchLiveBackground();
             simulateOthers();
-        }, 60000); // Increased to 60s to avoid rate limits
+        }, 60000);
 
         return () => clearInterval(interval);
     }, []);
