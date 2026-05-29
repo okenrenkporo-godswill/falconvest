@@ -120,7 +120,7 @@ export default function Header() {
       <div className="container mx-auto px-4 py-2 flex justify-between items-center relative z-[110]">
         
         <div className="flex items-center gap-3 md:gap-6">
-            <Link href="/" className="flex items-center gap-2.5 group">
+<Link href="/" className="flex items-center gap-2.5 group">
                 {/* Modern Dynamic Logo */}
                 <div className="relative w-8 h-8 flex items-center justify-center shrink-0">
                     {/* Glowing background bubble */}

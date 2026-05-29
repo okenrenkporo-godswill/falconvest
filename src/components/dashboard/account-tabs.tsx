@@ -20,10 +20,11 @@ interface Balance {
 
 interface AccountTabsProps {
     totalBalance: number;
+    lockedBalance?: number;
     balances: Balance[] | null;
 }
 
-export function AccountTabs({ totalBalance, balances }: AccountTabsProps) {
+export function AccountTabs({ totalBalance, lockedBalance = 0, balances }: AccountTabsProps) {
     const [activeTab, setActiveTab] = useState<'account' | 'asset'>('asset');
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [isSwapModalOpen, setIsSwapModalOpen] = useState(false);
@@ -184,11 +185,11 @@ export function AccountTabs({ totalBalance, balances }: AccountTabsProps) {
                             </div>
                             <div className="flex items-center justify-between">
                                 <span className="text-xs sm:text-sm text-default-600">Available</span>
-                                <span className="text-sm sm:text-base font-semibold">${totalBalance.toFixed(2)}</span>
+                                <span className="text-sm sm:text-base font-semibold">${(totalBalance - lockedBalance).toFixed(2)}</span>
                             </div>
                             <div className="flex items-center justify-between">
                                 <span className="text-xs sm:text-sm text-default-600">In Use</span>
-                                <span className="text-sm sm:text-base font-semibold">$0.00</span>
+                                <span className="text-sm sm:text-base font-semibold">${lockedBalance.toFixed(2)}</span>
                             </div>
                         </div>
                     )}

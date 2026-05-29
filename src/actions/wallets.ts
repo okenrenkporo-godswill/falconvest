@@ -177,6 +177,52 @@ export async function updatePlatformWallet(
   return { success: true };
 }
 
+export async function deletePlatformWallet(walletId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "Unauthorized" };
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (profile?.role !== "admin") return { error: "Unauthorized" };
+
+  const adminClient = createAdminClient();
+
+  // Get wallet to check for logo to clean up
+  const { data: wallet } = await adminClient
+    .from("platform_wallets")
+    .select("logo_url, symbol")
+    .eq("id", walletId)
+    .single();
+
+  // Delete the wallet
+  const { error } = await adminClient
+    .from("platform_wallets")
+    .delete()
+    .eq("id", walletId);
+
+  if (error) return { error: error.message };
+
+  // Clean up logo from storage if it exists
+  if (wallet?.logo_url) {
+    try {
+      const fileName = wallet.logo_url.split("/").pop();
+      if (fileName) {
+        await adminClient.storage.from("wallet-logos").remove([fileName]);
+      }
+    } catch (e) {
+      console.error("Logo cleanup error:", e);
+    }
+  }
+
+  revalidatePath("/cpanel/wallets");
+  return { success: true };
+}
+
 export async function getActivePlatformWallets() {
   const adminClient = createAdminClient();
   const { data } = await adminClient

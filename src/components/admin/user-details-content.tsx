@@ -135,12 +135,19 @@ export function UserDetailsContent({ userId }: { userId: string }) {
     );
   }
 
-  // Calculate total balance using real-time prices
-  const totalBalance = data.balances.reduce((sum: number, b: any) => {
+  // Calculate locked copy balance from active trades
+  const lockedCopyBalance = data.copyTrades
+    ?.filter((ct: any) => ct.status === 'active')
+    .reduce((sum: number, ct: any) => sum + Number(ct.copy_amount), 0) || 0;
+
+  // Calculate liquid balance using real-time prices
+  const liquidBalance = data.balances.reduce((sum: number, b: any) => {
     const price = prices[b.asset] || 0;
     const value = Number(b.amount) * price;
     return sum + value;
   }, 0);
+
+  const totalBalance = liquidBalance + lockedCopyBalance;
 
   return (
     <div className="space-y-6">
@@ -172,6 +179,9 @@ export function UserDetailsContent({ userId }: { userId: string }) {
               <div>
                 <p className="text-sm text-default-500">Total Balance</p>
                 <p className="text-2xl font-bold">${totalBalance.toFixed(2)}</p>
+                {lockedCopyBalance > 0 && (
+                  <p className="text-xs text-default-400 mt-1">(${lockedCopyBalance.toFixed(2)} in Copy Trades)</p>
+                )}
               </div>
             </div>
           </CardBody>

@@ -72,8 +72,8 @@ export function useLiveMarkets() {
     // ... (fetchForex remains the same)
 
     const fetchForex = async () => {
-        try {
-            const response = await fetch("https://api.exchangerate-api.com/v4/latest/USD");
+            const response = await fetch("https://api.exchangerate.host/latest?base=USD");
+            if (!response.ok) throw new Error("Forex API error");
             const json = await response.json();
             const rates = json.rates;
 

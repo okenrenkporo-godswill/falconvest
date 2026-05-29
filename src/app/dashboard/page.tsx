@@ -267,9 +267,9 @@ export default async function DashboardPage() {
       {/* <MarketTicker /> */}
       <MobileBannerBoxes />
 
-      {/* Account/Asset Tabs */}
       <AccountTabs
         totalBalance={totalBalance}
+        lockedBalance={lockedCopyFunds}
         balances={balancesWithLogos || []}
       />
 
