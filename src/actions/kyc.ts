@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient, ensureBucketExists } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 
 export async function submitKycAction(formData: FormData) {
@@ -25,10 +26,17 @@ export async function submitKycAction(formData: FormData) {
     return { error: "All fields are required" };
   }
 
-  // Upload documents to Supabase Storage
+  // Ensure the bucket exists
+  try {
+    await ensureBucketExists("kyc-documents", false);
+  } catch (err) {
+    console.error("Failed to ensure kyc-documents bucket exists:", err);
+  }
+
+  const adminClient = createAdminClient();
   const timestamp = Date.now();
   
-  const { data: frontData, error: frontError } = await supabase.storage
+  const { data: frontData, error: frontError } = await adminClient.storage
     .from("kyc-documents")
     .upload(`${user.id}/front-${timestamp}.${frontId.name.split('.').pop()}`, frontId);
 
@@ -37,7 +45,7 @@ export async function submitKycAction(formData: FormData) {
     return { error: "Failed to upload front ID" };
   }
 
-  const { data: backData, error: backError } = await supabase.storage
+  const { data: backData, error: backError } = await adminClient.storage
     .from("kyc-documents")
     .upload(`${user.id}/back-${timestamp}.${backId.name.split('.').pop()}`, backId);
 
@@ -46,12 +54,12 @@ export async function submitKycAction(formData: FormData) {
     return { error: "Failed to upload back ID" };
   }
 
-  // Get public URLs
-  const { data: { publicUrl: frontUrl } } = supabase.storage
+  // Get public URLs using adminClient
+  const { data: { publicUrl: frontUrl } } = adminClient.storage
     .from("kyc-documents")
     .getPublicUrl(frontData.path);
 
-  const { data: { publicUrl: backUrl } } = supabase.storage
+  const { data: { publicUrl: backUrl } } = adminClient.storage
     .from("kyc-documents")
     .getPublicUrl(backData.path);
 

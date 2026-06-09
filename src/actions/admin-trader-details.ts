@@ -1,6 +1,6 @@
 "use server";
 
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient, ensureBucketExists } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 
 export async function getTraderDetails(traderId: string) {
@@ -61,6 +61,8 @@ export async function uploadTraderAvatar(traderId: string, fileData: { base64: s
     const fileName = `traders/${traderId}/${Date.now()}.jpg`;
     console.log("Uploading to:", fileName);
     
+    await ensureBucketExists("avatars", true);
+
     const { error: uploadError } = await adminClient.storage
       .from("avatars")
       .upload(fileName, buffer, {
@@ -200,6 +202,8 @@ export async function createTrader(data: {
       const buffer = Buffer.from(data.avatar.base64, "base64");
       const fileName = `traders/${traderData.id}/${Date.now()}.jpg`;
       
+      await ensureBucketExists("avatars", true);
+
       const { error: uploadError } = await adminClient.storage
         .from("avatars")
         .upload(fileName, buffer, {

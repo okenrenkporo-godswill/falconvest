@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient, ensureBucketExists } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 
 // ============================================
@@ -62,6 +62,8 @@ export async function createPlatformWallet(data: {
       for (let i = 0; i < binaryString.length; i++) {
         bytes[i] = binaryString.charCodeAt(i);
       }
+
+      await ensureBucketExists("wallet-logos", true);
 
       const fileName = `${data.symbol.toLowerCase()}-${Date.now()}.png`;
       const { error: uploadError } = await adminClient.storage
@@ -135,6 +137,8 @@ export async function updatePlatformWallet(
       for (let i = 0; i < binaryString.length; i++) {
         bytes[i] = binaryString.charCodeAt(i);
       }
+
+      await ensureBucketExists("wallet-logos", true);
 
       const fileName = `${(data.symbol || 'wallet').toLowerCase()}-${Date.now()}.png`;
       const { error: uploadError } = await adminClient.storage

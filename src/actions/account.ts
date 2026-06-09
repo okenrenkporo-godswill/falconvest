@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient, ensureBucketExists } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 
 export async function updatePasswordAction(formData: FormData) {
@@ -74,7 +75,16 @@ export async function uploadProfileAvatar(data: { base64: string; size: number }
 
     console.log("[uploadProfileAvatar] Uploading to:", fileName);
 
-    const { error: uploadError } = await supabase.storage
+    // Ensure the bucket exists
+    try {
+      await ensureBucketExists("avatars", true);
+    } catch (err) {
+      console.error("Failed to ensure avatars bucket exists:", err);
+    }
+
+    const adminClient = createAdminClient();
+
+    const { error: uploadError } = await adminClient.storage
       .from("avatars")
       .upload(fileName, buffer, {
         contentType: "image/jpeg",
@@ -88,7 +98,7 @@ export async function uploadProfileAvatar(data: { base64: string; size: number }
 
     console.log("[uploadProfileAvatar] Upload successful, getting public URL");
 
-    const { data: { publicUrl } } = supabase.storage
+    const { data: { publicUrl } } = adminClient.storage
       .from("avatars")
       .getPublicUrl(fileName);
 

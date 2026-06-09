@@ -76,10 +76,20 @@ export async function submitDepositProof(data: {
           bytes[i] = binaryString.charCodeAt(i);
         }
 
+        // Ensure the bucket exists
+        try {
+          const { ensureBucketExists } = await import("@/lib/supabase/admin");
+          await ensureBucketExists("deposit-proofs", false);
+        } catch (err) {
+          console.error("Failed to ensure deposit-proofs bucket exists:", err);
+        }
+
+        const adminClient = createAdminClient();
+
         // Upload proof to storage
         fileName = `${user.id}/${Date.now()}-deposit-proof.jpg`;
         console.log("Uploading to:", fileName);
-        const { error: uploadError } = await supabase.storage
+        const { error: uploadError } = await adminClient.storage
           .from("deposit-proofs")
           .upload(fileName, bytes, {
             contentType: "image/jpeg",
