@@ -33,9 +33,8 @@ export default async function RootLayout({
         </NextIntlClientProvider>
         <Script id="smartsupp-chat" strategy="afterInteractive">
           {`
-            window._smartsupp = window._smartsupp || {};
-            window._smartsupp.key = '58024e205dccbafcff726e8499b5bcb1f41c87d7';
-            window._smartsupp.color = '#33525c';
+            var _smartsupp = _smartsupp || {};
+            _smartsupp.key = '6639c48f734b62ef44bf007bec771b6280b0addf';
             window.smartsupp||(function(d) {
               var s,c,o=smartsupp=function(){ o._.push(arguments)};o._=[];
               s=d.getElementsByTagName('script')[0];c=d.createElement('script');
@@ -44,6 +43,12 @@ export default async function RootLayout({
             })(document);
           `}
         </Script>
+        <noscript>
+          Powered by{" "}
+          <a href="https://www.smartsupp.com" target="_blank" rel="noopener noreferrer">
+            Smartsupp
+          </a>
+        </noscript>
       </body>
     </html>
   );
