@@ -15,6 +15,7 @@ type CopyTrade = {
   total_profit: number;
   total_trades: number;
   started_at: string;
+  asset?: string;
   trader?: {
     display_name: string;
     avatar_url: string | null;
@@ -27,7 +28,7 @@ export default function MyCopyTradesPage() {
   const [copyTrades, setCopyTrades] = useState<CopyTrade[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCopyTrade, setSelectedCopyTrade] = useState<{ id: string; name: string } | null>(null);
-  const [increaseModal, setIncreaseModal] = useState<{ id: string; name: string; amount: number } | null>(null);
+  const [increaseModal, setIncreaseModal] = useState<{ id: string; name: string; amount: number; asset: string } | null>(null);
 
   useEffect(() => {
     loadCopyTrades();
@@ -164,7 +165,7 @@ export default function MyCopyTradesPage() {
                           size="sm"
                           color="success"
                           variant="flat"
-                          onPress={() => setIncreaseModal({ id: ct.id, name: ct.trader?.display_name || "Trader", amount: ct.copy_amount })}
+                          onPress={() => setIncreaseModal({ id: ct.id, name: ct.trader?.display_name || "Trader", amount: ct.copy_amount, asset: ct.asset || "USDT" })}
                           startContent={<Plus size={14} />}
                         >
                           Add
@@ -247,7 +248,7 @@ export default function MyCopyTradesPage() {
                           size="sm"
                           color="success"
                           variant="flat"
-                          onPress={() => setIncreaseModal({ id: ct.id, name: ct.trader?.display_name || "Trader", amount: ct.copy_amount })}
+                          onPress={() => setIncreaseModal({ id: ct.id, name: ct.trader?.display_name || "Trader", amount: ct.copy_amount, asset: ct.asset || "USDT" })}
                           startContent={<Plus size={16} />}
                         >
                           Increase
@@ -287,6 +288,7 @@ export default function MyCopyTradesPage() {
           copyTradeId={increaseModal.id}
           traderName={increaseModal.name}
           currentAmount={increaseModal.amount}
+          asset={increaseModal.asset}
           onSuccess={loadCopyTrades}
         />
       )}

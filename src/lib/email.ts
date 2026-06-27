@@ -325,13 +325,14 @@ export async function notifyAdminCopyTrade(
   userEmail: string,
   traderName: string,
   amount: number,
+  asset: string = "USDT",
 ) {
   await sendAdminNotification(
     "New Copy Trade",
     `<p><strong>User started copy trading:</strong></p>
     <p>Email: ${userEmail}</p>
     <p>Trader: ${traderName}</p>
-    <p>Amount: $${amount.toFixed(2)}</p>
+    <p>Amount: ${amount.toFixed(asset === "BTC" ? 8 : 2)} ${asset}</p>
     <p>Time: ${new Date().toLocaleString()}</p>`,
   );
 }

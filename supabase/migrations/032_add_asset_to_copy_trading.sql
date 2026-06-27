@@ -1,9 +1,20 @@
--- =========================================================
--- FalconVest ATOMIC COPY-TRADE START RPC
--- Resolves: "Double-spending" of copy trading funds.
--- Ensures: Funds are debited from the selected asset balance before the trade starts.
--- =========================================================
+-- Alter copy_trades table to add asset column
+ALTER TABLE public.copy_trades ADD COLUMN IF NOT EXISTS asset TEXT DEFAULT 'USDT';
 
+-- =========================================================
+-- Clean up old function signatures to prevent duplicate conflicts
+-- =========================================================
+DROP FUNCTION IF EXISTS start_copy_trade_atomic(UUID, UUID, DECIMAL, DECIMAL);
+DROP FUNCTION IF EXISTS start_copy_trade_atomic(UUID, UUID, DECIMAL, DECIMAL, TEXT);
+
+DROP FUNCTION IF EXISTS increase_copy_amount_atomic(UUID, UUID, DECIMAL);
+DROP FUNCTION IF EXISTS increase_copy_amount_atomic(UUID, UUID, DECIMAL, TEXT);
+
+DROP FUNCTION IF EXISTS stop_copy_trade_atomic(UUID, UUID);
+
+-- =========================================================
+-- FalconVest ATOMIC COPY-TRADE START RPC (Updated with asset support)
+-- =========================================================
 CREATE OR REPLACE FUNCTION start_copy_trade_atomic(
   p_user_id UUID,
   p_trader_id UUID,
@@ -61,13 +72,9 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
-
 -- =========================================================
--- FalconVest ATOMIC COPY-TRADE STOP RPC
--- Resolves: Refund of funds after trade stop.
--- Ensures: Atomic credit of (amount + profit) back to USDT balance.
+-- FalconVest ATOMIC COPY-TRADE STOP RPC (Updated with asset support)
 -- =========================================================
-
 CREATE OR REPLACE FUNCTION stop_copy_trade_atomic(
   p_user_id UUID,
   p_copy_trade_id UUID
@@ -98,7 +105,7 @@ BEGIN
       stopped_by = 'user'
   WHERE id = p_copy_trade_id;
 
-  -- 4. Credit the asset trading balance (back to the asset used when starting)
+  -- 4. Credit the asset trading balance
   INSERT INTO public.balances (user_id, asset, amount, account_type)
   VALUES (p_user_id, v_asset, v_return_amount, 'trading')
   ON CONFLICT (user_id, asset, account_type)
@@ -114,10 +121,8 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- =========================================================
--- FalconVest ATOMIC INCREASE COPY AMOUNT RPC
--- Ensures: Additional funds are debited from the USDT balance.
+-- FalconVest ATOMIC INCREASE COPY AMOUNT RPC (Updated with asset support)
 -- =========================================================
-
 CREATE OR REPLACE FUNCTION increase_copy_amount_atomic(
   p_user_id UUID,
   p_copy_trade_id UUID,
@@ -161,5 +166,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
-GRANT EXECUTE ON FUNCTION stop_copy_trade_atomic TO authenticated;
-GRANT EXECUTE ON FUNCTION increase_copy_amount_atomic TO authenticated;
+-- Grant permissions explicitly with matching argument lists
+GRANT EXECUTE ON FUNCTION start_copy_trade_atomic(UUID, UUID, DECIMAL, DECIMAL, TEXT) TO authenticated;
+GRANT EXECUTE ON FUNCTION stop_copy_trade_atomic(UUID, UUID) TO authenticated;
+GRANT EXECUTE ON FUNCTION increase_copy_amount_atomic(UUID, UUID, DECIMAL, TEXT) TO authenticated;

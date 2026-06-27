@@ -35,6 +35,7 @@ export async function startCopyTrading(data: {
   traderId: string;
   copyAmount: number;
   copyPercentage?: number;
+  asset?: string;
 }) {
   
   const supabase = await createClient();
@@ -61,12 +62,15 @@ export async function startCopyTrading(data: {
     };
   }
 
+  const asset = data.asset || "USDT";
+
   // 1. Call atomic RPC to handle balance and registration
   const { data: result, error: rpcError } = await supabase.rpc("start_copy_trade_atomic", {
     p_user_id: user.id,
     p_trader_id: data.traderId,
     p_copy_amount: data.copyAmount,
-    p_copy_percentage: data.copyPercentage || null
+    p_copy_percentage: data.copyPercentage || null,
+    p_asset: asset
   });
 
   if (rpcError) return { error: rpcError.message };
@@ -93,7 +97,7 @@ export async function startCopyTrading(data: {
   if (profile?.email && trader?.display_name) {
     try {
       const { notifyAdminCopyTrade } = await import("@/lib/email");
-      await notifyAdminCopyTrade(profile.email, trader.display_name, data.copyAmount);
+      await notifyAdminCopyTrade(profile.email, trader.display_name, data.copyAmount, asset);
     } catch (error) {
       console.error("Failed to notify admin:", error);
     }
@@ -104,7 +108,7 @@ export async function startCopyTrading(data: {
 }
 
 // Increase copy amount for existing copy trade
-export async function increaseCopyAmount(copyTradeId: string, additionalAmount: number) {
+export async function increaseCopyAmount(copyTradeId: string, additionalAmount: number, asset: string = "USDT") {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: "Unauthorized" };
@@ -124,7 +128,8 @@ export async function increaseCopyAmount(copyTradeId: string, additionalAmount: 
   const { data: result, error: rpcError } = await supabase.rpc("increase_copy_amount_atomic", {
     p_user_id: user.id,
     p_copy_trade_id: copyTradeId,
-    p_additional_amount: additionalAmount
+    p_additional_amount: additionalAmount,
+    p_asset: asset
   });
 
   if (rpcError) return { error: rpcError.message };
