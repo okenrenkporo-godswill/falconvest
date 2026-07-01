@@ -19,6 +19,7 @@ export function ProfileOverview({ openKycModal }: ProfileOverviewProps) {
     const router = useRouter();
 
     const [kycStatus, setKycStatus] = useState<string>("pending");
+    const [vpsStatus, setVpsStatus] = useState<string>("none");
     const [userData, setUserData] = useState({
         name: "",
         email: "",
@@ -50,7 +51,7 @@ export function ProfileOverview({ openKycModal }: ProfileOverviewProps) {
         if (user) {
             const { data: profile } = await supabase
                 .from("profiles")
-                .select("full_name, first_name, last_name, phone, country, kyc_status, avatar_url")
+                .select("full_name, first_name, last_name, phone, country, kyc_status, avatar_url, vps_status")
                 .eq("id", user.id)
                 .single();
 
@@ -64,6 +65,7 @@ export function ProfileOverview({ openKycModal }: ProfileOverviewProps) {
                     avatar: profile.avatar_url || ""
                 });
                 setKycStatus(profile.kyc_status || "pending");
+                setVpsStatus(profile.vps_status || "none");
             }
         }
         setLoading(false);
@@ -111,7 +113,7 @@ export function ProfileOverview({ openKycModal }: ProfileOverviewProps) {
 
 
                             </div>
-                            <div className="flex items-center gap-2 mt-2">
+                            <div className="flex flex-wrap items-center gap-2 mt-2">
                                 <Chip
                                     startContent={isVerified ? <ShieldCheck size={14} /> : <ShieldAlert size={14} />}
                                     variant="flat"
@@ -121,6 +123,17 @@ export function ProfileOverview({ openKycModal }: ProfileOverviewProps) {
                                 >
                                     {isVerified ? "Verified User" : isPending ? "Pending Review" : "Unverified"}
                                 </Chip>
+                                {vpsStatus === "active" && (
+                                    <Chip
+                                        variant="shadow"
+                                        color="secondary"
+                                        size="sm"
+                                        className="bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-500 text-white border-none font-bold shadow-purple-500/30 animate-pulse px-3 py-1"
+                                        startContent={<span className="mr-0.5">🚀</span>}
+                                    >
+                                        VPS Bot Active
+                                    </Chip>
+                                )}
                                 {!isVerified && (
                                     <Button size="sm" variant="light" color="primary" className="h-6 text-xs px-2" onPress={onKycOpen}>
                                         Verify Now

@@ -99,13 +99,13 @@ function LoginContent() {
       if (result?.error) {
         setError(result.error);
         addToast({ title: "Error", description: result.error, color: "danger" });
-      } else {
+      } else if (result?.redirect) {
         addToast({
           title: "Success",
-          description: "OTP sent to your email",
+          description: "Logged in successfully",
           color: "success",
         });
-        setStep("otp");
+        router.push(result.redirect);
       }
     } catch {
       setError("An error occurred");

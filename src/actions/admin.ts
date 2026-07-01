@@ -589,3 +589,63 @@ export async function rejectKycWithReason(
   revalidatePath("/cpanel/kyc-pending");
   return { success: true };
 }
+
+export async function adminUpdateBotAndVpsSettingsAction(
+  userId: string,
+  settings: {
+    botEnabled: boolean;
+    botRestrictionActive: boolean;
+    vpsStatus: "none" | "active" | "expired";
+    vpsRenewalPrice: number;
+    botPlans: Array<{
+      id: string;
+      price: number;
+      status: "inactive" | "active" | "paused";
+    }>;
+  }
+) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "Unauthorized" };
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+  if (profile?.role !== "admin") return { error: "Unauthorized" };
+
+  const adminClient = createAdminClient();
+
+  // Update profile settings
+  const { error: profileError } = await adminClient
+    .from("profiles")
+    .update({
+      bot_enabled: settings.botEnabled,
+      bot_restriction_active: settings.botRestrictionActive,
+      vps_status: settings.vpsStatus,
+      vps_renewal_price: settings.vpsRenewalPrice,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", userId);
+
+  if (profileError) return { error: profileError.message };
+
+  // Update each bot plan
+  for (const plan of settings.botPlans) {
+    const { error: planError } = await adminClient
+      .from("user_bot_plans")
+      .update({
+        price: plan.price,
+        status: plan.status,
+        is_active: plan.status === "active",
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", plan.id);
+
+    if (planError) return { error: `Failed to update plan: ${planError.message}` };
+  }
+
+  revalidatePath("/cpanel/users");
+  return { success: true };
+}

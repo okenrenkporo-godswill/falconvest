@@ -98,6 +98,13 @@ export async function getUserDetails(userId: string) {
     .order("created_at", { ascending: false })
     .limit(20);
 
+  // Fetch bot plans
+  const { data: userBotPlans } = await adminClient
+    .from("user_bot_plans")
+    .select("*")
+    .eq("user_id", userId)
+    .order("price", { ascending: true });
+
   return {
     profile,
     balances: balances || [],
@@ -109,5 +116,6 @@ export async function getUserDetails(userId: string) {
     stakes: stakes || [],
     copyTrades: copyTrades || [],
     copyTradePositions: copyTradePositions || [],
+    userBotPlans: userBotPlans || [],
   };
 }

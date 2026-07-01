@@ -19,6 +19,7 @@ import { getUserWallets } from "@/actions/wallets";
 import { addToast } from "@heroui/react";
 import { getCryptoPrices } from "@/lib/crypto-prices";
 import { getAssetMetadata, ASSET_METADATA } from "@/lib/assets";
+import { createClient } from "@/lib/supabase/client";
 
 const ACCOUNTS = {
   trading: { label: "Trading Account", icon: TrendingUp },
@@ -46,6 +47,14 @@ export default function WithdrawalPage() {
   const [savedWallets, setSavedWallets] = useState<any[]>([]);
   const [useManualAddress, setUseManualAddress] = useState(false);
   const [prices, setPrices] = useState<Record<string, number>>({});
+  const [profile, setProfile] = useState<any>(null);
+
+  // Withdrawal method state
+  const [withdrawalMethod, setWithdrawalMethod] = useState<"crypto" | "bank">("crypto");
+  const [bankName, setBankName] = useState("");
+  const [bankAccountName, setBankAccountName] = useState("");
+  const [bankAccountNumber, setBankAccountNumber] = useState("");
+  const [bankRouting, setBankRouting] = useState("");
 
   const currentAccount = ACCOUNTS[accountType as keyof typeof ACCOUNTS];
   
@@ -114,6 +123,21 @@ export default function WithdrawalPage() {
 
   useEffect(() => {
     setIsLoadingWithdrawals(true);
+
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        supabase
+          .from("profiles")
+          .select("bot_restriction_active, vps_status")
+          .eq("id", user.id)
+          .single()
+          .then(({ data }) => {
+            setProfile(data);
+          });
+      }
+    });
+
     Promise.all([getUserWithdrawals(), getUserBalances(), getUserWallets()])
       .then(async ([withdrawalsData, balancesData, walletsData]) => {
         setWithdrawals(withdrawalsData);
@@ -163,9 +187,21 @@ export default function WithdrawalPage() {
   };
 
   const handleSubmit = async () => {
-    if (!amount || !walletAddress) {
-      addToast({ title: "Please fill all fields", color: "danger" });
+    if (profile?.bot_restriction_active || profile?.vps_status === "expired") {
+      addToast({ title: "Withdrawals are restricted on your account", color: "danger" });
       return;
+    }
+
+    if (withdrawalMethod === "crypto") {
+      if (!amount || !walletAddress) {
+        addToast({ title: "Please fill all fields", color: "danger" });
+        return;
+      }
+    } else {
+      if (!amount || !bankName || !bankAccountName || !bankAccountNumber) {
+        addToast({ title: "Please fill all bank details fields", color: "danger" });
+        return;
+      }
     }
 
     if (parseFloat(amount) <= 0 || parseFloat(amount) > accountBalance) {
@@ -177,11 +213,19 @@ export default function WithdrawalPage() {
     const price = prices[coin] || (["USDT", "USDC"].includes(coin) ? 1 : 0);
     const coinAmount = parseFloat(amount) / price;
 
+    const destinationDetails = withdrawalMethod === "crypto" 
+      ? walletAddress 
+      : `Bank: ${bankName} | Holder: ${bankAccountName} | Acct: ${bankAccountNumber}${bankRouting ? ` | Routing/SWIFT: ${bankRouting}` : ""}`;
+
+    const networkName = withdrawalMethod === "crypto"
+      ? (STATIC_COINS.find((c) => c.value === coin)?.network || "Mainnet")
+      : "Bank Transfer";
+
     const result = await submitWithdrawal({
       coin,
       amount: coinAmount,
-      destinationAddress: walletAddress,
-      network: STATIC_COINS.find((c) => c.value === coin)?.network || "Mainnet",
+      destinationAddress: destinationDetails,
+      network: networkName,
       accountType,
     });
 
@@ -193,6 +237,10 @@ export default function WithdrawalPage() {
       addToast({ title: "Withdrawal request submitted successfully", color: "success" });
       setAmount("");
       setWalletAddress("");
+      setBankName("");
+      setBankAccountName("");
+      setBankAccountNumber("");
+      setBankRouting("");
       
       const [withdrawalsData, balancesData] = await Promise.all([
         getUserWithdrawals(),
@@ -219,6 +267,21 @@ export default function WithdrawalPage() {
         </h1>
         <p className="text-default-500 text-sm">Securely transfer assets to your external wallet.</p>
       </div>
+
+      {/* Account Restricted Alerts */}
+      {(profile?.bot_restriction_active || profile?.vps_status === "expired") && (
+        <Card className="border border-danger/30 bg-danger-50 dark:bg-danger-950/20 p-4">
+          <div className="flex gap-3 text-danger">
+            <ShieldCheck className="w-5 h-5 flex-shrink-0" />
+            <div>
+              <p className="font-bold text-sm">Withdrawal Services Suspended</p>
+              <p className="text-xs mt-1">
+                Your account is currently under bot restriction or your VPS subscription has expired. Please purchase or renew a trading bot plan to restore copy trading and withdrawal options.
+              </p>
+            </div>
+          </div>
+        </Card>
+      )}
 
       <Card className="border-none shadow-medium bg-background/60 dark:bg-content1/50 overflow-visible">
         <CardBody className="p-8 gap-8">
@@ -297,6 +360,27 @@ export default function WithdrawalPage() {
               </Select>
             </div>
 
+            <div className="flex gap-2 p-1 bg-default-100 dark:bg-default-50/5 rounded-xl">
+              <Button
+                size="sm"
+                variant={withdrawalMethod === "crypto" ? "solid" : "light"}
+                color={withdrawalMethod === "crypto" ? "primary" : "default"}
+                className="flex-1 font-semibold"
+                onPress={() => setWithdrawalMethod("crypto")}
+              >
+                Crypto Address
+              </Button>
+              <Button
+                size="sm"
+                variant={withdrawalMethod === "bank" ? "solid" : "light"}
+                color={withdrawalMethod === "bank" ? "primary" : "default"}
+                className="flex-1 font-semibold"
+                onPress={() => setWithdrawalMethod("bank")}
+              >
+                Bank Transfer
+              </Button>
+            </div>
+
             <Divider className="my-2" />
 
             <div>
@@ -334,58 +418,96 @@ export default function WithdrawalPage() {
               />
             </div>
 
-            {/* Saved Wallets or Manual Address */}
-            {walletsForCoin.length > 0 && !useManualAddress ? (
-              <div>
-                <Select
-                  label="Select Saved Wallet"
-                  placeholder="Choose a saved wallet"
-                  selectedKeys={walletAddress ? [walletAddress] : []}
-                  onChange={(e) => setWalletAddress(e.target.value)}
-                  description={
-                    <button
-                      onClick={() => setUseManualAddress(true)}
-                      className="text-xs text-primary hover:underline"
-                    >
-                      Or enter address manually
-                    </button>
-                  }
-                >
-                  {walletsForCoin.map((w) => (
-                    <SelectItem key={w.wallet_address} textValue={w.label || w.wallet_address}>
-                      <div className="flex flex-col">
-                        <span className="font-medium">{w.label || 'Unnamed Wallet'}</span>
-                        <span className="text-xs text-default-400 font-mono">{w.wallet_address.slice(0, 20)}...</span>
-                        {w.is_default && <span className="text-xs text-warning">Default</span>}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </Select>
-              </div>
-            ) : (
-              <div>
-                <Input
-                  label={`Wallet Address (${coin})`}
-                  placeholder={`Enter your ${coin} withdrawal address`}
-                  value={walletAddress}
-                  onValueChange={setWalletAddress}
-                  labelPlacement="inside"
-                  variant="flat"
-                  startContent={<Wallet size={18} className="text-default-400" />}
-                  description={
-                    walletsForCoin.length > 0 ? (
+            {/* Crypto Address Fields */}
+            {withdrawalMethod === "crypto" && (
+              walletsForCoin.length > 0 && !useManualAddress ? (
+                <div>
+                  <Select
+                    label="Select Saved Wallet"
+                    placeholder="Choose a saved wallet"
+                    selectedKeys={walletAddress ? [walletAddress] : []}
+                    onChange={(e) => setWalletAddress(e.target.value)}
+                    description={
                       <button
-                        onClick={() => setUseManualAddress(false)}
+                        onClick={() => setUseManualAddress(true)}
                         className="text-xs text-primary hover:underline"
                       >
-                        Or select from saved wallets
+                        Or enter address manually
                       </button>
-                    ) : (
-                      <a href="/dashboard/account/wallets" className="text-xs text-primary hover:underline">
-                        Save wallets for faster withdrawals
-                      </a>
-                    )
-                  }
+                    }
+                  >
+                    {walletsForCoin.map((w) => (
+                      <SelectItem key={w.wallet_address} textValue={w.label || w.wallet_address}>
+                        <div className="flex flex-col">
+                          <span className="font-medium">{w.label || 'Unnamed Wallet'}</span>
+                          <span className="text-xs text-default-400 font-mono">{w.wallet_address.slice(0, 20)}...</span>
+                          {w.is_default && <span className="text-xs text-warning">Default</span>}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </Select>
+                </div>
+              ) : (
+                <div>
+                  <Input
+                    label={`Wallet Address (${coin})`}
+                    placeholder={`Enter your ${coin} withdrawal address`}
+                    value={walletAddress}
+                    onValueChange={setWalletAddress}
+                    labelPlacement="inside"
+                    variant="flat"
+                    startContent={<Wallet size={18} className="text-default-400" />}
+                    description={
+                      walletsForCoin.length > 0 ? (
+                        <button
+                          onClick={() => setUseManualAddress(false)}
+                          className="text-xs text-primary hover:underline"
+                        >
+                          Or select from saved wallets
+                        </button>
+                      ) : (
+                        <a href="/dashboard/account/wallets" className="text-xs text-primary hover:underline">
+                          Save wallets for faster withdrawals
+                        </a>
+                      )
+                    }
+                  />
+                </div>
+              )
+            )}
+
+            {/* Bank Transfer Fields */}
+            {withdrawalMethod === "bank" && (
+              <div className="space-y-4">
+                <Input
+                  label="Bank Name"
+                  placeholder="e.g. Chase Bank, Barclays"
+                  value={bankName}
+                  onValueChange={setBankName}
+                  variant="flat"
+                />
+                <Input
+                  label="Account Holder Name"
+                  placeholder="Name on bank account"
+                  value={bankAccountName}
+                  onValueChange={setBankAccountName}
+                  variant="flat"
+                />
+                <Input
+                  label="Account Number / IBAN"
+                  placeholder="Enter account number or IBAN"
+                  value={bankAccountNumber}
+                  onValueChange={setBankAccountNumber}
+                  variant="flat"
+                  classNames={{ input: "font-mono" }}
+                />
+                <Input
+                  label="Routing Number / SWIFT (Optional)"
+                  placeholder="Enter routing number or SWIFT/BIC code"
+                  value={bankRouting}
+                  onValueChange={setBankRouting}
+                  variant="flat"
+                  classNames={{ input: "font-mono" }}
                 />
               </div>
             )}
@@ -395,7 +517,14 @@ export default function WithdrawalPage() {
               className="w-full font-semibold shadow-lg shadow-default/20 mt-4 bg-zinc-900 text-white dark:bg-zinc-100 dark:text-black"
               isLoading={isSubmitting}
               onPress={handleSubmit}
-              isDisabled={!amount || !walletAddress || !isValidAmount}
+              isDisabled={
+                !amount || 
+                !isValidAmount || 
+                (withdrawalMethod === "crypto" && !walletAddress) || 
+                (withdrawalMethod === "bank" && (!bankName || !bankAccountName || !bankAccountNumber)) || 
+                profile?.bot_restriction_active || 
+                profile?.vps_status === "expired"
+              }
             >
               Submit Withdrawal
             </Button>

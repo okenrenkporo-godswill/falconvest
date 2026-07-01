@@ -20,7 +20,7 @@ export async function adminCreateCopyPosition(data: {
   // Get copy trade details (simple query without FK joins to avoid constraint name issues)
   const { data: copyTrade, error: copyTradeError } = await adminClient
     .from("copy_trades")
-    .select("id, user_id, trader_id, copy_amount, total_profit, total_trades")
+    .select("id, user_id, trader_id, copy_amount, total_profit, total_trades, asset")
     .eq("id", data.copyTradeId)
     .single();
 
@@ -77,7 +77,19 @@ export async function adminCreateCopyPosition(data: {
   if (error) return { error: error.message };
 
   // Update copy trade totals
-  const newProfit = copyTrade.total_profit + data.profitLoss;
+  const asset = copyTrade.asset || "USDT";
+  let dbProfitLoss = data.profitLoss;
+
+  if (!["USDT", "USDC", "USD"].includes(asset)) {
+    const { getCryptoPrices } = await import("@/lib/crypto-prices");
+    const prices = await getCryptoPrices([asset]);
+    const price = prices[asset] || 0;
+    if (price > 0) {
+      dbProfitLoss = data.profitLoss / price;
+    }
+  }
+
+  const newProfit = Number(copyTrade.total_profit) + dbProfitLoss;
   const newTrades = copyTrade.total_trades + 1;
 
   console.log("📊 Updating copy trade totals:", {

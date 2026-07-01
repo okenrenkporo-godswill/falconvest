@@ -138,12 +138,21 @@ export async function increaseCopyAmount(copyTradeId: string, additionalAmount: 
   // Fetch the new amount to return to the UI (optional but good for UX)
   const { data: updatedTrade } = await supabase
     .from("copy_trades")
-    .select("copy_amount")
+    .select("copy_amount, asset")
     .eq("id", copyTradeId)
     .single();
 
+  if (!updatedTrade) return { success: true, newAmount: 0 };
+
+  // Convert copy_amount to USD before returning to the UI
+  const { getCryptoPrices } = await import("@/lib/crypto-prices");
+  const tradeAsset = updatedTrade.asset || "USDT";
+  const prices = await getCryptoPrices([tradeAsset]);
+  const price = prices[tradeAsset] || (["USDT", "USDC"].includes(tradeAsset) ? 1 : 0);
+  const newAmountUsd = Number(updatedTrade.copy_amount) * price;
+
   revalidatePath("/dashboard/my-copy-trades");
-  return { success: true, newAmount: updatedTrade?.copy_amount };
+  return { success: true, newAmount: newAmountUsd };
 }
 
 // Stop copying a trader
@@ -205,12 +214,26 @@ export async function getUserCopyTrades() {
     tradeCounts[pos.copy_trade_id] = (tradeCounts[pos.copy_trade_id] || 0) + 1;
   });
 
-  // Map traders to copy trades with actual trade count
-  const result = copyTrades.map((ct) => ({
-    ...ct,
-    total_trades: tradeCounts[ct.id] || 0,
-    trader: traders?.find((t) => t.id === ct.trader_id),
-  }));
+  // Fetch crypto prices to convert amounts and profits to USD
+  const { getCryptoPrices } = await import("@/lib/crypto-prices");
+  const uniqueAssets = [...new Set(copyTrades.map((ct) => ct.asset || "USDT"))];
+  const prices = await getCryptoPrices(uniqueAssets);
+
+  // Map traders to copy trades with actual trade count and USD conversion
+  const result = copyTrades.map((ct) => {
+    const asset = ct.asset || "USDT";
+    const price = prices[asset] || (["USDT", "USDC"].includes(asset) ? 1 : 0);
+    const copyAmountUsd = Number(ct.copy_amount) * price;
+    const totalProfitUsd = Number(ct.total_profit) * price;
+
+    return {
+      ...ct,
+      copy_amount: copyAmountUsd,
+      total_profit: totalProfitUsd,
+      total_trades: tradeCounts[ct.id] || 0,
+      trader: traders?.find((t) => t.id === ct.trader_id),
+    };
+  });
 
   return result;
 }

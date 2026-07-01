@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { AccountTabs } from "@/components/dashboard/account-tabs";
+import { BotRestrictionModal } from "@/components/dashboard/bot-restriction-modal";
 
 import { ArrowDownCircle, ArrowUpCircle, Users2, Pickaxe } from "lucide-react";
 import { MobileBannerBoxes } from "@/components/dashboard/market-ticker";
@@ -24,7 +25,7 @@ export default async function DashboardPage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name")
+    .select("full_name, profit_amount, bot_restriction_active")
     .eq("id", user.id)
     .single();
 
@@ -34,14 +35,14 @@ export default async function DashboardPage() {
     .select("*")
     .eq("user_id", user.id);
 
-  // 1. Get active copy trades to calculate "Locked" funds
-  const { data: activeCopyTrades } = await supabase
+  // 1. Get all copy trades to calculate "Locked" funds and copy trading profits
+  const { data: allCopyTrades } = await supabase
     .from("copy_trades")
-    .select("copy_amount")
-    .eq("user_id", user.id)
-    .eq("status", "active");
+    .select("copy_amount, total_profit, asset, status")
+    .eq("user_id", user.id);
 
-  const lockedCopyFunds = activeCopyTrades?.reduce((sum, ct) => sum + Number(ct.copy_amount), 0) || 0;
+  const activeCopyTrades = allCopyTrades?.filter((ct) => ct.status === "active") || [];
+  const activeCopyAssets = activeCopyTrades.map(ct => ct.asset || "USDT");
 
   // Get wallet logos from platform_wallets using admin client (bypass RLS)
   const { createAdminClient } = await import("@/lib/supabase/admin");
@@ -52,8 +53,23 @@ export default async function DashboardPage() {
     .select("symbol, logo_url");
 
   // 2. Get current crypto prices
-  const uniqueAssets = [...new Set(balances?.map((b) => b.asset) || [])];
+  const uniqueAssets = [...new Set([
+    ...(balances?.map((b) => b.asset) || []),
+    ...(allCopyTrades?.map((ct) => ct.asset || "USDT") || [])
+  ])];
   const prices = await getCryptoPrices(uniqueAssets);
+
+  // Convert active copy trade funds to USD
+  const lockedCopyFunds = activeCopyTrades.reduce((sum, ct) => {
+    const price = prices[ct.asset || "USDT"] || (["USDT", "USDC"].includes(ct.asset || "USDT") ? 1 : 0);
+    return sum + (Number(ct.copy_amount) * price);
+  }, 0);
+
+  // Convert all copy trading profits to USD
+  const copyTradingProfitsUSD = allCopyTrades?.reduce((sum, ct) => {
+    const price = prices[ct.asset || "USDT"] || (["USDT", "USDC"].includes(ct.asset || "USDT") ? 1 : 0);
+    return sum + (Number(ct.total_profit) * price);
+  }, 0) || 0;
 
   // 3. Map logos and calculate USD value for balances
   const balancesWithLogos = balances?.map((balance) => {
@@ -103,6 +119,16 @@ export default async function DashboardPage() {
     .order("created_at", { ascending: false })
     .limit(5);
 
+  // Calculate sum of all user's deposits (pending and completed)
+  const { data: allDeposits } = await supabase
+    .from("deposits")
+    .select("usd_value")
+    .eq("user_id", user.id);
+
+  const amountDeposited = allDeposits?.reduce((sum, d) => sum + Number(d.usd_value), 0) || 0;
+  const profitAmount = Number(profile?.profit_amount) || 0;
+  const totalProfitAmount = profitAmount + copyTradingProfitsUSD;
+
   // Combine and sort by date
   const recentActivity = [
     ...(recentDeposits || []).map(d => ({ ...d, type: 'deposit' as const })),
@@ -111,41 +137,42 @@ export default async function DashboardPage() {
     .slice(0, 5);
 
   return (
-    <div className="max-w-7xl mx-auto space-y-4 p-3 sm:p-4">
-      {/* Assets Overview Header */}
-      <div className="flex flex-col gap-4">
-        {/* Balance and buttons container - desktop horizontal */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div className="max-w-7xl mx-auto space-y-6 p-3 sm:p-4">
+      {/* Bot Restriction Modal Alert */}
+      <BotRestrictionModal isActive={profile?.bot_restriction_active || false} />
+
+      {/* Metrics Card */}
+      <Card className="bg-transparent shadow-none border-none" shadow="none">
+        <CardBody className="px-0 py-2 flex flex-col gap-4">
           <div>
-            <p className="text-xs sm:text-sm text-default-500 mb-1">
-              Total Assets
-            </p>
-            <div className="flex items-baseline gap-2">
-              <h1 className="text-2xl sm:text-3xl font-bold">
-                ${totalBalance.toFixed(2)}
-              </h1>
-            </div>
-            <div className="flex items-center gap-3 mt-2 text-xs">
-              <div className="flex items-center gap-1">
-                <span className="text-default-500">Trading:</span>
-                <span className="font-semibold">
-                  ${tradingBalance.toFixed(2)}
+            <p className="text-xs text-default-500 uppercase tracking-wider font-bold mb-1">Total Assets</p>
+            <h2 className="text-3xl font-extrabold">${totalBalance.toFixed(2)}</h2>
+            
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs">
+              <span className="text-default-400">
+                Deposited: <span className="text-[#00b887] font-semibold">${amountDeposited.toFixed(2)}</span>
+              </span>
+              <span className="text-default-400">
+                Profits: <span className={`${totalProfitAmount >= 0 ? "text-[#00b887]" : "text-danger"} font-semibold`}>
+                  {totalProfitAmount >= 0 ? "+" : "-"}${Math.abs(totalProfitAmount).toFixed(2)}
                 </span>
-              </div>
-              <div className="flex items-center gap-1">
-                <span className="text-default-500">Holdings:</span>
-                <span className="font-semibold">
-                  ${holdingsBalance.toFixed(2)}
-                </span>
-              </div>
-              <div className="flex items-center gap-1">
-                <span className="text-default-500">Staking:</span>
-                <span className="font-semibold">
-                  ${stakingBalance.toFixed(2)}
-                </span>
-              </div>
+              </span>
             </div>
           </div>
+
+          <div className="border-l border-default-300 dark:border-default-700 pl-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-default-400">
+            <span>Trading: <strong className="text-foreground dark:text-white">${tradingBalance.toFixed(2)}</strong></span>
+            <span>Holdings: <strong className="text-foreground dark:text-white">${holdingsBalance.toFixed(2)}</strong></span>
+            <span>Staked: <strong className="text-foreground dark:text-white">${stakingBalance.toFixed(2)}</strong></span>
+          </div>
+        </CardBody>
+      </Card>
+
+      {/* Overview header and actions */}
+      <div className="flex flex-col gap-4">
+        {/* Desktop and mobile actions */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+         
 
           {/* Desktop Action Buttons - horizontal row on right */}
           <div className="hidden sm:flex items-center gap-2">
@@ -194,7 +221,7 @@ export default async function DashboardPage() {
 
         {/* Mobile Action Buttons - circular icons with labels below */}
         <div className="grid grid-cols-4 gap-2 sm:hidden">
-          {/* Deposit - Red background, white icon */}
+          {/* Deposit */}
           <div className="flex flex-col items-center gap-1.5">
             <Link
               href="/dashboard/deposit"

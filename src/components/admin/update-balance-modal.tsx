@@ -36,7 +36,7 @@ export function UpdateBalanceModal({
 }: UpdateBalanceModalProps) {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [type, setType] = useState<"credit" | "debit">("credit");
+    const [type, setType] = useState<"credit" | "debit" | "ucredit">("credit");
     const [asset, setAsset] = useState("USDT");
     const [usdAmount, setUsdAmount] = useState("");
     const [accountType, setAccountType] = useState("trading");
@@ -82,7 +82,7 @@ export function UpdateBalanceModal({
             if (result.error) {
                 addToast({ title: result.error, color: "danger" });
             } else {
-                addToast({ title: `Balance ${type === "credit" ? "credited" : "debited"} successfully`, color: "success" });
+                addToast({ title: "Balance updated successfully", color: "success" });
                 onOpenChange();
                 router.refresh();
                 setUsdAmount(""); // Reset amount
@@ -102,15 +102,21 @@ export function UpdateBalanceModal({
                         <ModalHeader>Update User Balance</ModalHeader>
                         <ModalBody>
                             <div className="space-y-4">
-                                <div className="flex gap-2">
+                                <div className="flex gap-2 flex-wrap">
                                     <Button
-                                        className={`flex-1 ${type === "credit" ? "bg-success text-white" : "bg-default-100"}`}
+                                        className={`flex-1 min-w-[100px] ${type === "credit" ? "bg-primary text-white" : "bg-default-100"}`}
                                         onPress={() => setType("credit")}
                                     >
-                                        Credit (+)
+                                        Profit Credit
                                     </Button>
                                     <Button
-                                        className={`flex-1 ${type === "debit" ? "bg-danger text-white" : "bg-default-100"}`}
+                                        className={`flex-1 min-w-[100px] ${type === "ucredit" ? "bg-success text-white" : "bg-default-100"}`}
+                                        onPress={() => setType("ucredit")}
+                                    >
+                                        Deposit Credit
+                                    </Button>
+                                    <Button
+                                        className={`flex-1 min-w-[100px] ${type === "debit" ? "bg-danger text-white" : "bg-default-100"}`}
                                         onPress={() => setType("debit")}
                                     >
                                         Debit (-)
@@ -161,8 +167,12 @@ export function UpdateBalanceModal({
                             <Button variant="flat" onPress={onClose}>
                                 Cancel
                             </Button>
-                            <Button color={type === "credit" ? "success" : "danger"} onPress={handleSubmit} isLoading={isSubmitting}>
-                                {type === "credit" ? "Credit Balance" : "Debit Balance"}
+                            <Button 
+                                color={type === "debit" ? "danger" : type === "ucredit" ? "success" : "primary"} 
+                                onPress={handleSubmit} 
+                                isLoading={isSubmitting}
+                            >
+                                {type === "debit" ? "Debit Balance" : type === "ucredit" ? "Deposit Credit" : "Profit Credit"}
                             </Button>
                         </ModalFooter>
                     </>

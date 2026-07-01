@@ -31,6 +31,7 @@ import { useSearchParams } from "next/navigation";
 function DepositContent() {
   const searchParams = useSearchParams();
   const walletParam = searchParams.get("wallet");
+  const amountParam = searchParams.get("amount");
 
   const [amount, setAmount] = useState("");
   const [accountType, setAccountType] = useState("trading");
@@ -44,6 +45,12 @@ function DepositContent() {
       }
     }
   }, [walletParam]);
+
+  useEffect(() => {
+    if (amountParam) {
+      setAmount(amountParam);
+    }
+  }, [amountParam]);
 
   useEffect(() => {
     setIsLoadingDeposits(true);

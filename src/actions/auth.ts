@@ -29,38 +29,52 @@ export async function loginAction(formData: FormData) {
     return { error: passwordError.message };
   }
 
-  // Sign out immediately (we'll sign in again after OTP)
-  await supabase.auth.signOut();
+  // Fetch profile to check suspension and role
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role, account_status, first_name, last_name, email")
+    .eq("email", data.email)
+    .single();
 
-  // Generate and send OTP
-  const adminClient = createAdminClient();
-  const code = Math.floor(100000 + Math.random() * 900000).toString();
-  const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
-
-  // Delete old OTP codes
-  await adminClient.from("otp_codes").delete().eq("email", data.email);
-
-  // Insert new OTP with password hash for later verification
-  const { error: otpError } = await adminClient.from("otp_codes").insert({
-    email: data.email,
-    code,
-    expires_at: expiresAt.toISOString(),
-    verified: false,
-    metadata: { password: data.password },
-  });
-
-  if (otpError) {
-    return { error: "Failed to send OTP" };
+  if (profile?.account_status === "suspended") {
+    await supabase.auth.signOut();
+    return { error: "Your account has been suspended. Please contact support." };
   }
 
-  // Send OTP email
-  try {
-    await sendOtpEmail(data.email, code);
-  } catch (emailError) {
-    console.error("Email send failed:", emailError);
+  if (profile?.role === "admin") {
+    const adminName =
+      profile.first_name && profile.last_name
+        ? `${profile.first_name} ${profile.last_name}`
+        : profile.email.split("@")[0];
+
+    try {
+      const { sendAdminLoginEmail } = await import("@/lib/email");
+      await sendAdminLoginEmail(profile.email, adminName);
+    } catch (error) {
+      console.error("Failed to send admin login notification:", error);
+    }
+
+    revalidatePath("/", "layout");
+    return { success: true, redirect: "/cpanel/admin" };
   }
 
-  return { success: true };
+  // Notify admin of user login
+  if (profile && profile.role !== "admin") {
+    const userName =
+      profile.first_name && profile.last_name
+        ? `${profile.first_name} ${profile.last_name}`
+        : profile.email.split("@")[0];
+
+    try {
+      const { notifyAdminUserLogin } = await import("@/lib/email");
+      await notifyAdminUserLogin(profile.email, userName);
+    } catch (error) {
+      console.error("Failed to notify admin of user login:", error);
+    }
+  }
+
+  revalidatePath("/", "layout");
+  return { success: true, redirect: "/dashboard" };
 }
 
 export async function adminLoginAction(formData: FormData) {

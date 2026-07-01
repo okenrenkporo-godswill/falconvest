@@ -1,11 +1,11 @@
 "use client";
 
-import { Card, CardBody, Skeleton, Chip, Tabs, Tab, Button, addToast, Avatar, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input } from "@heroui/react";
+import { Card, CardBody, Skeleton, Chip, Tabs, Tab, Button, addToast, Avatar, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Switch, Select, SelectItem } from "@heroui/react";
 import { useEffect, useState } from "react";
 import { getUserDetails } from "@/actions/admin-user-details";
-import { approveKycAction, rejectKycAction, suspendUserAccount, reactivateUserAccount, deleteUserAction } from "@/actions/admin";
+import { approveKycAction, rejectKycAction, suspendUserAccount, reactivateUserAccount, deleteUserAction, adminUpdateBotAndVpsSettingsAction } from "@/actions/admin";
 import { CopyTradesContent } from "./copy-trades-content";
-import { ArrowLeft, User, Wallet, TrendingUp, ArrowDownCircle, ArrowUpCircle, Lock, ShieldCheck, Plus, CheckCircle, XCircle, Ban, Eye, Trash2 } from "lucide-react";
+import { ArrowLeft, User, Wallet, TrendingUp, ArrowDownCircle, ArrowUpCircle, Lock, ShieldCheck, Plus, CheckCircle, XCircle, Ban, Eye, Trash2, Cpu } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -28,9 +28,23 @@ export function UserDetailsContent({ userId }: { userId: string }) {
   const [suspendReason, setSuspendReason] = useState("");
   const [actionLoading, setActionLoading] = useState(false);
 
+  // Bot & VPS settings states
+  const [botEnabled, setBotEnabled] = useState(false);
+  const [botRestrictionActive, setBotRestrictionActive] = useState(false);
+  const [vpsStatus, setVpsStatus] = useState<"none" | "active" | "expired">("none");
+  const [vpsRenewalPrice, setVpsRenewalPrice] = useState(0);
+  const [botPlans, setBotPlans] = useState<any[]>([]);
+
   const loadData = async () => {
     const result = await getUserDetails(userId);
     setData(result);
+    if (result?.profile) {
+      setBotEnabled(result.profile.bot_enabled || false);
+      setBotRestrictionActive(result.profile.bot_restriction_active || false);
+      setVpsStatus(result.profile.vps_status || "none");
+      setVpsRenewalPrice(Number(result.profile.vps_renewal_price) || 0);
+      setBotPlans(result.userBotPlans || []);
+    }
     if (result?.balances) {
       const assets = Array.from(new Set(result.balances.map((b: any) => b.asset))) as string[];
       const fetchedPrices = await getCryptoPrices(assets);
@@ -119,6 +133,29 @@ export function UserDetailsContent({ userId }: { userId: string }) {
     } else {
       addToast({ title: "Success", description: "User deleted successfully", color: "success" });
       router.push("/cpanel/users");
+    }
+  };
+
+  const handleSaveBotSettings = async () => {
+    setActionLoading(true);
+    const result = await adminUpdateBotAndVpsSettingsAction(userId, {
+      botEnabled,
+      botRestrictionActive,
+      vpsStatus,
+      vpsRenewalPrice: Number(vpsRenewalPrice),
+      botPlans: botPlans.map(plan => ({
+        id: plan.id,
+        price: Number(plan.price),
+        status: plan.status
+      }))
+    });
+    setActionLoading(false);
+    
+    if (result.error) {
+      addToast({ title: "Error", description: result.error, color: "danger" });
+    } else {
+      addToast({ title: "Success", description: "Trading Bot & VPS settings updated successfully", color: "success" });
+      loadData();
     }
   };
 
@@ -588,6 +625,109 @@ export function UserDetailsContent({ userId }: { userId: string }) {
             <Tab key="copy-trading" title="Copy Trading">
               <div className="pt-4">
                 <CopyTradesContent userId={userId} />
+              </div>
+            </Tab>
+
+            <Tab key="bot-settings" title="Bot & VPS">
+              <div className="space-y-6 pt-4">
+                <div className="flex justify-between items-center bg-default-50 dark:bg-default-50/5 p-4 rounded-lg">
+                  <h3 className="font-semibold text-lg flex items-center gap-2">
+                    <Cpu size={20} className="text-primary" /> Trading Bot & VPS Configuration
+                  </h3>
+                  <Button
+                    size="sm"
+                    color="primary"
+                    onPress={handleSaveBotSettings}
+                    isLoading={actionLoading}
+                    className="font-bold bg-[#33525c] text-white"
+                  >
+                    Save Changes
+                  </Button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-default-50 dark:bg-default-50/5 p-6 rounded-lg">
+                  {/* General Toggles */}
+                  <div className="space-y-4">
+                    <h4 className="font-bold text-sm text-default-500 uppercase tracking-wider">Feature Access</h4>
+                    <div className="flex items-center justify-between p-3 border border-default-100 dark:border-zinc-800 rounded-lg">
+                      <div>
+                        <p className="font-semibold text-sm">Enable Trading Bot Feature</p>
+                        <p className="text-xs text-default-400">Controls visibility of the Trading Bot page in side nav</p>
+                      </div>
+                      <Switch isSelected={botEnabled} onValueChange={setBotEnabled} />
+                    </div>
+
+                    <div className="flex items-center justify-between p-3 border border-default-100 dark:border-zinc-800 rounded-lg">
+                      <div>
+                        <p className="font-semibold text-sm">Activate Bot Restriction</p>
+                        <p className="text-xs text-default-400">Blocks copy-trades/withdrawals, shows warning modal popup</p>
+                      </div>
+                      <Switch isSelected={botRestrictionActive} onValueChange={setBotRestrictionActive} />
+                    </div>
+                  </div>
+
+                  {/* VPS Subscription Controls */}
+                  <div className="space-y-4">
+                    <h4 className="font-bold text-sm text-default-500 uppercase tracking-wider">VPS Bot Status</h4>
+                    <div className="grid grid-cols-2 gap-4">
+                      <Select
+                        label="VPS Status"
+                        selectedKeys={[vpsStatus]}
+                        onChange={(e) => setVpsStatus(e.target.value as any)}
+                      >
+                        <SelectItem key="none" textValue="None">None</SelectItem>
+                        <SelectItem key="active" textValue="Active">Active (Shows Nitro Boost badge)</SelectItem>
+                        <SelectItem key="expired" textValue="Expired">Expired (Blocks copy/withdraw, shows banner)</SelectItem>
+                      </Select>
+
+                      <Input
+                        type="number"
+                        label="VPS Renewal Price (USD)"
+                        value={vpsRenewalPrice.toString()}
+                        onValueChange={(val) => setVpsRenewalPrice(Number(val) || 0)}
+                        startContent={<span className="text-default-400 text-xs">$</span>}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Customizable Bot Plan Prices */}
+                <div className="bg-default-50 dark:bg-default-50/5 p-6 rounded-lg space-y-4">
+                  <h4 className="font-bold text-sm text-default-500 uppercase tracking-wider">Trading Bot Packages</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {botPlans.map((plan, index) => (
+                      <Card key={plan.id} className="border border-default-100 dark:border-zinc-800 bg-background/50">
+                        <CardBody className="p-4 space-y-4">
+                          <p className="font-bold capitalize text-sm">{plan.plan_type} Package</p>
+                          <Input
+                            type="number"
+                            label="Price (USD)"
+                            value={plan.price.toString()}
+                            onValueChange={(val) => {
+                              const updated = [...botPlans];
+                              updated[index].price = Number(val) || 0;
+                              setBotPlans(updated);
+                            }}
+                            startContent={<span className="text-default-400 text-xs">$</span>}
+                          />
+                          <Select
+                            label="Status"
+                            selectedKeys={[plan.status]}
+                            onChange={(e) => {
+                              const updated = [...botPlans];
+                              updated[index].status = e.target.value;
+                              setBotPlans(updated);
+                            }}
+                          >
+                            <SelectItem key="inactive" textValue="Inactive">Inactive</SelectItem>
+                            <SelectItem key="active" textValue="Active">Active</SelectItem>
+                            <SelectItem key="paused" textValue="Paused">Paused</SelectItem>
+                          </Select>
+                        </CardBody>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
               </div>
             </Tab>
           </Tabs>

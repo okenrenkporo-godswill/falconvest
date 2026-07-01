@@ -24,6 +24,17 @@ type CopyTrade = {
   };
 };
 
+const formatAssetValue = (amount: number | string | undefined | null, _asset?: string) => {
+  const num = Number(amount) || 0;
+  return `$${num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+};
+
+const formatProfit = (amount: number | string | undefined | null, _asset?: string) => {
+  const num = Number(amount) || 0;
+  const formatted = formatAssetValue(Math.abs(num));
+  return `${num >= 0 ? "+" : "-"}${formatted}`;
+};
+
 export default function MyCopyTradesPage() {
   const [copyTrades, setCopyTrades] = useState<CopyTrade[]>([]);
   const [loading, setLoading] = useState(true);
@@ -134,12 +145,12 @@ export default function MyCopyTradesPage() {
                   <div className="grid grid-cols-3 gap-2 mb-3 text-center">
                     <div>
                       <p className="text-xs text-default-500">Amount</p>
-                      <p className="text-sm font-bold">${ct.copy_amount.toLocaleString()}</p>
+                      <p className="text-sm font-bold">{formatAssetValue(ct.copy_amount, ct.asset)}</p>
                     </div>
                     <div>
                       <p className="text-xs text-default-500">Profit</p>
                       <p className={`text-sm font-bold ${ct.total_profit >= 0 ? "text-success" : "text-danger"}`}>
-                        {ct.total_profit >= 0 ? "+" : ""}${ct.total_profit.toLocaleString()}
+                        {formatProfit(ct.total_profit, ct.asset)}
                       </p>
                     </div>
                     <div>
@@ -221,12 +232,12 @@ export default function MyCopyTradesPage() {
                   <div className="flex items-center gap-8">
                     <div className="text-right">
                       <p className="text-xs text-default-500 mb-1">Copy Amount</p>
-                      <p className="text-lg font-bold">${ct.copy_amount.toLocaleString()}</p>
+                      <p className="text-lg font-bold">{formatAssetValue(ct.copy_amount, ct.asset)}</p>
                     </div>
                     <div className="text-right">
                       <p className="text-xs text-default-500 mb-1">Total Profit</p>
                       <p className={`text-lg font-bold ${ct.total_profit >= 0 ? "text-success" : "text-danger"}`}>
-                        {ct.total_profit >= 0 ? "+" : ""}${ct.total_profit.toLocaleString()}
+                        {formatProfit(ct.total_profit, ct.asset)}
                       </p>
                     </div>
                     <div className="text-right">

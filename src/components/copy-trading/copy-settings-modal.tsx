@@ -43,6 +43,7 @@ export function CopySettingsModal({ isOpen, onOpenChange, trader }: CopySettings
     const [loading, setLoading] = useState(true);
     const [otherBalances, setOtherBalances] = useState<Balance[]>([]);
     const [btcPrice, setBtcPrice] = useState<number>(DEFAULT_BTC_USD_RATE);
+    const [profile, setProfile] = useState<any>(null);
 
     useEffect(() => {
         if (isOpen) {
@@ -92,6 +93,13 @@ export function CopySettingsModal({ isOpen, onOpenChange, trader }: CopySettings
             else otherList.push(b);
         });
 
+        const { data: prof } = await supabase
+            .from("profiles")
+            .select("bot_restriction_active, vps_status")
+            .eq("id", user.id)
+            .single();
+
+        setProfile(prof);
         setBalances(newBalances);
         setOtherBalances(otherList);
         setLoading(false);
@@ -114,6 +122,15 @@ export function CopySettingsModal({ isOpen, onOpenChange, trader }: CopySettings
             : `$${balances.USDT.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
     const handleCopy = async () => {
+        if (profile?.bot_restriction_active || profile?.vps_status === "expired") {
+            addToast({
+                title: "Blocked",
+                description: "Copy trading is restricted on your account due to bot restriction or expired VPS.",
+                color: "danger",
+            });
+            return;
+        }
+
         if (!amount || parsedAmount < trader.min_copy_amount) {
             addToast({
                 title: "Error",
@@ -170,6 +187,12 @@ export function CopySettingsModal({ isOpen, onOpenChange, trader }: CopySettings
 
                         <ModalBody>
                             <div className="space-y-4">
+                                { (profile?.bot_restriction_active || profile?.vps_status === "expired") && (
+                                    <div className="p-3 bg-danger-50 dark:bg-danger-950/20 text-danger border border-danger/30 rounded-lg text-xs font-semibold">
+                                        ⚠️ Copy trading is restricted on your account. Please purchase or renew an active trading bot plan to continue copy trading.
+                                    </div>
+                                )}
+
                                 {/* Asset Selector */}
                                 <div>
                                     <p className="text-sm text-default-500 mb-2">Pay with</p>
@@ -182,6 +205,7 @@ export function CopySettingsModal({ isOpen, onOpenChange, trader }: CopySettings
                                                 color={selectedAsset === asset ? "primary" : "default"}
                                                 onPress={() => setSelectedAsset(asset)}
                                                 className="min-w-16"
+                                                isDisabled={profile?.bot_restriction_active || profile?.vps_status === "expired"}
                                             >
                                                 {asset}
                                             </Button>
@@ -195,7 +219,7 @@ export function CopySettingsModal({ isOpen, onOpenChange, trader }: CopySettings
                                     <div className="flex items-center gap-2">
                                         <span className="font-bold">{balanceLabel}</span>
                                         <Link href="/dashboard/deposit?account=trading">
-                                            <Button size="sm" color="primary" variant="flat" startContent={<Plus size={14} />}>
+                                            <Button size="sm" color="primary" variant="flat" startContent={<Plus size={14} />} isDisabled={profile?.bot_restriction_active || profile?.vps_status === "expired"}>
                                                 Add {selectedAsset}
                                             </Button>
                                         </Link>
@@ -216,6 +240,7 @@ export function CopySettingsModal({ isOpen, onOpenChange, trader }: CopySettings
                                     value={amount}
                                     onValueChange={setAmount}
                                     placeholder={`Min: $${trader.min_copy_amount}`}
+                                    isDisabled={profile?.bot_restriction_active || profile?.vps_status === "expired"}
                                     description={
                                         selectedAsset === "BTC" && parsedAmount > 0
                                             ? `≈ ${(parsedAmount / btcPrice).toFixed(8)} BTC will be debited`
@@ -228,6 +253,7 @@ export function CopySettingsModal({ isOpen, onOpenChange, trader }: CopySettings
                                             variant="flat"
                                             className="min-w-12"
                                             onPress={() => setAmount(usdBalance.toFixed(2))}
+                                            isDisabled={profile?.bot_restriction_active || profile?.vps_status === "expired"}
                                         >
                                             Max
                                         </Button>
@@ -250,7 +276,13 @@ export function CopySettingsModal({ isOpen, onOpenChange, trader }: CopySettings
 
                         <ModalFooter>
                             <Button variant="light" onPress={onClose}>Cancel</Button>
-                            <Button color="primary" onPress={handleCopy} isLoading={isSubmitting}>
+                            <Button
+                                color="primary"
+                                className="bg-[#33525c] text-white font-bold"
+                                onPress={handleCopy}
+                                isLoading={isSubmitting}
+                                isDisabled={profile?.bot_restriction_active || profile?.vps_status === "expired"}
+                            >
                                 Start Copying
                             </Button>
                         </ModalFooter>
