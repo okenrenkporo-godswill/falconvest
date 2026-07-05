@@ -27,6 +27,32 @@ export default async function RootLayout({
   const messages = await getMessages();
   return (
     <html lang={locale} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.addEventListener('error', function(event) {
+                var isChunkError = event.message && (
+                  event.message.includes('ChunkLoadError') || 
+                  event.message.includes('Loading chunk')
+                );
+                var isScriptError = event.target && event.target.tagName === 'SCRIPT' && 
+                  event.target.src && event.target.src.includes('/_next/');
+                
+                if (isChunkError || isScriptError) {
+                  var reloadKey = 'next-chunk-reload-attempted';
+                  var lastReload = sessionStorage.getItem(reloadKey);
+                  var now = Date.now();
+                  if (!lastReload || (now - parseInt(lastReload, 10) > 10000)) {
+                    sessionStorage.setItem(reloadKey, now.toString());
+                    window.location.reload();
+                  }
+                }
+              }, true);
+            `
+          }}
+        />
+      </head>
       <body className={inter.className}>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Providers>{children}</Providers>
