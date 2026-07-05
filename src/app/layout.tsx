@@ -32,6 +32,33 @@ export default async function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `
+              // Prevent Google Translate/Safari Translate crashes by ignoring NotFoundError on removeChild and insertBefore
+              if (typeof Node === 'function' && Node.prototype) {
+                var originalRemoveChild = Node.prototype.removeChild;
+                Node.prototype.removeChild = function(child) {
+                  try {
+                    return originalRemoveChild.call(this, child);
+                  } catch (e) {
+                    if (e.name === 'NotFoundError' || (e.message && e.message.indexOf('not be found') !== -1)) {
+                      return child;
+                    }
+                    throw e;
+                  }
+                };
+
+                var originalInsertBefore = Node.prototype.insertBefore;
+                Node.prototype.insertBefore = function(newNode, referenceNode) {
+                  try {
+                    return originalInsertBefore.call(this, newNode, referenceNode);
+                  } catch (e) {
+                    if (e.name === 'NotFoundError' || (e.message && e.message.indexOf('not be found') !== -1)) {
+                      return newNode;
+                    }
+                    throw e;
+                  }
+                };
+              }
+
               window.addEventListener('error', function(event) {
                 var isChunkError = event.message && (
                   event.message.includes('ChunkLoadError') || 
