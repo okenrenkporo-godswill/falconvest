@@ -112,17 +112,23 @@ export default function RegisterPage() {
 
   async function handleStep2(formData: FormData) {
     setLoading(true);
+    setError("");
     formData.append("email", email);
 
     try {
       const result = await verifyOtpAction(formData);
 
       if (result?.error) {
+        setError(result.error);
         addToast({ title: "Error", description: result.error, color: "danger" });
       } else {
         setStep(3);
         addToast({ title: "Verified", color: "success" });
       }
+    } catch (err: any) {
+      console.error("❌ OTP verification error:", err);
+      setError(err?.message || "An unexpected error occurred during OTP verification");
+      addToast({ title: "Error", description: "Verification failed", color: "danger" });
     } finally {
       setLoading(false);
     }
@@ -245,6 +251,15 @@ export default function RegisterPage() {
           </CardHeader>
 
           <CardBody className="gap-8 p-0 mt-4">
+            {error && (
+              <Alert 
+                color="danger" 
+                variant="flat" 
+                className="font-semibold text-xs"
+              >
+                {error}
+              </Alert>
+            )}
             <Alert 
               color="primary" 
               variant="flat"
