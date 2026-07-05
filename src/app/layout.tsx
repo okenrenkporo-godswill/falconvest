@@ -5,6 +5,7 @@ import { Providers } from "@/components/providers";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import Script from "next/script";
+import { ErrorBoundary } from "@/components/shared/error-boundary";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -49,13 +50,46 @@ export default async function RootLayout({
                   }
                 }
               }, true);
+
+              window.onerror = function(message, source, lineno, colno, error) {
+                var errData = {
+                  type: 'onerror',
+                  message: message,
+                  source: source,
+                  lineno: lineno,
+                  colno: colno,
+                  stack: error ? error.stack : null,
+                  route: window.location.href,
+                  time: new Date().toISOString(),
+                  userAgent: navigator.userAgent
+                };
+                try {
+                  localStorage.setItem('last_client_error', JSON.stringify(errData));
+                } catch (e) {}
+              };
+
+              window.addEventListener('unhandledrejection', function(event) {
+                var errData = {
+                  type: 'unhandledrejection',
+                  reason: event.reason ? (event.reason.message || String(event.reason)) : 'Unknown',
+                  stack: event.reason ? event.reason.stack : null,
+                  route: window.location.href,
+                  time: new Date().toISOString(),
+                  userAgent: navigator.userAgent
+                };
+                try {
+                  localStorage.setItem('last_client_error', JSON.stringify(errData));
+                } catch (e) {}
+              });
             `
           }}
         />
       </head>
       <body className={inter.className}>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <Providers>{children}</Providers>
+          <ErrorBoundary>
+            <Providers>{children}</Providers>
+          </ErrorBoundary>
         </NextIntlClientProvider>
         <Script id="smartsupp-chat" strategy="afterInteractive">
           {`
