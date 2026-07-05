@@ -407,21 +407,23 @@ export default function RegisterPage() {
                     setSelectedCountry(key as string);
                     setSelectedState("");
                 }}
+                items={countries}
                 classNames={{
                   listboxWrapper: "bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/5 rounded-xl",
                 }}
                 inputProps={{
+                  autoComplete: "new-password",
                   classNames: {
                     label: "text-xs font-bold text-default-600 ml-1",
                     inputWrapper: "h-14 bg-black/5 dark:bg-white/5 hover:bg-black/10 transition-colors rounded-xl border-none",
                   }
                 }}
               >
-                {countries.map((country) => (
-                  <AutocompleteItem key={country.isoCode}>
+                {(country) => (
+                  <AutocompleteItem key={country.isoCode} textValue={country.name}>
                     {country.name}
                   </AutocompleteItem>
-                ))}
+                )}
               </Autocomplete>
 
               <Autocomplete
@@ -434,21 +436,23 @@ export default function RegisterPage() {
                 selectedKey={selectedState}
                 onSelectionChange={(key) => setSelectedState(key as string)}
                 isDisabled={!selectedCountry}
+                items={states}
                 classNames={{
                     listboxWrapper: "bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 rounded-xl",
                   }}
                 inputProps={{
+                  autoComplete: "new-password",
                   classNames: {
                     label: "text-xs font-bold text-default-600 ml-1",
                     inputWrapper: "h-14 bg-black/5 dark:bg-white/5 hover:bg-black/10 transition-colors rounded-xl border-none",
                   }
                 }}
               >
-                {states.map((state) => (
-                  <AutocompleteItem key={state.isoCode}>
+                {(state) => (
+                  <AutocompleteItem key={state.isoCode} textValue={state.name}>
                     {state.name}
                   </AutocompleteItem>
-                ))}
+                )}
               </Autocomplete>
             </div>
 
@@ -461,21 +465,23 @@ export default function RegisterPage() {
                 labelPlacement="outside"
                 placeholder="Select City"
                 isDisabled={!selectedState}
+                items={cities}
                 classNames={{
                     listboxWrapper: "bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/5 rounded-xl",
                   }}
                 inputProps={{
+                  autoComplete: "new-password",
                   classNames: {
                     label: "text-xs font-bold text-default-600 ml-1",
                     inputWrapper: "h-14 bg-black/5 dark:bg-white/5 hover:bg-black/10 transition-colors rounded-xl border-none",
                   }
                 }}
               >
-                {cities.map((city) => (
-                  <AutocompleteItem key={city.name}>
+                {(city) => (
+                  <AutocompleteItem key={city.name} textValue={city.name}>
                     {city.name}
                   </AutocompleteItem>
-                ))}
+                )}
               </Autocomplete>
 
               <Input 
