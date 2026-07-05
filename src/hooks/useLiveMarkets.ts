@@ -76,7 +76,10 @@ export function useLiveMarkets() {
         const response = await fetch("https://api.exchangerate.host/latest?base=USD");
         if (!response.ok) throw new Error("Forex API error");
         const json = await response.json();
-        const rates = json.rates;
+        const rates = json?.rates;
+        if (!rates || typeof rates !== 'object' || !rates.EUR || !rates.GBP || !rates.JPY || !rates.AUD || !rates.CHF || !rates.CAD) {
+            throw new Error("Rates are missing or invalid in API response");
+        }
 
         const pairs = [
             { id: "eurusd", name: "EUR/USD", symbol: "EURUSD", price: 1 / rates.EUR },
