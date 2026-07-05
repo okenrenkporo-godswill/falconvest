@@ -62,7 +62,18 @@ export default function MarketStats() {
       );
       const data = await response.json();
       if (Array.isArray(data)) {
-        setCoins(data);
+        const mapped: CoinData[] = data.map((coin: any) => ({
+          id: coin.id,
+          symbol: coin.symbol,
+          name: coin.name,
+          image: coin.image,
+          current_price: coin.current_price ?? 0,
+          price_change_percentage_24h: coin.price_change_percentage_24h ?? 0,
+          sparkline_in_7d: {
+            price: coin.sparkline_in_7d?.price || []
+          }
+        }));
+        setCoins(mapped);
       }
     } catch (error) {
       console.error("Error fetching market data:", error);
@@ -155,14 +166,14 @@ export default function MarketStats() {
                           <span className="ml-2 text-[10px] text-neutral-400 font-medium">USD</span>
                         </td>
                         <td className="py-5">
-                          <span className={`${coin.price_change_percentage_24h >= 0 ? "text-green-500" : "text-red-500"} font-bold text-base`}>
-                            {coin.price_change_percentage_24h >= 0 ? "+" : ""}{coin.price_change_percentage_24h.toFixed(2)}%
+                          <span className={`${(coin.price_change_percentage_24h ?? 0) >= 0 ? "text-green-500" : "text-red-500"} font-bold text-base`}>
+                            {(coin.price_change_percentage_24h ?? 0) >= 0 ? "+" : ""}{(coin.price_change_percentage_24h ?? 0).toFixed(2)}%
                           </span>
                         </td>
                         <td className="py-5 hidden md:table-cell">
                           <Sparkline 
-                            data={coin.sparkline_in_7d.price} 
-                            color={coin.price_change_percentage_24h >= 0 ? "#22c55e" : "#ef4444"} 
+                            data={coin.sparkline_in_7d?.price || []} 
+                            color={(coin.price_change_percentage_24h ?? 0) >= 0 ? "#22c55e" : "#ef4444"} 
                           />
                         </td>
                         <td className="py-5 text-right pr-4">
@@ -198,8 +209,8 @@ export default function MarketStats() {
                       <span className="font-bold text-neutral-800 uppercase text-sm">{coin.symbol}/USDC</span>
                     </div>
                     <div className="text-right">
-                      <p className="font-extrabold text-black dark:text-white text-sm whitespace-nowrap">{coin.current_price.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</p>
-                      <p className="text-green-500 text-xs font-bold">+{coin.price_change_percentage_24h.toFixed(2)}% 24h</p>
+                      <p className="font-extrabold text-black dark:text-white text-sm whitespace-nowrap">{(coin.current_price ?? 0).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</p>
+                      <p className="text-green-500 text-xs font-bold">+{(coin.price_change_percentage_24h ?? 0).toFixed(2)}% 24h</p>
                     </div>
                   </div>
                 ))}
@@ -221,9 +232,9 @@ export default function MarketStats() {
                       <span className="font-bold text-neutral-800 uppercase text-sm">{coin.symbol}/USDT</span>
                     </div>
                     <div className="text-right">
-                      <p className="font-extrabold text-black dark:text-white text-sm whitespace-nowrap">{coin.current_price.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</p>
-                      <p className={`${coin.price_change_percentage_24h >= 0 ? "text-green-500" : "text-red-500"} text-xs font-bold`}>
-                        {coin.price_change_percentage_24h >= 0 ? "+" : ""}{coin.price_change_percentage_24h.toFixed(2)}% 24h
+                      <p className="font-extrabold text-black dark:text-white text-sm whitespace-nowrap">{(coin.current_price ?? 0).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</p>
+                      <p className={`${(coin.price_change_percentage_24h ?? 0) >= 0 ? "text-green-500" : "text-red-500"} text-xs font-bold`}>
+                        {(coin.price_change_percentage_24h ?? 0) >= 0 ? "+" : ""}{(coin.price_change_percentage_24h ?? 0).toFixed(2)}% 24h
                       </p>
                     </div>
                   </div>

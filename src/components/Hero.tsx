@@ -61,10 +61,12 @@ function CryptoMarquee() {
 
       <div className="flex animate-marquee whitespace-nowrap">
         {items.map((coin, i) => {
-          const up = coin.price_change_percentage_24h >= 0;
-          const price = coin.current_price >= 1
-            ? `$${coin.current_price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-            : `$${coin.current_price.toFixed(4)}`;
+          const change24h = coin.price_change_percentage_24h ?? 0;
+          const currentPrice = coin.current_price ?? 0;
+          const up = change24h >= 0;
+          const price = currentPrice >= 1
+            ? `$${currentPrice.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+            : `$${currentPrice.toFixed(4)}`;
           return (
             <span key={`${coin.id}-${i}`} className="inline-flex items-center gap-3 mx-8">
               {coin.image && (
@@ -74,7 +76,7 @@ function CryptoMarquee() {
               <span className="text-white/80 text-sm font-semibold">{price}</span>
               <span className={`flex items-center gap-0.5 text-xs font-bold ${up ? "text-green-400" : "text-red-400"}`}>
                 {up ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
-                {up ? "+" : ""}{coin.price_change_percentage_24h.toFixed(2)}%
+                {up ? "+" : ""}{change24h.toFixed(2)}%
               </span>
               <span className="text-white/20 text-xs">•</span>
             </span>

@@ -45,11 +45,11 @@ export function useLiveMarkets() {
                     name: coin.name,
                     symbol: coin.symbol.toUpperCase(),
                     image: coin.image,
-                    price: coin.current_price,
-                    buy: coin.current_price,
-                    sell: coin.current_price * 0.9995,
-                    change24h: coin.price_change_percentage_24h,
-                    trend: coin.sparkline_in_7d.price.slice(-15),
+                    price: coin.current_price ?? 0,
+                    buy: coin.current_price ?? 0,
+                    sell: (coin.current_price ?? 0) * 0.9995,
+                    change24h: coin.price_change_percentage_24h ?? 0,
+                    trend: coin.sparkline_in_7d?.price?.slice(-15) || [],
                     category: "Cryptocurrencies",
                 }));
 

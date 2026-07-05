@@ -161,12 +161,12 @@ export default function AssetExplorer() {
                                         </span>
                                     </td>
                                     <td className="px-8 py-6 text-right">
-                                        <span className={`text-xs font-black p-2 rounded-lg ${asset.change24h >= 0 ? "text-green-500 bg-green-500/10" : "text-red-500 bg-red-500/10"}`}>
-                                            {asset.change24h >= 0 ? "+" : ""}{asset.change24h.toFixed(2)}%
+                                        <span className={`text-xs font-black p-2 rounded-lg ${(asset.change24h ?? 0) >= 0 ? "text-green-500 bg-green-500/10" : "text-red-500 bg-red-500/10"}`}>
+                                            {(asset.change24h ?? 0) >= 0 ? "+" : ""}{(asset.change24h ?? 0).toFixed(2)}%
                                         </span>
                                     </td>
                                     <td className="px-8 py-6">
-                                        <Sparkline trend={asset.trend} color={asset.change24h >= 0 ? "#22c55e" : "#ef4444"} />
+                                        <Sparkline trend={asset.trend} color={(asset.change24h ?? 0) >= 0 ? "#22c55e" : "#ef4444"} />
                                     </td>
                                     <td className="px-8 py-6 text-right">
                                         <Button 
