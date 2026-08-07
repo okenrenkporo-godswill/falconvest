@@ -53,7 +53,7 @@
 #### Email Function
 - **File:** `src/lib/email.ts`
 - Added `notifyAdminKycSubmission(userEmail, userName)`
-- Sends alert to `admin@FalconVest.live`
+- Sends alert to `admin@FalconVest.online`
 - Includes link to KYC pending page
 
 #### KYC Submission Action
