@@ -180,6 +180,15 @@ export default function RegisterPage() {
           </CardHeader>
 
           <CardBody className="gap-8 p-0 mt-4">
+            {error && (
+              <Alert 
+                color="danger" 
+                variant="flat" 
+                className="font-semibold text-xs"
+              >
+                {error}
+              </Alert>
+            )}
             <Form
               onSubmit={(e) => {
                 e.preventDefault();

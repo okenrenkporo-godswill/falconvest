@@ -217,42 +217,49 @@ const sendOtpSchema = z.object({
 });
 
 export async function sendOtpAction(formData: FormData) {
-  const data = sendOtpSchema.parse({
-    email: formData.get("email"),
-  });
-
-  const supabase = await createClient();
-  const adminClient = createAdminClient();
-
-  // Generate 6-digit OTP
-  const code = Math.floor(100000 + Math.random() * 900000).toString();
-  const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
-
-  // Delete old OTP codes for this email
-  await adminClient.from("otp_codes").delete().eq("email", data.email);
-
-  // Insert new OTP
-  const { error: otpError } = await adminClient.from("otp_codes").insert({
-    email: data.email,
-    code,
-    expires_at: expiresAt.toISOString(),
-    verified: false,
-  });
-
-  if (otpError) {
-    console.error("❌ [sendOtpAction] Database error:", otpError);
-    return { error: otpError.message };
-  }
-
-  // Send OTP email
   try {
-    await sendOtpEmail(data.email, code);
-  } catch (emailError) {
-    console.error("❌ [sendOtpAction] Email error:", emailError);
-    return { error: "Failed to send verification email" };
-  }
+    const data = sendOtpSchema.parse({
+      email: formData.get("email"),
+    });
 
-  return { success: true };
+    const adminClient = createAdminClient();
+
+    // Generate 6-digit OTP
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+    // Delete old OTP codes for this email
+    await adminClient.from("otp_codes").delete().eq("email", data.email);
+
+    // Insert new OTP
+    const { error: otpError } = await adminClient.from("otp_codes").insert({
+      email: data.email,
+      code,
+      expires_at: expiresAt.toISOString(),
+      verified: false,
+    });
+
+    if (otpError) {
+      console.error("❌ [sendOtpAction] Database error:", otpError);
+      return { error: otpError.message };
+    }
+
+    // Send OTP email
+    try {
+      await sendOtpEmail(data.email, code);
+    } catch (emailError) {
+      console.error("❌ [sendOtpAction] Email error:", emailError);
+      return { error: "Failed to send verification email" };
+    }
+
+    return { success: true };
+  } catch (err: any) {
+    console.error("❌ [sendOtpAction] Exception:", err);
+    if (err?.message?.includes("fetch failed") || err?.code === "ENOTFOUND") {
+      return { error: "Database connection failed. Please check your Supabase project status or NEXT_PUBLIC_SUPABASE_URL." };
+    }
+    return { error: err?.message || "An unexpected error occurred" };
+  }
 }
 
 const verifyOtpSchema = z.object({
